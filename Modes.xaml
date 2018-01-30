@@ -1,0 +1,1886 @@
+﻿<Window
+    x:Class="MultiTools.Modes"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MultiTools"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="mW"
+    Title="{DynamicResource TitleMods}"
+    Width="833.625"
+    Height="589.238"
+    Activated="Window_Activated"
+    Closing="Window_Closing"
+    Cursor="{Binding AoE}"
+    ResizeMode="CanMinimize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d" ShowInTaskbar="False" Background="#00000000" AllowsTransparency="True">
+    <Window.Resources>
+
+        <Style BasedOn="{StaticResource {x:Type ToolTip}}" TargetType="ToolTip">
+            <Setter Property="Background" Value="#CC000000" />
+            <Setter Property="Placement" Value="Left" />
+            <Setter Property="Foreground" Value="WhiteSmoke" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Button_PreviewMouseLeftButtonDown" />
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type RadioButton}}" TargetType="RadioButton">
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Button_PreviewMouseLeftButtonDown" />
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="ToggleButton">
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Button_PreviewMouseLeftButtonDown" />
+        </Style>
+
+
+
+        <ControlTemplate x:Key="ContextTemplate1" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate2" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_1">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate3" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_2">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate4" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_3">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate5" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_4">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate6" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_5">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate7" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_6">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate8" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_7">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate9" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_8">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate10" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_9">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ContextTemplate11" TargetType="ContextMenu">
+            <ListBox
+                x:Name="colorList"
+                Width="485"
+                Height="220"
+                Background="#CC000000"
+                BorderThickness="1"
+                ItemsSource="{Binding Colors}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionChanged="colorList_SelectionChanged_10">
+                <ListBox.BorderBrush>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </ListBox.BorderBrush>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="20"
+                            Height="20"
+                            Fill="{Binding Name}"
+                            OpacityMask="Black"
+                            Stroke="#FF211E1E"
+                            StrokeThickness="1"
+                            ToolTip="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ControlTemplate>
+        <ControlTemplate x:Key="SliderTemplate" TargetType="Slider">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="Black"
+                    Text="{DynamicResource Larger}" Padding="0,0,5,0" />
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Height="16"
+                    VerticalAlignment="Center">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="Slider/Slider.png" />
+                    </Grid.Background>
+                    <Track
+                        Name="PART_Track"
+                        Width="128"
+                        Height="16">
+
+                        <Track.Thumb>
+                            <Thumb
+                                Width="16"
+                                Height="16"
+                                Foreground="{x:Null}"
+                                Grid.IsSharedSizeScope="False"
+                                SnapsToDevicePixels="True">
+                                <Thumb.Template>
+                                    <ControlTemplate>
+                                        <Image Source="Slider/SliderThumb.png" />
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+                        </Track.Thumb>
+
+                    </Track>
+                </Grid>
+                <TextBlock
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="Black"
+                    Text="{DynamicResource Smaller}" Padding="5,0,0,0" />
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="RectTemplate" TargetType="Button">
+            <Grid HorizontalAlignment="Center">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="Black"
+                    Text="{TemplateBinding Content}" />
+                <Border
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    BorderBrush="#948a63"
+                    BorderThickness="2">
+                    <Grid
+                        Width="48"
+                        Height="32"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"
+                        Background="{TemplateBinding Background}" />
+
+
+                </Border>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="MenuTemplate" TargetType="ToggleButton">
+            <Grid>
+                <Image Name="iButton">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="Buttons/MenuNormal.png" />
+                        </Style>
+
+                    </Image.Style>
+                </Image>
+                <Label
+                    Name="lButton"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{TemplateBinding Content}"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="#FFFDFDFD" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/MenuActive.png" />
+                    <Setter Property="Width" Value="192" />
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Width" Value="183" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="BigButtonTemplate" TargetType="Button">
+            <Grid>
+                <Image Name="iButton">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="Buttons/ButtonNormal.png" />
+                        </Style>
+
+                    </Image.Style>
+                </Image>
+                <Label
+                    Name="lButton"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{TemplateBinding Content}"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="22"
+                    Foreground="#FFFDFDFD" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/ButtonDisable.png" />
+                </Trigger>
+
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/ButtonActive.png" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/ButtonClicked.png" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+            <Grid>
+                <Image Name="iButton">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="Buttons/SmallButtonNormal.png" />
+                        </Style>
+
+                    </Image.Style>
+                </Image>
+                <Label
+                    Name="lButton"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{TemplateBinding Content}"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="#FFFDFDFD">
+                    <Label.Effect>
+                        <DropShadowEffect
+                            BlurRadius="0"
+                            RenderingBias="Quality"
+                            ShadowDepth="1" />
+                    </Label.Effect>
+                </Label>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/SmallButtonDisable.png" />
+                </Trigger>
+
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/SmallButtonActive.png" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/SmallButtonClicked.png" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ToogleTemplate" TargetType="ToggleButton">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Padding="10,2,10,2">
+                    <Image
+                        Name="iButton"
+                        Grid.Column="0"
+                        Height="32">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="Buttons/RoundNormal.png" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Source" Value="Buttons/RoundActive.png" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+
+                    </Image>
+                </Border>
+                <Label
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{TemplateBinding Content}"
+                    FontFamily="{TemplateBinding FontFamily}"
+                    FontSize="20"
+                    Foreground="Black" />
+            </Grid>
+            <ControlTemplate.Triggers>
+
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/RoundActive.png" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/RoundDisabled.png" />
+                </Trigger>
+
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel
+            Name="TitleBar"
+            Grid.Row="0"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Height="23"
+            DockPanel.Dock="Top"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Top.png" />
+            </DockPanel.Background>
+          
+        </DockPanel>
+        <DockPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Width="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Left.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="23"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopLeft.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Width="23"
+            Height="41">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopLeftBottom.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Width="41"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopLeftRight.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="2"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Bottom.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="5"
+            Width="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Right.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="0"
+            Width="23"
+            Height="41">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomLeftTop.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="0"
+            Width="23"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomLeft.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="1"
+            Width="41"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomLeftRight.png" />
+            </DockPanel.Background>
+        </DockPanel>
+
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="3"
+            Width="41"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomRightLeft.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="4"
+            Width="23"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomRight.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="4"
+            Width="23"
+            Height="41">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomRightTop.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="4"
+            Width="23">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopRight.png" />
+            </DockPanel.Background>
+
+        </DockPanel>
+
+        <Button
+            Name="bClose"
+            Grid.Row="0"
+            Grid.Column="4"
+            Margin="0"
+            Padding="0"
+            BorderThickness="0"
+            Click="bClose_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Image
+                        Name="iClose"
+                        Width="23"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="Buttons/CloseNormal.png" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Source" Value="Buttons/CloseActive.png" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+
+                        </Image.Style>
+                    </Image>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="iClose" Property="Source" Value="Buttons/CloseClicked.png" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Grid
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="3">
+            <Grid.Background>
+                <ImageBrush
+                    ImageSource="Images/Wood.png"
+                    Stretch="None"
+                    TileMode="Tile"
+                    Viewport="0,0,512,512"
+                    ViewportUnits="Absolute" Opacity="0.75" />
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Padding="0,50,0,0">
+                    <RadioButton x:Name="rbDefault"
+                        
+                        Height="32"
+                        HorizontalAlignment="Right"
+                        Checked="RadioButton_Checked"
+                        Content="{DynamicResource Interface}"
+                        GroupName="Menu"
+                        IsChecked="True"
+                        Template="{StaticResource MenuTemplate}"
+                        Unchecked="RadioButton_Unchecked" />
+                </Border>
+                <Border Grid.Row="1" Padding="0,10,0,0">
+                    <RadioButton
+                        Height="32"
+                        HorizontalAlignment="Right"
+                        Checked="RadioButton_Checked_2"
+                        Content="{DynamicResource Settings}"
+                        GroupName="Menu"
+                        Template="{StaticResource MenuTemplate}"
+                        Unchecked="RadioButton_Unchecked_2" />
+                </Border>
+                <Border Grid.Row="2" Padding="0,10,0,0">
+                    <RadioButton
+                        
+                        Height="32"
+                        HorizontalAlignment="Right"
+                        Checked="RadioButton_Checked_1"
+                        Content="{DynamicResource Mod}"
+                        GroupName="Menu"
+                        Template="{StaticResource MenuTemplate}"
+                        Unchecked="RadioButton_Unchecked_1" />
+                </Border>
+                <Border Grid.Row="3" Padding="0,10,0,0">
+                    <RadioButton
+                        Height="32"
+                        HorizontalAlignment="Right"
+                        Checked="RadioButton_Checked_6"
+                        Content="{DynamicResource Back}"
+                        GroupName="Menu"
+                        Template="{StaticResource MenuTemplate}" />
+                </Border>
+            </Grid>
+            <Border Grid.Column="1" Padding="0,10,10,10">
+                <Grid>
+                    <Grid.Background>
+                        <ImageBrush
+                            ImageSource="Images/Paper.png"
+                            Stretch="None"
+                            TileMode="Tile"
+                            Viewport="0,0,256,256"
+                            ViewportUnits="Absolute" />
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BLeftTop.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Width="14"
+                        HorizontalAlignment="Left">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BLeft.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Width="16"
+                        Height="16">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BLeftBottom.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Height="14"
+                        VerticalAlignment="Bottom">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BBottom.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Width="16"
+                        Height="16"
+                        VerticalAlignment="Bottom">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BRightBottom.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Width="14"
+                        HorizontalAlignment="Right">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BRight.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Height="14"
+                        VerticalAlignment="Top">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BTop.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+                    <DockPanel
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="Borders2/BRightTop.png" />
+                        </DockPanel.Background>
+                    </DockPanel>
+
+
+
+
+
+
+
+                    <Border
+                        Name="gMods"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="10"
+                        Visibility="Collapsed">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label
+                                Grid.ColumnSpan="2"
+                                Width="256"
+                                Height="32"
+                                Padding="0"
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{DynamicResource UI}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="24"
+                                Foreground="White">
+                                <Label.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBlock.png" />
+                                </Label.Background>
+                            </Label>
+
+                            <RadioButton
+                                x:Name="rbEkantaUI"
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Checked="rbEkantaUI_Checked"
+                                Content="Ekanta"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="rbEkantaUI_Unchecked" />
+                            <RadioButton
+                                x:Name="rbJammsUI"
+                                Grid.Row="2"
+                                Grid.ColumnSpan="2"
+                                Checked="rbJammsUI_Checked"
+                                Content="Jamms"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="rbJammsUI_Unchecked" />
+                            <RadioButton
+                                x:Name="rbQazUI"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="2"
+                                Checked="RadioButton_Checked_3"
+                                Content="Qazitory"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="rbQazUI_Unchecked" />
+                            <RadioButton
+                                x:Name="rbRemoveUI"
+                                Grid.Row="4"
+                                Grid.ColumnSpan="2"
+                                Checked="rbRemoveUI_Checked"
+                                Content="{DynamicResource defaultUI}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}" />
+
+
+                            <Label
+                                Grid.Row="5"
+                                Grid.ColumnSpan="2"
+                                Width="256"
+                                Height="32"
+                                Padding="0"
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{DynamicResource Misc}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="24"
+                                Foreground="White">
+                                <Label.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBlock.png" />
+                                </Label.Background>
+                            </Label>
+                            <ToggleButton
+                                x:Name="tbCows"
+                                Grid.Row="6"
+                                Grid.ColumnSpan="2"
+                                Checked="tbCows_Checked"
+                                Content="{DynamicResource Cows}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="tbCows_Unchecked" />
+                            <ToggleButton
+                                x:Name="tbArty"
+                                Grid.Row="7"
+                                Grid.ColumnSpan="2"
+                                Checked="tbArty_Checked"
+                                Content="{DynamicResource ROF}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="tbArty_Unchecked" />
+                            <ToggleButton
+                                x:Name="tbKeys"
+                                Grid.Row="8"
+                                Grid.ColumnSpan="2"
+                                Checked="tbKeys_Checked"
+                                Content="{DynamicResource Hotkeys}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="tbKeys_Unchecked" />
+                            <ToggleButton
+                                x:Name="miRotator"
+                                Grid.Row="9"
+                                Grid.ColumnSpan="2"
+                                Checked="miRotator_Checked"
+                                Content="{DynamicResource Rotator}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="miRotator_Unchecked" />
+                            <ToggleButton
+                                Name="bDisableEnable"
+                                Grid.Row="10"
+                                Checked="bEnable_Click"
+                                Content="{DynamicResource GymXP}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="bDisable_Click" />
+                            <Button
+                                x:Name="bNote"
+                                Grid.Row="10"
+                                Grid.Column="1"
+                                Width="128"
+                               
+                                Click="bNote_Click"
+                                Content="{DynamicResource More}"
+                                Template="{StaticResource ButtonTemplate}" />
+                            <Label
+                                Grid.Row="11"
+                                Padding="10,5,5,5"
+                                Content="{DynamicResource SingleDeck}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="22" />
+                            <Button
+                                Grid.Row="11"
+                                Grid.Column="1"
+                                Width="128"
+                           
+                                Click="Button_Click_2"
+                                Content="{DynamicResource Install}"
+                                Template="{StaticResource ButtonTemplate}" />
+                        </Grid>
+                    </Border>
+                    <Border
+                        Name="gInterface"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="10"
+                        Visibility="Visible">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.ColumnSpan="5"
+                                Width="256"
+                                Height="32"
+                                Padding="0"
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{DynamicResource Interface}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="24"
+                                Foreground="White">
+                                <Label.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBlock.png" />
+                                </Label.Background>
+                            </Label>
+                            <ToggleButton
+                                x:Name="miIntro"
+                                Grid.Row="1"
+                                Grid.ColumnSpan="5"
+                                Checked="miIntro_Checked"
+                                Content="{DynamicResource Intro}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="miIntro_Unchecked" FontSize="16" />
+                            <ToggleButton
+                                x:Name="miFPS"
+                                Grid.Row="2"
+                                Grid.ColumnSpan="5"
+                                Checked="miFPS_Checked"
+                                Content="{DynamicResource FPS}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="miFPS_Unchecked" FontSize="18" />
+                            <ToggleButton
+                                x:Name="miMsecs"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="5"
+                                Checked="miMsecs_Checked"
+                                Content="{DynamicResource Msecs}"
+                                FontFamily="Monotype Corsiva"
+                                Template="{StaticResource ToogleTemplate}"
+                                Unchecked="miMsecs_Unchecked" />
+                            <Label
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="5"
+                                Padding="10,5,5,5"
+                                Content="{DynamicResource Switcher}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="22"
+                                Foreground="Black" />
+                            <Label
+                                Grid.Row="5"
+                                Grid.Column="4"
+                                Grid.ColumnSpan="5"
+                                Padding="10,5,190,5"
+                                Content="{DynamicResource Zoom}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="22"
+                                Foreground="Black" HorizontalAlignment="Right" />
+                            <Button x:Name="bRus"       
+                ToolTip="Русский"
+                             
+                                           Grid.Row="6"
+                                Grid.Column="0"
+                           
+            
+            BorderThickness="0" Padding="1" Margin="10,0,5,0" Click="bRus_Click"  >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Image
+                        Name="iClose"
+                        Height="48"
+                        
+                        VerticalAlignment="Top">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Flags/Normal.png" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Source" Value="Flags/flag.png" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+
+                                            </Image.Style>
+                                        </Image>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/d1.png" />
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/click.png" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button x:Name="bEng"       
+                ToolTip="English"
+                                    Margin="0,0,5,0"
+                                   Grid.Row="6"
+                               
+                                Grid.Column="1" Click="bEng_Click"
+            >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Image
+                        Name="iClose"
+                        Height="48"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Flags/u3.png" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Source" Value="Flags/u1.png" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+
+                                            </Image.Style>
+                                        </Image>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/d4.png" />
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/u2.png" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button x:Name="bGer" 
+                ToolTip="Deutsch"
+                                 Grid.Row="6"
+                             Grid.Column="2"
+                                Margin="0,0,5,0" Click="bGer_Click"
+             >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Image
+                        Name="iClose"
+                        Height="48"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Flags/g1.png" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Source" Value="Flags/g3.png" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+
+                                            </Image.Style>
+                                        </Image>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/d2.png" />
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/g2.png" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button x:Name="bFra"      
+                ToolTip="Français"
+                                    Grid.Row="6"
+                               
+                                Grid.Column="3" Click="bFra_Click"
+             >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Image
+                        Name="iClose"
+                        Height="48"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Flags/f1.png" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Source" Value="Flags/f3.png" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+
+                                            </Image.Style>
+                                        </Image>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/d3.png" />
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="iClose" Property="Source" Value="Flags/f2.png" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <StackPanel
+                                Grid.Row="6"
+                                Grid.Column="4"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Right"
+                                Orientation="Vertical">
+
+                               
+                                <TextBlock
+                                    FontFamily="Monotype Corsiva"
+                                    FontSize="22"
+                                    FontWeight="Bold"
+                                    Foreground="Black"
+                                    Text="{DynamicResource Min}" />
+                                <Slider
+                                    x:Name="udMin"
+                                    LargeChange="5"
+                                    Maximum="49"
+                                    Minimum="9"
+                                    SmallChange="1"
+                                    Template="{StaticResource SliderTemplate}"
+                                   
+                                    Value="29">
+                                    <Slider.Background>
+                                        <ImageBrush ImageSource="Slider/Slider.png" />
+                                    </Slider.Background>
+                                </Slider>
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Row="7"
+                                Grid.Column="4"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Right"
+                                Orientation="Vertical">
+                                <TextBlock
+                                    FontFamily="Monotype Corsiva"
+                                    FontSize="22"
+                                    FontWeight="Bold"
+                                    Foreground="Black"
+                                    Text="{DynamicResource Norm}" />
+                                <Slider
+                                    x:Name="udNorm"
+                                    LargeChange="5"
+                                    Maximum="90"
+                                    Minimum="30"
+                                    SmallChange="1"
+                                    Template="{StaticResource SliderTemplate}"
+                                    
+                                    Value="50">
+                                    <Slider.Background>
+                                        <ImageBrush ImageSource="Slider/Slider.png" />
+                                    </Slider.Background>
+                                </Slider>
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Row="8"
+                                Grid.Column="4"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Right"
+                                Orientation="Vertical">
+                                <TextBlock
+                                    FontFamily="Monotype Corsiva"
+                                    FontSize="22"
+                                    FontWeight="Bold"
+                                    Foreground="Black"
+                                    Text="{DynamicResource Max}" />
+                                <Slider
+                                    x:Name="udMax"
+                                    LargeChange="5"
+                                    Maximum="200"
+                                    Minimum="40"
+                                    SmallChange="1"
+                                    Template="{StaticResource SliderTemplate}"
+                                    Value="60"
+                                  
+                                    >
+                                    <Slider.Background>
+                                        <ImageBrush ImageSource="Slider/Slider.png" />
+                                    </Slider.Background>
+                                </Slider>
+
+                            </StackPanel>
+
+                            <Label
+                                Grid.Row="9"
+                                Grid.ColumnSpan="5"
+                                Padding="10,5,5,5"
+                                Content="{DynamicResource Colors}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="22" />
+                            <Grid Grid.Row="10" Grid.ColumnSpan="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Background="{Binding P1}"
+                                    Content="{DynamicResource Player1}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate1}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Background="{Binding P2}"
+                                    Content="{DynamicResource Player2}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate2}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Background="{Binding P3}"
+                                    Content="{DynamicResource Player3}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate3}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="3"
+                                    Background="{Binding P4}"
+                                    Content="{DynamicResource Player4}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate4}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="4"
+                                    Background="{Binding P5}"
+                                    Content="{DynamicResource Player5}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate5}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="5"
+                                    Background="{Binding P6}"
+                                    Content="{DynamicResource Player6}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate6}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="6"
+                                    Background="{Binding P7}"
+                                    Content="{DynamicResource Player7}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate7}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="7"
+                                    Background="{Binding P8}"
+                                    Content="{DynamicResource Player8}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate8}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Background="{Binding P9}"
+                                    Content="{DynamicResource You}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate9}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Background="{Binding P10}"
+                                    Content="{DynamicResource Ally}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate10}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Background="{Binding P11}"
+                                    Content="{DynamicResource Enemy}"
+                                    Template="{StaticResource RectTemplate}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu Cursor="{Binding AoE}" Template="{StaticResource ContextTemplate11}" />
+                                    </Button.ContextMenu>
+                                </Button>
+                                <Button
+                                    Grid.Row="1"
+                                    Grid.Column="4"
+                                    Grid.ColumnSpan="5"
+                                    Width="128"
+                                    HorizontalAlignment="Right"
+                                    Click="Button_Click"
+                                    Content="{DynamicResource Reset}"
+                                    Template="{StaticResource ButtonTemplate}" />
+                            </Grid>
+                            <Button
+                                Grid.Row="5"
+                                Grid.Column="4"
+                                Width="128"
+                               
+                                
+                                HorizontalAlignment="Right"
+                                Click="Button_Click_6"
+                                Content="{DynamicResource Reset}"
+                                Template="{StaticResource ButtonTemplate}" />
+
+                        </Grid>
+                    </Border>
+                    <Border
+                        Name="gGraphics"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="10"
+                        Visibility="Collapsed">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.ColumnSpan="3"
+                                Width="256"
+                                Height="32"
+                                Padding="0"
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{DynamicResource Fonts}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="24"
+                                Foreground="White">
+                                <Label.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBlock.png" />
+                                </Label.Background>
+                            </Label>
+                            <RadioButton
+                                x:Name="rbF1"
+                                Grid.Row="1"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF1_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 1"
+                                FontFamily="Academy"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF2"
+                                Grid.Row="2"
+                                Grid.ColumnSpan="3"
+                                Padding="0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF2_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 2"
+                                FontFamily="Basil Regular"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF3"
+                                Grid.Row="3"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF3_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 3"
+                                FontFamily="Cambria Italic"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF4"
+                                Grid.Row="4"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF4_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 4"
+                                FontFamily="Candara Italic"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF5"
+                                Grid.Row="5"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF5_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 5"
+                                FontFamily="Kramola"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF6"
+                                Grid.Row="6"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF6_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 6"
+                                FontFamily="LugaType"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF7"
+                                Grid.Row="7"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="rbF7_Checked"
+                                Content="Age of Empires 3 MultiTools, шрифт № 7"
+                                FontFamily="Margot"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF8"
+                                Grid.Row="8"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="RadioButton_Checked_5"
+                                Content="Age of Empires 3 MultiTools, шрифт № 8"
+                                FontFamily="Plainot"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <RadioButton
+                                x:Name="rbF9"
+                                Grid.Row="9"
+                                Grid.ColumnSpan="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Checked="RadioButton_Checked_4"
+                                Content="Age of Empires 3 standard, шрифт стандартный"
+                                FontFamily="Formal436 BT"
+                                GroupName="Fonts"
+                                Template="{StaticResource ToogleTemplate}" />
+                            <Label
+                                Grid.Row="10"
+                                Grid.ColumnSpan="3"
+                                Width="256"
+                                Height="32"
+                                Padding="0"
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Content="{DynamicResource Settings}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="24"
+                                Foreground="White">
+                                <Label.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBlock.png" />
+                                </Label.Background>
+                            </Label>
+                            <Label
+                                Grid.Row="11"
+                                Padding="10,5,5,5"
+                                HorizontalAlignment="Left"
+                                VerticalContentAlignment="Center"
+                                Content="{DynamicResource Auto}"
+                                FontFamily="Monotype Corsiva"
+                                FontSize="22" />
+                            <Border
+                                Grid.Row="11"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center">
+                                <Button
+                                    Width="128"
+                                  
+                                    HorizontalAlignment="Right"
+                                    Click="Button_Click_1"
+                                    Content="{DynamicResource Apply}"
+                                    Template="{StaticResource ButtonTemplate}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

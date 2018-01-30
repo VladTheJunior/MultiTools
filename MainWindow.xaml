@@ -1,0 +1,1152 @@
+﻿<Window
+    x:Class="MultiTools.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MultiTools"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MultiTools"
+    Width="1073"
+    Height="719"
+    Closed="Window_Closed"
+    ResizeMode="CanMinimize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d" Loaded="Window_Loaded" Closing="Window_Closing">
+
+    <Window.Resources>
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Button_PreviewMouseLeftButtonDown" />
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type ToolTip}}" TargetType="ToolTip">
+            <Setter Property="Background" Value="#CC000000" />
+            <Setter Property="Placement" Value="Left" />
+            <Setter Property="Foreground" Value="WhiteSmoke" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <RadialGradientBrush>
+                        <GradientStop Offset="0" Color="#FF4F4F4F" />
+                        <GradientStop Offset="1" Color="#FFB09D24" />
+                    </RadialGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="BlurStyle" TargetType="Image">
+
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <BlurEffect Radius="0">
+                        
+                    </BlurEffect>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="UIElement.RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="UIElement.RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FrameworkElement.LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform x:Name="transform" />
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Effect).Radius"
+                                To="4"
+                                Duration="0:0:0.3">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Effect).Radius"
+                                To="0"
+                                Duration="0:0:0.3">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                           
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+
+        
+
+
+
+
+        <Style x:Key="ImageStyle" TargetType="Image">
+
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="13"
+                        Direction="0"
+                        RenderingBias="Quality"
+                        ShadowDepth="0"
+                        Color="#FFF5E9E9" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="UIElement.RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="UIElement.RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FrameworkElement.LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform x:Name="transform" />
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                To="1.03"
+                                Duration="0:0:.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                To="1.03"
+                                Duration="0:0:.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Effect).BlurRadius"
+                                To="25"
+                                Duration="0:0:0.6">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Effect).BlurRadius"
+                                To="13"
+                                Duration="0:0:0.7">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                To="1"
+                                Duration="0:0:.1" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                To="1"
+                                Duration="0:0:.1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <ControlTemplate x:Key="AudioB" TargetType="ToggleButton">
+            
+                <Image
+                        Name="iButton" 
+                        Height="23"
+                        Width="23">
+                </Image>
+       
+
+            <ControlTemplate.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="True" />
+                        <Condition Property="IsMouseOver" Value="False" />
+                        <Condition Property="IsPressed" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter TargetName="iButton" Property="Source" Value="Audio/4.png" />
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="True" />
+                        <Condition Property="IsMouseOver" Value="True" />
+                        <Condition Property="IsPressed" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter TargetName="iButton" Property="Source" Value="Audio/5.png" />
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="True" />
+                        <Condition Property="IsPressed" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter TargetName="iButton" Property="Source" Value="Audio/6.png" />
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="False" />
+                        <Condition Property="IsMouseOver" Value="False" />
+                        <Condition Property="IsPressed" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter TargetName="iButton" Property="Source" Value="Audio/1.png" />
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="False" />
+                        <Condition Property="IsMouseOver" Value="True" />
+                        <Condition Property="IsPressed" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter TargetName="iButton" Property="Source" Value="Audio/2.png" />
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="False" />
+                        <Condition Property="IsPressed" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter TargetName="iButton" Property="Source" Value="Audio/3.png" />
+                </MultiTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+            <Grid>
+                <Image Name="iButton">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="Buttons/ButtonNormal.png" />
+                        </Style>
+
+                    </Image.Style>
+                </Image>
+                <Label
+                    Name="lButton"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{TemplateBinding Content}"
+                    FontFamily="Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="WhiteSmoke">
+                    <Label.Effect>
+                        <DropShadowEffect
+                            BlurRadius="0"
+                            RenderingBias="Quality"
+                            ShadowDepth="1" />
+                    </Label.Effect>
+                </Label>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/ButtonDisable.png" />
+                </Trigger>
+
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/ButtonActive.png" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="iButton" Property="Source" Value="Buttons/ButtonClicked.png" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel
+            Name="TitleBar"
+            Grid.Row="0"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            Height="23"
+            DockPanel.Dock="Top"
+            MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Top.png" />
+            </DockPanel.Background>
+            <Image
+                Height="23"
+                HorizontalAlignment="Left"
+                Source="Buttons/Name.png" />
+        </DockPanel>
+        <DockPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Width="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Left.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Width="23"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopLeft.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Width="23"
+            Height="41">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopLeftBottom.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Width="41"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopLeftRight.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="2"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Bottom.png" />
+            </DockPanel.Background>
+            
+            <Button       
+                ToolTip="Русский"
+            Margin="512,0,10,0"
+            Padding="0"
+            BorderThickness="0" VerticalAlignment="Top" Click="Button_Click_5" >
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image
+                        Name="iClose"
+                        Height="22"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="Flags/Normal.png" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="Flags/flag.png" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+
+                            </Image.Style>
+                        </Image>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="iClose" Property="Source" Value="Flags/click.png" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button       
+                ToolTip="English"
+            Margin="0,0,0,0"
+            Padding="0"
+            BorderThickness="0" VerticalAlignment="Top" Click="Button_Click_6" >
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image
+                        Name="iClose"
+                        Height="22"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="Flags/u3.png" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="Flags/u1.png" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+
+                            </Image.Style>
+                        </Image>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="iClose" Property="Source" Value="Flags/u2.png" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button 
+                ToolTip="Deutsch"
+            Margin="10,0,0,0"
+            Padding="0"
+            BorderThickness="0" VerticalAlignment="Top" Click="Button_Click_9" >
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image
+                        Name="iClose"
+                        Height="22"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="Flags/g1.png" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="Flags/g3.png" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+
+                            </Image.Style>
+                        </Image>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="iClose" Property="Source" Value="Flags/g2.png" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button       
+                ToolTip="Український"
+            Margin="10,0,0,0"
+            Padding="0"
+            BorderThickness="0" VerticalAlignment="Top" Click="Button_Click_7"  >
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image
+                        Name="iClose"
+                        Height="22"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="Flags/n1.png" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="Flags/n3.png" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+
+                            </Image.Style>
+                        </Image>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="iClose" Property="Source" Value="Flags/n2.png" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button      
+                ToolTip="Français"
+            Margin="10,0,0,0"
+            Padding="0"
+            BorderThickness="0" VerticalAlignment="Top" Click="Button_Click_8"  >
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image
+                        Name="iClose"
+                        Height="22"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="Flags/f1.png" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Source" Value="Flags/f3.png" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+
+                            </Image.Style>
+                        </Image>
+
+                        <ControlTemplate.Triggers>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="iClose" Property="Source" Value="Flags/f2.png" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Image
+                Height="23"
+                HorizontalAlignment="Right"
+                Source="Images/Copyright.png" />
+        </DockPanel>
+        <DockPanel
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="5"
+            Width="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/Right.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="0"
+            Width="23"
+            Height="41">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomLeftTop.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="0"
+            Width="23"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomLeft.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="1"
+            Width="41"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomLeftRight.png" />
+            </DockPanel.Background>
+        </DockPanel>
+
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="3"
+            Width="41"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomRightLeft.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="4"
+            Grid.Column="4"
+            Width="23"
+            Height="23">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomRight.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="4"
+            Width="23"
+            Height="41">
+
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/BottomRightTop.png" />
+            </DockPanel.Background>
+        </DockPanel>
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="4"
+            Width="23">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="Borders/TopRight.png" />
+            </DockPanel.Background>
+
+        </DockPanel>
+        <ToggleButton x:Name="Audio"
+            
+            IsChecked="False"
+            Template="{StaticResource AudioB}"
+            Grid.Row="0"
+            Grid.Column="3"
+            Margin="0"
+            Padding="0"
+   
+            BorderThickness="0" HorizontalAlignment="Right"/>
+        <Button
+            Name="bClose"
+            Grid.Row="0"
+            Grid.Column="4"
+            Margin="0"
+            Padding="0"
+            BorderThickness="0"
+            Click="bClose_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Image
+                        Name="iClose"
+                        Width="23"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="Buttons/CloseNormal.png" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Source" Value="Buttons/CloseActive.png" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+
+                        </Image.Style>
+                    </Image>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="iClose" Property="Source" Value="Buttons/CloseClicked.png" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Grid
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="3">
+            <Grid.Background>
+                <ImageBrush ImageSource="Images/1.png" Stretch="UniformToFill" />
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <MediaElement IsMuted="{Binding ElementName=Audio,Path=IsChecked}" Grid.ColumnSpan="2" Grid.RowSpan="2" x:Name="AnimationSound" Source="1.wav" LoadedBehavior="Manual" Loaded="Sound_Loaded" MediaEnded="Sound_MediaEnded"/>
+            <MediaElement Grid.ColumnSpan="2" Grid.RowSpan="2" x:Name="Animation" Source="1.mp4" LoadedBehavior="Manual" Loaded="Animation_Loaded" MediaEnded="Animation_MediaEnded"/>
+
+            <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+                <Border Padding="0,10,28,28">
+                <ListView
+                x:Name="listView1"
+                Width="576"
+                    Height="auto"
+                BorderThickness="0,0,0,0"
+                IsSynchronizedWithCurrentItem="True"
+                 HorizontalAlignment="Right" Padding="0" Background="{x:Null}" Focusable="False" BorderBrush="White" FontSize="22" FontFamily="Monotype Corsiva" Foreground="#FFF9CD07">
+                     <ListView.ItemContainerStyle>
+
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:1" />
+                                                <DoubleAnimation
+                                            Storyboard.TargetProperty="LayoutTransform.ScaleY"
+                                            From="0"
+                                            Duration="0:0:.6" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="Images/Без имени-1.png"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Margin" Value="0,0,0,5"/>
+                                <Setter Property="Width" Value="576"/>
+                                <Setter Property="Height" Value="64"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border
+                         BorderBrush="Transparent"
+                         BorderThickness="0"
+                         Background="{TemplateBinding Background}">
+                                                <GridViewRowPresenter HorizontalAlignment="Stretch" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Width="Auto" Margin="0" Content="{TemplateBinding Content}"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform />
+                                </Setter.Value>
+                            </Setter>
+                                <Setter Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform x:Name="transform" />
+                                    </Setter.Value>
+                                </Setter>
+                                
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    
+                    <ListView.View>
+                        <GridView x:Name="dataGridView" AllowsColumnReorder="False">
+                                <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+                                <GridViewColumn Header="">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Image
+                                            Width="60"
+                                            Height="60"
+                                            Style="{StaticResource BlurStyle}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                                    ToolTip="{Binding HintIP}"
+                                            Source="{Binding Flag}" Margin="349,-6,0,0" />
+                                                <Label Height="14" Width="30" Content="{Binding Vpnperc}" Padding="0" Margin="379,28,0,0" Background="#99080808" Foreground="#FFFDFBFB" VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                                                <Image
+                                            Width="48"
+                                            Height="48"
+                                                    Style="{StaticResource BlurStyle}"
+                                            ToolTip="{Binding Hint}"        
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Source="{Binding Avatar}" Margin="32,0,0,0" />
+
+                                                <Label Padding="0" Margin="330,41,0,0" Content="{Binding IP}" HorizontalAlignment="Left" Width="98" VerticalAlignment="Top" TextOptions.TextFormattingMode="Display" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FFF9CD07"/>
+                                                <Label Padding="0" Margin="415,0,0,0" Width="60" Content="{Binding Ping}" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" FontSize="18"/>
+                                                <Label Padding="0" Margin="100,5.5,0,0" Height="26" Width="232"  Content="{Binding ESO}" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF0E0D0D" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="{DynamicResource jpELO}" MouseLeftButtonDown="Label_MouseLeftButtonDown"/>
+                                                <Label Padding="0" Height="26" Width="232" Margin="100,30,0,0" Content="{Binding PR}" HorizontalAlignment="Left" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FFF9CD07" FontSize="10"/>
+                                                <TextBlock Margin="480,0,0,0" Text="{Binding Combined}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                    </ListView.View>
+                </ListView>
+                </Border>
+            </Grid>
+            
+            
+            
+            
+            <Grid
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Border Padding="0,0,28,28"  Visibility="{Binding NVisible}">
+                        <Grid
+                            Width="160"
+                            Height="163"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Padding="32,32,0,0">
+                                <Image
+                                    Height="96"
+                                    MouseLeftButtonDown="Image_MouseLeftButtonDown"
+                                    PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
+                                    Source="Launcher/age3.png"
+                                    Style="{StaticResource ImageStyle}" />
+                            </Border>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="Launcher/vanilla.png" />
+                            </Grid.Background>
+
+                        </Grid>
+                    </Border>
+                    <Border Padding="0,0,28,28"  Visibility="{Binding XVisible}">
+                        <Grid
+                            Width="160"
+                            Height="163"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Padding="36,36,0,0">
+                                <Image
+                                    Height="88"
+                                    MouseLeftButtonDown="Image_MouseLeftButtonDown_4"
+                                    PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
+                                    Source="Launcher/age3x.png"
+                                    Style="{StaticResource ImageStyle}" />
+                            </Border>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="Launcher/twc.png" />
+                            </Grid.Background>
+
+                        </Grid>
+                    </Border>
+                    <Border Padding="0,0,28,28"  Visibility="{Binding YVisible}">
+
+                        <Grid
+                            Width="160"
+                            Height="163"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Padding="32,32,0,0">
+                                <Image
+                                    Height="96"
+                                    MouseLeftButtonDown="Image_MouseLeftButtonDown_1"
+                                    PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
+                                    Source="Launcher/age3y.png"
+                                    Style="{StaticResource ImageStyle}" />
+                            </Border>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="Launcher/tad.png" />
+                            </Grid.Background>
+
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <Border Padding="0,0,28,28" Visibility="{Binding EPVisible}">
+                        <Grid
+                            Width="160"
+                            Height="163"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Padding="32,32,0,0">
+                                <Image
+                                    Height="96"
+                                    MouseLeftButtonDown="Image_MouseLeftButtonDown_2"
+                                    PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
+                                    Source="Launcher/age3p.png"
+                                    Style="{StaticResource ImageStyle}" />
+                            </Border>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="Launcher/esoc.png" />
+                            </Grid.Background>
+
+                        </Grid>
+                    </Border>
+                    <Border Padding="0,0,28,28" Visibility="{Binding TPVisible}">
+                        <Grid
+                            Width="160"
+                            Height="163"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Padding="32,32,0,0">
+                                <Image
+                                    Height="96"
+                                    MouseLeftButtonDown="Image_MouseLeftButtonDown_3"
+                                    PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown"
+                                    Source="Launcher/age3t.png"
+                                    Style="{StaticResource ImageStyle}" />
+                            </Border>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="Launcher/tp.png" />
+                            </Grid.Background>
+
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <Border
+                Grid.Row="0"
+                Grid.Column="0"
+                Padding="0,10,0,0">
+                <Grid
+                    Width="224"
+                    Height="107"
+                    VerticalAlignment="Top">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="Images/Population.png" />
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Padding="0,6,20,0">
+                        <Ellipse
+                            Width="7"
+                            Height="7"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Fill="{Binding ESO}"
+                            ToolTip="{Binding ESOHint}" />
+                    </Border>
+
+                    <Border
+                        Grid.Row="1"
+                        Padding="85,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom">
+                        <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Padding="5,10,5,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                VerticalContentAlignment="Bottom"
+                                Content="ESO:"
+                                FontFamily="Cambria"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White" >
+                                <Label.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" RenderingBias="Quality" />
+                                </Label.Effect>
+                            </Label>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Padding="5,10,5,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                HorizontalContentAlignment="Right"
+                                VerticalContentAlignment="Bottom"
+                                Content="{Binding ESOPop}"
+                                FontFamily="Cambria"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White" >
+                                <Label.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" RenderingBias="Quality"/>
+                                </Label.Effect>
+                            </Label>
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Padding="5,0"
+                                VerticalAlignment="Bottom"
+                                VerticalContentAlignment="Bottom"
+                                Content="TAD:"
+                                FontFamily="Cambria"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White" >
+                                <Label.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" RenderingBias="Quality"/>
+                                </Label.Effect>
+                            </Label>
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Padding="5,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                HorizontalContentAlignment="Right"
+                                VerticalContentAlignment="Bottom"
+                                Content="{Binding TADPop}"
+                                FontFamily="Cambria"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White" >
+                                <Label.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" RenderingBias="Quality"/>
+                                </Label.Effect>
+                            </Label>
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Padding="5,0,5,15"
+                                VerticalAlignment="Bottom"
+                                VerticalContentAlignment="Bottom"
+                                Content="Nilla:"
+                                FontFamily="Cambria"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White" >
+                                <Label.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" RenderingBias="Quality"/>
+                                </Label.Effect>
+                            </Label>
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Padding="5,0,5,15"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                HorizontalContentAlignment="Right"
+                                VerticalContentAlignment="Bottom"
+                                Content="{Binding NillaPop}"
+                                FontFamily="Cambria"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White" >
+                                <Label.Effect>
+                                    <DropShadowEffect BlurRadius="0" ShadowDepth="1" RenderingBias="Quality"/>
+                                </Label.Effect>
+                            </Label>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0"
+                Width="237"
+                Height="429"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom">
+                <Grid.Background>
+                    <ImageBrush ImageSource="Images/Menu.png" />
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="22,177,0,0">
+                    <Button
+                        Width="192"
+                       
+                        Click="Button_Click_1"
+                        Content="{DynamicResource Mods}"
+                        IsEnabled="{Binding DisableMenu}"
+                        Template="{StaticResource ButtonTemplate}" />
+                </Border>
+                <Border
+                    Grid.Row="1"
+                    Padding="22,8,0,0"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Width="192"
+                        
+                        Click="Button_Click_4"
+                        Content="ESOCommunity"
+                        Template="{StaticResource ButtonTemplate}" />
+                </Border>
+                <Border
+                    Grid.Row="2"
+                    Padding="22,8,0,0"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Width="192"
+                        
+                        Click="Button_Click_3"
+                        Content="Помощь и советы"
+                        Template="{StaticResource ButtonTemplate}" />
+                </Border>
+                <Border
+                    Grid.Row="3"
+                    Padding="22,8,0,0"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Width="192"
+                    
+                        BorderThickness="0"
+                        Click="Button_Click_2"
+                        Content="ESO-Assistant"
+                        Template="{StaticResource ButtonTemplate}" />
+                </Border>
+                <Border
+                    Grid.Row="4"
+                    Padding="22,0,0,24"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Width="192"
+                       
+                        Padding="0"
+                        BorderThickness="0"
+                        Click="Button_Click"
+                        Content="{DynamicResource Exit}"
+                        Template="{StaticResource ButtonTemplate}" />
+                </Border>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,111 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:v="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:MultiTools.Languages">
+    <v:String x:Key="TitleMods">MultiTools - Модифікації</v:String>
+    <v:String x:Key="Switcher">Перемикач локалізації гри</v:String>
+    <v:String x:Key="Mods">Модифікації</v:String>
+    <v:String x:Key="Exit">Вихід</v:String>
+    <v:String x:Key="jpELO">Натисніть для перевірки ELO</v:String>
+    <v:String x:Key="Larger">Крупніше </v:String>
+    <v:String x:Key="Smaller"> Меньше</v:String>
+    <v:String x:Key="Interface">Интерфейс</v:String>
+    <v:String x:Key="Settings">Игрові параметри</v:String>
+    <v:String x:Key="Mod">Моди</v:String>
+    <v:String x:Key="Back">Назад</v:String>
+    <v:String x:Key="UI">Игровe Меню</v:String> <!--Игровое меню-->
+    <v:String x:Key="defaultUI">Скинути UI до стандарту</v:String><!--Скинути UI до стандарту-->
+    <v:String x:Key="Misc">Різне</v:String>
+    <v:String x:Key="Cows">Зміна кольору відгодованих корів</v:String> <!--Зміна кольору відгодованих корів-->
+    <v:String x:Key="ROF">Коло огляду артилерії і місіонерів</v:String> <!--Коло &quot;огляду&quot; артилерії і місіонерів-->
+    <v:String x:Key="Hotkeys">Настроені горячі клавіщі</v:String><!--Настроені горячі клавіщі-->
+    <v:String x:Key="Rotator">Обертання будівель</v:String><!--Обертання будівель-->
+    <v:String x:Key="GymXP">Прокачування метрополій ESO</v:String><!--Прокачування метрополій ESO-->
+    <v:String x:Key="More">Детальніше</v:String>    <!--Детальніше-->
+    <v:String x:Key="SingleDeck">Прокачення метрополії для сингла з деками</v:String>    <!--Прокачення метрополії для сингла з деками-->
+    <v:String x:Key="Install">Установити</v:String>    <!--Установити-->
+    <v:String x:Key="Intro">Пропуск початкового ролика</v:String><!--Пропуск початкового ролика-->
+    <v:String x:Key="FPS">Включити FPS</v:String>    <!--Включити FPS-->
+    <v:String x:Key="Msecs">Мілісекунди в таймері</v:String><!--Мілісекунди в таймері-->
+    <v:String x:Key="Zoom">Масштаб</v:String><!--Масштаб-->
+    <v:String x:Key="Min">Мінімальний:</v:String>    <!--Мінімальний:-->
+    <v:String x:Key="Norm">Нормальний:</v:String>    <!--Нормальний:-->
+    <v:String x:Key="Max">Максимальний:</v:String>    <!--Максимальний:-->
+    <v:String x:Key="Colors">Колоря игроків</v:String> <!--Колоря игроків-->
+    <v:String x:Key="Player1">Игрок 1</v:String>
+    <v:String x:Key="Player2">Игрок 2</v:String>
+    <v:String x:Key="Player3">Игрок 3</v:String>
+    <v:String x:Key="Player4">Игрок 4</v:String>
+    <v:String x:Key="Player5">Игрок 5</v:String>
+    <v:String x:Key="Player6">Игрок 6</v:String>
+    <v:String x:Key="Player7">Игрок 7</v:String>
+    <v:String x:Key="Player8">Игрок 8</v:String>
+
+    <v:String x:Key="You">Ви</v:String>
+    <v:String x:Key="Ally">Союзник</v:String>
+    <v:String x:Key="Enemy">Ворог</v:String>
+
+    <v:String x:Key="Reset">Скинуті</v:String>
+    <v:String x:Key="Fonts">Шрифти</v:String>
+    <v:String x:Key="Apply">Применити</v:String>
+
+    <v:String x:Key="Auto">Автоналаштування графики, звука та опций</v:String><!-- Автоналаштування графики, звука та опций-->
+
+    <v:String x:Key="ESOon">Статус: ESO працюе.</v:String> <!--Статус: ESO працюе.-->
+    <v:String x:Key="ESOoff">Статус: ESO не працюе.</v:String>
+    <v:String x:Key="Updated">Обновлено:</v:String>    <!--Обновлено: -->
+    <v:String x:Key="Cause">Можлива причина: Перезавантаження сервера.</v:String>    <!--Можлива причина: Перезавантаження сервера.-->
+    <v:String x:Key="Conscript">Новобранец</v:String>
+    <v:String x:Key="Private">Рядовий</v:String>
+    <v:String x:Key="Lance Corporal">Молодший капрал</v:String>
+    <v:String x:Key="Corporal">Капрал</v:String>
+    <v:String x:Key="Sergeant">Сержант</v:String>
+    <v:String x:Key="Master Sergeant">Старший сержант</v:String>
+    <v:String x:Key="2nd Lieutenant">Молодший лейтенант</v:String>
+    <v:String x:Key="1st Lieutenant">Старший лейтенант</v:String>
+    <v:String x:Key="Captain">Капітан</v:String>
+    <v:String x:Key="Major">Майор</v:String>
+    <v:String x:Key="Lieutenant Colonel">Підполковник</v:String>
+    <v:String x:Key="Colonel">Полковник</v:String>
+    <v:String x:Key="Brigadier">Бригадний генерал</v:String>
+    <v:String x:Key="Major General">Генерал-майор</v:String>
+    <v:String x:Key="Lieutenant General">Генерал-лейтенант</v:String>
+    <v:String x:Key="General">Генерал</v:String>
+    <v:String x:Key="Field Marshal">Фельдмаршал</v:String>
+    <v:String x:Key="Level ">Рівень</v:String>
+    <v:String x:Key="Hintdefault">Невидомий на данний момент.</v:String>
+
+    <v:String x:Key="● Coutry: unknown">● Країна: невідомо</v:String>
+    <v:String x:Key="● City: unknown">● Місто: невідомо</v:String>
+    <v:String x:Key="● Hours Between: unknown">● Різниця у часі: невідомо</v:String>
+    <v:String x:Key="No VPN detected!">VPN не знайдений!</v:String>
+    <v:String x:Key="Medium probability">Середня вероятність</v:String>
+    <v:String x:Key="High probability">Висока вероятність</v:String>
+    <v:String x:Key="100% probability">100% вероятність</v:String>
+
+    <v:String x:Key="Checking ESO servers...">Перевірка сервера ESO...</v:String>
+    <v:String x:Key="VPN: Low probability!">VPN: Низка вероятність!</v:String>
+    <v:String x:Key="VPN: Medium probability!">VPN: Середня вероятність!</v:String>
+    <v:String x:Key="VPN: High probability!">VPN: Висока вероятність!</v:String>
+    <v:String x:Key="VPN detected!">VPN знайдений!</v:String>
+
+    <v:String x:Key="● Country: ">● Країна:</v:String>
+    <v:String x:Key="● City: ">● Місто:</v:String>
+    <v:String x:Key="● Hours Between: +">● Різниця у часі: +</v:String>
+    <v:String x:Key="● Hours Between: ">● Різниця у часі:</v:String>
+
+    <v:String x:Key="ESO-Assistant not found!">ESO-Assistant не знайдений!</v:String>
+    <v:String x:Key="The game is already running!">Гра вже запущена!</v:String>
+    <v:String x:Key="The game is not found!">Гра не найдена!</v:String>
+
+    <v:String x:Key="This mod will level up your homecity by 100.">Цей мод прокачає ваши метрополії до 100 рівня.</v:String>
+    <v:String x:Key="I am not responsible for the consequences of using this mod!">Я не відповідальний за наслідки використання даного мода!</v:String>
+    <v:String x:Key="1. Find a partner with the same mod.">1. Знайдіть напарника з цим же модом.</v:String>
+    <v:String x:Key="2. Enable mod.">2. Включіть мод.</v:String>
+    <v:String x:Key="3. Start the game.">3. Запустіть гру.</v:String>
+    <v:String x:Key="4. Play a game on fast mod.">4. Создайте лоббі с бистрим режимом.</v:String>
+    <v:String x:Key="5. Wait 2 minutes and resign (the winner will receive the XP).">5. Зачекайте 2 хвилини і здайтеся (переможець отримає XP).</v:String>
+    <v:String x:Key="6. Close the game.">6. Закрийте гру.</v:String>
+    <v:String x:Key="7. Disable mod.">7. Вимкніть мод.</v:String>
+    <v:String x:Key="8. Done!">8. Готово!</v:String>
+</ResourceDictionary>

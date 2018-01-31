@@ -368,7 +368,9 @@ namespace MultiTools
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            Paths.OpenESOA();
+            //Paths.OpenESOA();
+            Process.Start("http://xakops.pythonanywhere.com/");
+
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -2237,27 +2239,47 @@ namespace MultiTools
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            App.Language = new CultureInfo("ru-RU");
+            try
+            {
+                App.Language = new CultureInfo("ru-RU");
+            }
+            catch { }
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            App.Language = new CultureInfo("en-US");
+            try
+            {
+                App.Language = new CultureInfo("en-US");
+            }
+            catch { }
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
-            App.Language = new CultureInfo("uk-UA");
+            try
+            {
+                App.Language = new CultureInfo("uk-UA");
+            }
+            catch { }
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
-            App.Language = new CultureInfo("fr-FR");
+            try
+            {
+                App.Language = new CultureInfo("fr-FR");
+            }
+            catch { }
         }
 
         private void Button_Click_9(object sender, RoutedEventArgs e)
         {
-            App.Language = new CultureInfo("de-DE");
+            try
+            {
+                App.Language = new CultureInfo("de-DE");
+            }
+            catch { }
         }
 
     }

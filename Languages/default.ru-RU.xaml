@@ -3,7 +3,8 @@
                     xmlns:v="clr-namespace:System;assembly=mscorlib"
                     xmlns:local="clr-namespace:MultiTools.Languages">
     <v:String x:Key="TitleMods">MultiTools - Модификации</v:String>
-    <v:String x:Key="Switcher">Переключатель локализации игры</v:String>
+    <v:String x:Key="Switcher">Локализация игры</v:String>
+    <v:String x:Key="Projects">Другие проекты</v:String>
     <v:String x:Key="Mods">Модификации</v:String>
     <v:String x:Key="Exit">Выход</v:String>
     <v:String x:Key="jpELO">Нажмите для проверки ELO</v:String>

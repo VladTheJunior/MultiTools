@@ -1300,7 +1300,7 @@
                             <Label
                                 Grid.Row="5"
                                 Grid.Column="4"
-                                Grid.ColumnSpan="5"
+                                Grid.ColumnSpan="3"
                                 Padding="10,5,190,5"
                                 Content="{DynamicResource Zoom}"
                                 FontFamily="Monotype Corsiva"
@@ -1347,7 +1347,7 @@
                             </Button>
                             <Button x:Name="bEng"       
                 ToolTip="English"
-                                    Margin="0,0,5,0"
+                                    
                                    Grid.Row="6"
                                
                                 Grid.Column="1" Click="bEng_Click"
@@ -1385,8 +1385,8 @@
                             </Button>
                             <Button x:Name="bGer" 
                 ToolTip="Deutsch"
-                                 Grid.Row="6"
-                             Grid.Column="2"
+                                 Grid.Row="7"
+                             Grid.Column="0"
                                 Margin="0,0,5,0" Click="bGer_Click"
              >
                                 <Button.Template>
@@ -1422,9 +1422,9 @@
                             </Button>
                             <Button x:Name="bFra"      
                 ToolTip="Français"
-                                    Grid.Row="6"
+                                    Grid.Row="7"
                                
-                                Grid.Column="3" Click="bFra_Click"
+                                Grid.Column="1" Click="bFra_Click"
              >
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">

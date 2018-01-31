@@ -4,6 +4,7 @@
                     xmlns:local="clr-namespace:MultiTools.Languages">
     <v:String x:Key="TitleMods">MultiTools - Veränderungen</v:String>
     <v:String x:Key="Switcher">Spiellokalisierung</v:String>
+    <v:String x:Key="Projects">Weitere Projekte</v:String>
     <v:String x:Key="Mods">Veränderungen</v:String>
     <v:String x:Key="Exit">Beenden</v:String>
     <v:String x:Key="jpELO">Klick um ELO zu sehen</v:String>

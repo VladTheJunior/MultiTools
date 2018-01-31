@@ -585,274 +585,322 @@ namespace MultiTools
 
         private void miMsecs_Checked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
                 {
-                    bool NotExist = true;
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
                     {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        NotExist = S.IndexOf("showMilliseconds") == -1;
-                    }
-                    if (NotExist)
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
-                            w.WriteLine("showMilliseconds");
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("showMilliseconds") == -1;
                         }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("showMilliseconds");
+                            }
+                    }
                 }
             }
+            catch { }
         }
 
         private void miMsecs_Unchecked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        S.Remove("showMilliseconds");
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("showMilliseconds");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
             }
+            catch { }
         }
 
         private void miIntro_Checked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
                 {
-                    bool NotExist = true;
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
                     {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        NotExist = S.IndexOf("noIntroCinematics") == -1;
-                    }
-                    if (NotExist)
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
-                            w.WriteLine("noIntroCinematics");
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("noIntroCinematics") == -1;
                         }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("noIntroCinematics");
+                            }
+                    }
                 }
             }
+            catch { }
         }
 
         private void miIntro_Unchecked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        S.Remove("noIntroCinematics");
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("noIntroCinematics");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
             }
+            catch { }
         }
 
         private void miFPS_Checked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
                 {
-                    bool NotExist = true;
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
                     {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        NotExist = S.IndexOf("showFPS") == -1;
-                    }
-                    if (NotExist)
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
-                            w.WriteLine("showFPS");
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("showFPS") == -1;
                         }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("showFPS");
+                            }
+                    }
                 }
             }
+            catch { }
         }
 
         private void miFPS_Unchecked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        S.Remove("showFPS");
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("showFPS");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
             }
+            catch { }
         }
 
         private void miRotator_Checked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
                 {
-                    bool NotExist = true;
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
                     {
-                        string M = File.ReadAllText(Path.Combine(P.ToString(), "Startup", "user.con"));
-                        NotExist = !M.Contains("uiWheelRotatePlacedUnit");
-                    }
-                    if (NotExist)
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.con"), true))
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
                         {
-                            w.WriteLine("map(\"mousez\", \"building\", \"uiWheelRotatePlacedUnit\")");
+                            string M = File.ReadAllText(Path.Combine(P.ToString(), "Startup", "user.con"));
+                            NotExist = !M.Contains("uiWheelRotatePlacedUnit");
                         }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.con"), true))
+                            {
+                                w.WriteLine("map(\"mousez\", \"building\", \"uiWheelRotatePlacedUnit\")");
+                            }
+                    }
                 }
             }
+            catch { }
         }
 
         private void miRotator_Unchecked(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.con")).ToList();
-                        S.RemoveAt(S.FindIndex(x => x.EndsWith("uiWheelRotatePlacedUnit\")")));
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.con"), S.ToArray());
-                    }
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.con")).ToList();
+                            S.RemoveAt(S.FindIndex(x => x.EndsWith("uiWheelRotatePlacedUnit\")")));
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.con"), S.ToArray());
+                        }
+                }
             }
+            catch { }
         }
 
 
         private void udMax_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
-                        if (z1 >= 0)
-                            S.RemoveAt(z1);
-                        S.Add("maxZoom=" + Math.Round(udMax.Value).ToString());
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
-                    else
-                    {
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
-                            w.WriteLine("maxZoom=" + Math.Round(udMax.Value).ToString());
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
+                            if (z1 >= 0)
+                                S.RemoveAt(z1);
+                            S.Add("maxZoom=" + Math.Round(udMax.Value).ToString());
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
                         }
-                    }
+                        else
+                        {
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("maxZoom=" + Math.Round(udMax.Value).ToString());
+                            }
+                        }
 
+                }
             }
+            catch { }
         }
 
         private void udNorm_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
-                        if (z2 >= 0)
-                            S.RemoveAt(z2);
-                        S.Add("normalZoom=" + Math.Round(udNorm.Value).ToString());
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
-                    else
-                    {
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
-                            w.WriteLine("normalZoom=" + Math.Round(udMax.Value).ToString());
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
+                            if (z2 >= 0)
+                                S.RemoveAt(z2);
+                            S.Add("normalZoom=" + Math.Round(udNorm.Value).ToString());
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
                         }
-                    }
+                        else
+                        {
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("normalZoom=" + Math.Round(udMax.Value).ToString());
+                            }
+                        }
 
+                }
             }
+            catch { }
         }
 
         private void udMin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
-                        if (z3 >= 0)
-                            S.RemoveAt(z3);
-                        S.Add("minZoom=" + Math.Round(udMin.Value).ToString());
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
-                    else
-                    {
-                        using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
-                            w.WriteLine("minZoom=" + Math.Round(udMax.Value).ToString());
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
+                            if (z3 >= 0)
+                                S.RemoveAt(z3);
+                            S.Add("minZoom=" + Math.Round(udMin.Value).ToString());
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
                         }
-                    }
+                        else
+                        {
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("minZoom=" + Math.Round(udMax.Value).ToString());
+                            }
+                        }
 
+                }
             }
+            catch { }
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-                if (P != null)
-                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                    {
-                        udMax.ValueChanged -= udMax_ValueChanged;
-                        udMin.ValueChanged -= udMin_ValueChanged;
-                        udNorm.ValueChanged -= udNorm_ValueChanged;
-                        udMax.Value = 60;
-                        udNorm.Value = 50;
-                        udMin.Value = 29;
-                        udMax.ValueChanged += udMax_ValueChanged;
-                        udMin.ValueChanged += udMin_ValueChanged;
-                        udNorm.ValueChanged += udNorm_ValueChanged;
-                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                        int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
-                        if (z1 >= 0)
-                            S.RemoveAt(z1);
-                        int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
-                        if (z2 >= 0)
-                            S.RemoveAt(z2);
-                        int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
-                        if (z3 >= 0)
-                            S.RemoveAt(z3);
-                        File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                    }
-                    else
-                    {
-                        udMax.ValueChanged -= udMax_ValueChanged;
-                        udMin.ValueChanged -= udMin_ValueChanged;
-                        udNorm.ValueChanged -= udNorm_ValueChanged;
-                        udMax.Value = 60;
-                        udNorm.Value = 50;
-                        udMin.Value = 29;
-                        udMax.ValueChanged += udMax_ValueChanged;
-                        udMin.ValueChanged += udMin_ValueChanged;
-                        udNorm.ValueChanged += udNorm_ValueChanged;
-                    }
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            udMax.ValueChanged -= udMax_ValueChanged;
+                            udMin.ValueChanged -= udMin_ValueChanged;
+                            udNorm.ValueChanged -= udNorm_ValueChanged;
+                            udMax.Value = 60;
+                            udNorm.Value = 50;
+                            udMin.Value = 29;
+                            udMax.ValueChanged += udMax_ValueChanged;
+                            udMin.ValueChanged += udMin_ValueChanged;
+                            udNorm.ValueChanged += udNorm_ValueChanged;
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
+                            if (z1 >= 0)
+                                S.RemoveAt(z1);
+                            int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
+                            if (z2 >= 0)
+                                S.RemoveAt(z2);
+                            int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
+                            if (z3 >= 0)
+                                S.RemoveAt(z3);
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                        else
+                        {
+                            udMax.ValueChanged -= udMax_ValueChanged;
+                            udMin.ValueChanged -= udMin_ValueChanged;
+                            udNorm.ValueChanged -= udNorm_ValueChanged;
+                            udMax.Value = 60;
+                            udNorm.Value = 50;
+                            udMin.Value = 29;
+                            udMax.ValueChanged += udMax_ValueChanged;
+                            udMin.ValueChanged += udMin_ValueChanged;
+                            udNorm.ValueChanged += udNorm_ValueChanged;
+                        }
 
+                }
             }
+            catch { }
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -889,95 +937,143 @@ namespace MultiTools
 
         private void colorList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            P1 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P1 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            P2 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P2 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
         {
-            P3 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P3 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_3(object sender, SelectionChangedEventArgs e)
         {
-            P4 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P4 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_4(object sender, SelectionChangedEventArgs e)
         {
-            P5 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P5 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_5(object sender, SelectionChangedEventArgs e)
         {
-            P6 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P6 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_6(object sender, SelectionChangedEventArgs e)
         {
-            P7 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P7 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_7(object sender, SelectionChangedEventArgs e)
         {
-            P8 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P8 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_8(object sender, SelectionChangedEventArgs e)
         {
-            P9 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P9 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_9(object sender, SelectionChangedEventArgs e)
         {
-            P10 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P10 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void colorList_SelectionChanged_10(object sender, SelectionChangedEventArgs e)
         {
-            P11 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
-            SaveXML();
+            try
+            {
+                P11 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            using (RegistryKey R = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+            try
             {
-                object P = R.GetValue("setuppath");
-                if (P != null)
+                using (RegistryKey R = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                 {
-                    if (File.Exists(Path.Combine(P.ToString(), "Data", "playercolors.xml")))
-                        File.Delete(Path.Combine(P.ToString(), "Data", "playercolors.xml"));
+                    object P = R.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        if (File.Exists(Path.Combine(P.ToString(), "Data", "playercolors.xml")))
+                            File.Delete(Path.Combine(P.ToString(), "Data", "playercolors.xml"));
+                    }
                 }
+
+
+                P1.Color = Color.FromRgb(45, 45, 245);
+                P2.Color = Color.FromRgb(210, 40, 40);
+                P3.Color = Color.FromRgb(215, 215, 30);
+                P4.Color = Color.FromRgb(150, 15, 250);
+                P5.Color = Color.FromRgb(15, 210, 80);
+                P6.Color = Color.FromRgb(255, 150, 5);
+                P7.Color = Color.FromRgb(150, 255, 240);
+                P8.Color = Color.FromRgb(255, 190, 255);
+
+                P9.Color = Color.FromRgb(75, 75, 230);
+                P10.Color = Color.FromRgb(215, 215, 30);
+                P11.Color = Color.FromRgb(230, 40, 40);
             }
-
-
-            P1.Color = Color.FromRgb(45, 45, 245);
-            P2.Color = Color.FromRgb(210, 40, 40);
-            P3.Color = Color.FromRgb(215, 215, 30);
-            P4.Color = Color.FromRgb(150, 15, 250);
-            P5.Color = Color.FromRgb(15, 210, 80);
-            P6.Color = Color.FromRgb(255, 150, 5);
-            P7.Color = Color.FromRgb(150, 255, 240);
-            P8.Color = Color.FromRgb(255, 190, 255);
-
-            P9.Color = Color.FromRgb(75, 75, 230);
-            P10.Color = Color.FromRgb(215, 215, 30);
-            P11.Color = Color.FromRgb(230, 40, 40);
+            catch { }
 
         }
 
@@ -1297,93 +1393,100 @@ namespace MultiTools
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml")))
-                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile3.zip")))
-                {
-                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+            try
+            {
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile3.zip")))
                     {
-                        if (x.Name == "")
-                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName)));
-                        else
-                            x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName), true);
-                    }));
-                }
-            if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml")))
-                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile2.zip")))
-                {
-                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile2.zip")))
                     {
-                        if (x.Name == "")
-                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName)));
-                        else
-                            x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName), true);
-                    }));
-                }
-            if (!File.Exists(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml")))
-                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile.zip")))
-                {
-                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile.zip")))
                     {
-                        if (x.Name == "")
-                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName)));
-                        else
-                            x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName), true);
-                    }));
-                }
-            Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml"));
-            Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml"));
-            Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml"));
-
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName), true);
+                        }));
+                    }
+                Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml"));
+                Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml"));
+                Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml"));
+            }
+            catch { }
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.HomeCities.HC.zip")))
+            try
             {
-                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.HomeCities.HC.zip")))
                 {
-                    if (x.Name == "")
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetHCDirectory(), x.FullName)));
-                    else
-                        x.ExtractToFile(Path.Combine(Paths.GetHCDirectory(), x.FullName), true);
-                }));
+                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                    {
+                        if (x.Name == "")
+                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetHCDirectory(), x.FullName)));
+                        else
+                            x.ExtractToFile(Path.Combine(Paths.GetHCDirectory(), x.FullName), true);
+                    }));
+                }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile3.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile2.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName), true);
+                        }));
+                    }
+                Paths.SetHC(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml"));
+                Paths.SetHC(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml"));
+                Paths.SetHC(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml"));
             }
-            if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml")))
-                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile3.zip")))
-                {
-                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
-                    {
-                        if (x.Name == "")
-                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName)));
-                        else
-                            x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName), true);
-                    }));
-                }
-            if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml")))
-                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile2.zip")))
-                {
-                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
-                    {
-                        if (x.Name == "")
-                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName)));
-                        else
-                            x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName), true);
-                    }));
-                }
-            if (!File.Exists(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml")))
-                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile.zip")))
-                {
-                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
-                    {
-                        if (x.Name == "")
-                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName)));
-                        else
-                            x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName), true);
-                    }));
-                }
-            Paths.SetHC(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml"));
-            Paths.SetHC(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml"));
-            Paths.SetHC(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml"));
+            catch { }
         }
 
         private async void RadioButton_Checked_4(object sender, RoutedEventArgs e)
@@ -1397,25 +1500,29 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Formal436 BT"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Formal436 BT"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
                         }
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1438,26 +1545,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Plainot"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Plainot"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Plainot");
                         }
-                        Paths.ChangeFont("Plainot");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1480,26 +1591,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Margot"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Margot"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Margot");
                         }
-                        Paths.ChangeFont("Margot");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1522,26 +1637,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("LugaType"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("LugaType"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("LugaType");
                         }
-                        Paths.ChangeFont("LugaType");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1564,26 +1683,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Kramola"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Kramola"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Kramola");
                         }
-                        Paths.ChangeFont("Kramola");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1606,26 +1729,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Candara Italic"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Candara Italic"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Candara Italic");
                         }
-                        Paths.ChangeFont("Candara Italic");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1648,26 +1775,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Cambria Italic"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Cambria Italic"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Cambria Italic");
                         }
-                        Paths.ChangeFont("Cambria Italic");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1690,26 +1821,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Basil Regular"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Basil Regular"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Basil Regular");
                         }
-                        Paths.ChangeFont("Basil Regular");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1732,26 +1867,30 @@ namespace MultiTools
             rbF7.IsEnabled = false;
             rbF8.IsEnabled = false;
             rbF9.IsEnabled = false;
-            if (!Paths.IsFontInstalled("Academy"))
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
+            try
+            {
+                if (!Paths.IsFontInstalled("Academy"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                     {
-                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
                         {
-                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
                             {
-                                if (x.Name == "")
-                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
-                                else
-                                    x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
-                            }));
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Academy");
                         }
-                        Paths.ChangeFont("Academy");
                     }
-                }
+            }
+            catch { }
             rbF1.IsEnabled = true;
             rbF2.IsEnabled = true;
             rbF3.IsEnabled = true;
@@ -1774,6 +1913,8 @@ namespace MultiTools
             bEng.IsEnabled = false;
             bFra.IsEnabled = false;
             bGer.IsEnabled = false;
+            try
+            {
                 using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                 {
                     object P = AS.GetValue("setuppath");
@@ -1792,6 +1933,8 @@ namespace MultiTools
                         }
                     }
                 }
+            }
+            catch { }
             bRus.IsEnabled = true;
             bEng.IsEnabled = true;
             bFra.IsEnabled = true;
@@ -1804,24 +1947,28 @@ namespace MultiTools
             bEng.IsEnabled = false;
             bFra.IsEnabled = false;
             bGer.IsEnabled = false;
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                 {
-                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Eng.zip")))
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
                     {
-                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Eng.zip")))
                         {
-                            if (x.Name == "")
-                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
-                            else
-                                x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
-                        }));
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
                     }
                 }
             }
+            catch { }
             bRus.IsEnabled = true;
             bEng.IsEnabled = true;
             bFra.IsEnabled = true;
@@ -1834,24 +1981,29 @@ namespace MultiTools
             bEng.IsEnabled = false;
             bFra.IsEnabled = false;
             bGer.IsEnabled = false;
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
 
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                 {
-                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Ger.zip")))
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
                     {
-                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Ger.zip")))
                         {
-                            if (x.Name == "")
-                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
-                            else
-                                x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
-                        }));
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
                     }
                 }
             }
+            catch { }
             bRus.IsEnabled = true;
             bEng.IsEnabled = true;
             bFra.IsEnabled = true;
@@ -1864,24 +2016,28 @@ namespace MultiTools
             bEng.IsEnabled = false;
             bFra.IsEnabled = false;
             bGer.IsEnabled = false;
-            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+            try
             {
-                object P = AS.GetValue("setuppath");
-
-                if (P != null)
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
                 {
-                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.French.zip")))
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
                     {
-                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.French.zip")))
                         {
-                            if (x.Name == "")
-                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
-                            else
-                                x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
-                        }));
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
                     }
                 }
             }
+            catch { }
             bRus.IsEnabled = true;
             bEng.IsEnabled = true;
             bFra.IsEnabled = true;

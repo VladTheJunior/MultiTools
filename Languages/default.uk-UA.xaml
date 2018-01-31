@@ -4,6 +4,7 @@
                     xmlns:local="clr-namespace:MultiTools.Languages">
     <v:String x:Key="TitleMods">MultiTools - Модифікації</v:String>
     <v:String x:Key="Switcher">Перемикач локалізації гри</v:String>
+    <v:String x:Key="Projects">Інші проекти</v:String>
     <v:String x:Key="Mods">Модифікації</v:String>
     <v:String x:Key="Exit">Вихід</v:String>
     <v:String x:Key="jpELO">Натисніть для перевірки ELO</v:String>

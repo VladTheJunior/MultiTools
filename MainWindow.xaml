@@ -763,7 +763,7 @@
                                                 <Label Padding="0" Margin="330,41,0,0" Content="{Binding IP}" HorizontalAlignment="Left" Width="98" VerticalAlignment="Top" TextOptions.TextFormattingMode="Display" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FFF9CD07"/>
                                                 <Label Padding="0" Margin="415,0,0,0" Width="60" Content="{Binding Ping}" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" FontSize="18"/>
                                                 <Label Padding="0" Margin="100,5.5,0,0" Height="26" Width="232"  Content="{Binding ESO}" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF0E0D0D" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip="{DynamicResource jpELO}" MouseLeftButtonDown="Label_MouseLeftButtonDown"/>
-                                                <Label Padding="0" Height="26" Width="232" Margin="100,30,0,0" Content="{Binding PR}" HorizontalAlignment="Left" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FFF9CD07" FontSize="10"/>
+                                                <Label Padding="0" Height="26" Width="232" Margin="100,30,0,0" Content="{Binding PR}" HorizontalAlignment="Left" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FFF9CD07" FontSize="16"/>
                                                 <TextBlock Margin="480,0,0,0" Text="{Binding Combined}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16"/>
                                             </Grid>
                                         </DataTemplate>
@@ -1129,7 +1129,7 @@
                     
                         BorderThickness="0"
                         Click="Button_Click_2"
-                        Content="ESO-Assistant"
+                        Content="{DynamicResource Projects}"
                         Template="{StaticResource ButtonTemplate}" />
                 </Border>
                 <Border

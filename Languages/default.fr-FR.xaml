@@ -3,8 +3,9 @@
                     xmlns:v="clr-namespace:System;assembly=mscorlib"
                     xmlns:local="clr-namespace:MultiTools.Languages">
     <v:String x:Key="TitleMods">MultiTools - Modifications</v:String>
-    <v:String x:Key="Switcher">Game localization switch</v:String>
+    <v:String x:Key="Switcher">Emplacement du jeu</v:String>
     <v:String x:Key="Mods">Modifications</v:String>
+    <v:String x:Key="Projects">Autres projets</v:String>
     <v:String x:Key="Exit">Quitter</v:String>
     <v:String x:Key="jpELO">Cliquez pour vérifier l'ELO</v:String>
     <v:String x:Key="Larger">Plus large</v:String>

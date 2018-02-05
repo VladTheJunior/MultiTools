@@ -375,7 +375,7 @@ namespace MultiTools
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://vk.com/pages?oid=-4243069&p=%D0%9F%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%20%D0%B8%20%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B%20%D0%B8%D0%B3%D1%80%D0%BE%D0%BA%D0%B0%D0%BC");
+            Process.Start("http://eso-community.net/ladder.php");
         }
 
 
@@ -2234,7 +2234,7 @@ namespace MultiTools
         private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if ((sender as Label).Content.ToString() != "")
-                Process.Start("http://aoe3.jpcommunity.com/rating2/player?n=" + (sender as Label).Content.ToString());
+                Process.Start("http://eso-community.net/ladder.php?player=" + (sender as Label).Content.ToString());
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)

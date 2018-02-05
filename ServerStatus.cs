@@ -25,6 +25,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -64,11 +65,18 @@ namespace ESO_Assistant
 
         public static async Task<bool> checkESOAsync()
         {
-            string json = await HttpGetAsync("http://xakops.pythonanywhere.com/eso");
+            //string json = await HttpGetAsync("http://xakops.pythonanywhere.com/eso");
             try
             {
-                ESO eso = JsonConvert.DeserializeObject<ESO>(json);
-                return eso.status;
+                //   ESO eso = JsonConvert.DeserializeObject<ESO>(json);
+                //   return eso.status;
+                using (var client = new TcpClient())
+                {
+
+                    var a = client.ConnectAsync("connection.agecommunity.com", 2300);
+                    await a;
+                    return client.Connected;
+                }
             }
 
             catch

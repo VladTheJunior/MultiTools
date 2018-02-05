@@ -1117,7 +1117,7 @@
                         Width="192"
                         
                         Click="Button_Click_3"
-                        Content="Помощь и советы"
+                        Content="ESOC ELO Ladder"
                         Template="{StaticResource ButtonTemplate}" />
                 </Border>
                 <Border

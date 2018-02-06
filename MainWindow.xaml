@@ -348,7 +348,7 @@
             
             <Button       
                 ToolTip="Русский"
-            Margin="512,0,10,0"
+            Margin="494,0,10,0"
             Padding="0"
             BorderThickness="0" VerticalAlignment="Top" Click="Button_Click_5" >
                 <Button.Template>
@@ -519,7 +519,7 @@
             <Image
                 Height="23"
                 HorizontalAlignment="Right"
-                Source="Images/Copyright.png" />
+                Source="Images/Copyright.png"  />
         </DockPanel>
         <DockPanel
             Grid.Row="1"

@@ -1,33 +1,33 @@
 ﻿using ESO_Assistant;
 using ESO_Assistant.Classes;
-using MySql.Data.MySqlClient;
+using Microsoft.Win32;
 using Newtonsoft.Json;
-using PacketDotNet;
-using Renci.SshNet;
-using SharpPcap;
+
 using System;
-//using NetFwTypeLib;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Media;
 using System.Net;
 using System.Net.Http;
-using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Xml.Serialization;
+using System.Xml;
 
 namespace MultiTools
 {
@@ -36,6 +36,32 @@ namespace MultiTools
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+        public class ActionCommand : ICommand
+        {
+            private readonly Action _action;
+
+            public ActionCommand(Action action)
+            {
+                _action = action;
+            }
+
+            public void Execute(object parameter)
+            {
+                _action();
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return true;
+            }
+
+            public event EventHandler CanExecuteChanged;
+        }
+
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void NotifyPropertyChanged(string propName)
@@ -53,8 +79,7 @@ namespace MultiTools
             {
                 if (value != FGamesOpen && value)
                 {
-                    if (ModesWindow.IsVisible)
-                        ModesWindow.Hide();
+                    gSettings.Visibility = Visibility.Hidden;
                 }
                 FGamesOpen = value;
                 NotifyPropertyChanged("GamesOpen");
@@ -174,10 +199,7 @@ namespace MultiTools
             }
         }
         SoundPlayer Click = new SoundPlayer(Application.GetResourceStream(new Uri("Click.wav", UriKind.Relative)).Stream);
-        SoundPlayer Sound1 = new SoundPlayer(Application.GetResourceStream(new Uri("music.wav", UriKind.Relative)).Stream);
 
-
-        Modes ModesWindow = new Modes();
 
         async Task<string> HttpGetAsync(string URI)
         {
@@ -265,12 +287,12 @@ namespace MultiTools
         };
 
 
-        private DispatcherTimer SQLTimer = new DispatcherTimer()
+        /*private DispatcherTimer SQLTimer = new DispatcherTimer()
         {
             Interval = TimeSpan.FromMilliseconds(30000)
-        };
+        };*/
 
-        private void SQLTimer_Tick(object sender, EventArgs e)
+        /*private void SQLTimer_Tick(object sender, EventArgs e)
         {
             SQLTimer.Stop();
             Thread myThread = new Thread(async delegate ()
@@ -280,7 +302,7 @@ namespace MultiTools
             });
             myThread.Start();
             SQLTimer.Start();
-        }
+        }*/
 
 
         private void ESOTimer_Tick(object sender, EventArgs e)
@@ -360,22 +382,23 @@ namespace MultiTools
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (!ModesWindow.IsVisible)
-                ModesWindow.Show();
-            else
-                ModesWindow.Activate();
+            rbDefault.IsChecked = true;
+            gMods.Visibility = Visibility.Collapsed;
+            gGraphics.Visibility = Visibility.Collapsed;
+            gSettings.Visibility = Visibility.Visible;
+            bFriends.IsEnabled = false;
+            bStreams.IsEnabled = false;
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            //Paths.OpenESOA();
-            Process.Start("http://xakops.pythonanywhere.com/");
+            gStreams.Visibility = Visibility.Visible;
 
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            Process.Start("http://eso-community.net/ladder.php");
+            gFriends.Visibility = Visibility.Visible;
         }
 
 
@@ -408,18 +431,13 @@ namespace MultiTools
 
         private void Button_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Click.Play();
+            if (Audio.IsChecked == false)
+                Click.Play();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            try
-            {
-                captureDevice.Close();
-            }
-            catch
-            {
-            }
+
         }
 
         private void Image_MouseLeftButtonDown_4(object sender, MouseButtonEventArgs e)
@@ -430,7 +448,7 @@ namespace MultiTools
 
         class Stat
         {
-            public string FormatPR(string PR)
+            public static string FormatPR(string PR)
             {
                 if (int.TryParse(PR, out int Rating))
                 {
@@ -473,1298 +491,18 @@ namespace MultiTools
                 return PR;
             }
 
-            public string GetAvatarFromID(string ID)
-            {
-                if (ID == "8bf82e325d864aab8fb6bc227a09f226")
-                    return "pack://application:,,,/Avatars/avatar_tier1_01-sm.(0,0,4,1).jpg";
 
-                if (ID == "3cb647657009445fbc06132c79baabab")
-                    return "pack://application:,,,/Avatars/avatar_tier1_02-sm.(0,0,4,1).jpg";
-
-                if (ID == "4f33c4c6640a4dfcab6475cbcd94403f")
-                    return "pack://application:,,,/Avatars/avatar_tier1_03-sm.(0,0,4,1).jpg";
-
-                if (ID == "718e486223a842c2ab6fd35307ef02b1")
-                    return "pack://application:,,,/Avatars/avatar_tier1_04-sm.(0,0,4,1).jpg";
-
-                if (ID == "07c2cb652a1d4893b9a2d99f958e6d31")
-                    return "pack://application:,,,/Avatars/avatar_tier1_05-sm.(0,0,4,1).jpg";
-
-                if (ID == "ec538ed0aa954cffb66e1e52d0ef3d64")
-                    return "pack://application:,,,/Avatars/avatar_tier1_06-sm.(0,0,4,1).jpg";
-
-                if (ID == "0218ef8aad7d4b83aa94b7d3659e2337")
-                    return "pack://application:,,,/Avatars/avatar_tier1_07-sm.(0,0,4,1).jpg";
-
-                if (ID == "96354d77298944bda2d2366259ed706e")
-                    return "pack://application:,,,/Avatars/avatar_tier1_08-sm.(0,0,4,1).jpg";
-
-                if (ID == "7037F010793C44699ABDA6EF6E6CF895")
-                    return "pack://application:,,,/Avatars/avatar_tier1_09-sm.(0,0,4,1).jpg";
-
-                if (ID == "0A6F27904D9E46e8A83B8651F2C084EE")
-                    return "pack://application:,,,/Avatars/avatar_tier1_10-sm.(0,0,4,1).jpg";
-
-                if (ID == "1ED65B1AB7124f998DC32F921284B2C5")
-                    return "pack://application:,,,/Avatars/avatar_tier1_11-sm.(0,0,4,1).jpg";
-
-                if (ID == "91E0744C321E4ebcB1F2BB61864C0ECC")
-                    return "pack://application:,,,/Avatars/avatar_tier1_12-sm.(0,0,4,1).jpg";
-
-                if (ID == "A632EBB2CC2940099F60C79CE82A3782")
-                    return "pack://application:,,,/Avatars/avatar_tier1_13-sm.(0,0,4,1).jpg";
-
-                if (ID == "6BF1CDA1CB9E4c53BC6B79E28899F117")
-                    return "pack://application:,,,/Avatars/avatar_tier1_14-sm.(0,0,4,1).jpg";
-
-                if (ID == "4EDC2767117E4b058CB84EEC3108BCCE")
-                    return "pack://application:,,,/Avatars/avatar_tier1_15-sm.(0,0,4,1).jpg";
-
-                if (ID == "571A6711431541158F911C607CBE4F64")
-                    return "pack://application:,,,/Avatars/avatar_tier1_16-sm.(0,0,4,1).jpg";
-
-                if (ID == "6983279CC5FA496f9128E3CD50BA48F7")
-                    return "pack://application:,,,/Avatars/avatar_tier1_17-sm.(0,0,4,1).jpg";
-
-                if (ID == "69060A7953A847d5AC1B310CC796C4EC")
-                    return "pack://application:,,,/Avatars/avatar_tier1_18-sm.(0,0,4,1).jpg";
-
-                if (ID == "53A2885492E34794854C5DEF656A2242")
-                    return "pack://application:,,,/Avatars/avatar_tier1_19-sm.(0,0,4,1).jpg";
-
-                if (ID == "E0973385606549fe80D8749AE138860E")
-                    return "pack://application:,,,/Avatars/avatar_tier1_20-sm.(0,0,4,1).jpg";
-
-                if (ID == "453F555167B04d1cBD4F7524BB3D3DA8")
-                    return "pack://application:,,,/Avatars/avatar_tier2_01-sm.(0,0,4,1).jpg";
-
-                if (ID == "E58738AC49B244308348AEF89F7A1D74")
-                    return "pack://application:,,,/Avatars/avatar_tier2_02-sm.(0,0,4,1).jpg";
-
-                if (ID == "F4360548A23E47a7B99655034A142AB7")
-                    return "pack://application:,,,/Avatars/avatar_tier2_03-sm.(0,0,4,1).jpg";
-
-                if (ID == "393D02B47D2F493fBD74169B5AD46782")
-                    return "pack://application:,,,/Avatars/avatar_tier2_04-sm.(0,0,4,1).jpg";
-
-                if (ID == "117BBDB1A97F4909B063B9CFD6AEF5C0")
-                    return "pack://application:,,,/Avatars/avatar_tier2_05-sm.(0,0,4,1).jpg";
-
-                if (ID == "2F02B13EF0414c5cA65985FF6124F617")
-                    return "pack://application:,,,/Avatars/avatar_tier2_06-sm.(0,0,4,1).jpg";
-
-                if (ID == "E642DA47766D4c76B2ACE88293D7C5E7")
-                    return "pack://application:,,,/Avatars/avatar_tier2_07-sm.(0,0,4,1).jpg";
-
-                if (ID == "99919C71EE364f96970C92BA01C3BCFD")
-                    return "pack://application:,,,/Avatars/avatar_tier2_08-sm.(0,0,4,1).jpg";
-
-                if (ID == "1E1354A9EC4C4873A204AB80FEB06DC2")
-                    return "pack://application:,,,/Avatars/avatar_tier2_09-sm.(0,0,4,1).jpg";
-
-                if (ID == "2D4E8F6255F24af882646CF6DB059A8E")
-                    return "pack://application:,,,/Avatars/avatar_tier2_10-sm.(0,0,4,1).jpg";
-
-                if (ID == "2808F16EFAE7425cB6EF551F69CE747A")
-                    return "pack://application:,,,/Avatars/avatar_tier2_11-sm.(0,0,4,1).jpg";
-
-                if (ID == "DAB93CF1BB4F4ca9908500C56967F121")
-                    return "pack://application:,,,/Avatars/avatar_tier2_12-sm.(0,0,4,1).jpg";
-
-                if (ID == "203969335E0048da911714FC6841D042")
-                    return "pack://application:,,,/Avatars/avatar_tier2_13-sm.(0,0,4,1).jpg";
-
-                if (ID == "92D802EC707C4ca3B059347FA4770971")
-                    return "pack://application:,,,/Avatars/avatar_tier2_14-sm.(0,0,4,1).jpg";
-
-                if (ID == "FFC3672624084b62BDF579D129C1357C")
-                    return "pack://application:,,,/Avatars/avatar_tier2_15-sm.(0,0,4,1).jpg";
-
-                if (ID == "555564B6D5984f1aB1D7052E8EB03F3B")
-                    return "pack://application:,,,/Avatars/avatar_tier2_16-sm.(0,0,4,1).jpg";
-
-                if (ID == "9DEB1EA8A4AF44d1932462FB086F4589")
-                    return "pack://application:,,,/Avatars/avatar_tier2_17-sm.(0,0,4,1).jpg";
-
-                if (ID == "65085E77B9F34e17926D060A71ECDDEA")
-                    return "pack://application:,,,/Avatars/avatar_tier2_18-sm.(0,0,4,1).jpg";
-
-                if (ID == "A4E28F5B734F4bd6BC7B0BEDFCB794B1")
-                    return "pack://application:,,,/Avatars/avatar_tier2_19-sm.(0,0,4,1).jpg";
-
-                if (ID == "7775DA3F0B9C4f99915A0D3A03C3C47E")
-                    return "pack://application:,,,/Avatars/avatar_tier2_20-sm.(0,0,4,1).jpg";
-
-                if (ID == "D78B62A673704fe4B728CBA8EECCDB39")
-                    return "pack://application:,,,/Avatars/avatar_tier2_21-sm.(0,0,4,1).jpg";
-
-                if (ID == "CB9614DDEC584f13B316A7374DAAC8BC")
-                    return "pack://application:,,,/Avatars/avatar_tier2_22-sm.(0,0,4,1).jpg";
-
-                if (ID == "056E7483851847cb80BE385D7B1CC73E")
-                    return "pack://application:,,,/Avatars/avatar_tier2_23-sm.(0,0,4,1).jpg";
-
-                if (ID == "6F41B230195B4a53AEA974E0054F8381")
-                    return "pack://application:,,,/Avatars/avatar_tier2_24-sm.(0,0,4,1).jpg";
-
-                if (ID == "1FE3245B419D4b9e8EFBE3C554FEE608")
-                    return "pack://application:,,,/Avatars/avatar_tier2_25-sm.(0,0,4,1).jpg";
-
-                if (ID == "DD335A1A31B8491aAD29DC5AA8F300EA")
-                    return "pack://application:,,,/Avatars/avatar_tier2_26-sm.(0,0,4,1).jpg";
-
-                if (ID == "883FA8D0B2AE42aa988DF45CF045D203")
-                    return "pack://application:,,,/Avatars/avatar_tier3_01-sm.(0,0,4,1).jpg";
-
-                if (ID == "8816CF4DDAEA43bbB25B43BD80B0B4E3")
-                    return "pack://application:,,,/Avatars/avatar_tier3_02-sm.(0,0,4,1).jpg";
-
-                if (ID == "EB0DA7CD545B41c1ADB5217DFCD7A1A4")
-                    return "pack://application:,,,/Avatars/avatar_tier3_03-sm.(0,0,4,1).jpg";
-
-                if (ID == "5E89742837574e1195251E096C72975F")
-                    return "pack://application:,,,/Avatars/avatar_tier3_04-sm.(0,0,4,1).jpg";
-
-                if (ID == "B3780CE346994f178167C03F21D5AF27")
-                    return "pack://application:,,,/Avatars/avatar_tier3_05-sm.(0,0,4,1).jpg";
-
-                if (ID == "1DB54546B3474921B875743869FC7E72")
-                    return "pack://application:,,,/Avatars/avatar_tier3_06-sm.(0,0,4,1).jpg";
-
-                if (ID == "49ACAD53D85844eb97BB701D31290BA4")
-                    return "pack://application:,,,/Avatars/avatar_tier3_07-sm.(0,0,4,1).jpg";
-
-                if (ID == "DF66A29A174140c5AED343770399A36D")
-                    return "pack://application:,,,/Avatars/avatar_tier3_08-sm.(0,0,4,1).jpg";
-
-                if (ID == "AD476EAE4798422a9DB2CD58BC192D2E")
-                    return "pack://application:,,,/Avatars/avatar_tier3_09-sm.(0,0,4,1).jpg";
-
-                if (ID == "2695D251FEAC43a88C8DEB33F446DE01")
-                    return "pack://application:,,,/Avatars/avatar_tier3_10-sm.(0,0,4,1).jpg";
-
-                if (ID == "23BD8CB8AADD4a1bB798D18F1AE8D2B5")
-                    return "pack://application:,,,/Avatars/avatar_tier3_11-sm.(0,0,4,1).jpg";
-
-                if (ID == "29DCE1286B0B4b31A03D5EF92A333958")
-                    return "pack://application:,,,/Avatars/avatar_tier3_12-sm.(0,0,4,1).jpg";
-
-                if (ID == "C4F44F57D68C4e338BC1848364A474FD")
-                    return "pack://application:,,,/Avatars/avatar_tier3_13-sm.(0,0,4,1).jpg";
-
-                if (ID == "A4C0A7AB7C7041d5B6680997A33A071F")
-                    return "pack://application:,,,/Avatars/avatar_tier3_14-sm.(0,0,4,1).jpg";
-
-                if (ID == "8F43A431AF48419080358B97BE9F9E40")
-                    return "pack://application:,,,/Avatars/avatar_tier3_15-sm.(0,0,4,1).jpg";
-
-                if (ID == "494F56E8C3B341a596D8FB15E18A654B")
-                    return "pack://application:,,,/Avatars/avatar_tier3_16-sm.(0,0,4,1).jpg";
-
-                if (ID == "502BE28D06EF41379C5F5635820B6929")
-                    return "pack://application:,,,/Avatars/avatar_tier3_17-sm.(0,0,4,1).jpg";
-
-                if (ID == "CC3C8BEEC9054a20B1665CADE1D4089A")
-                    return "pack://application:,,,/Avatars/avatar_tier3_18-sm.(0,0,4,1).jpg";
-
-                if (ID == "A9199968CDBB4f338687FA43AE943264")
-                    return "pack://application:,,,/Avatars/avatar_tier3_19-sm.(0,0,4,1).jpg";
-
-                if (ID == "BCF28F8B25BE4d17850920EE23EF0BD6")
-                    return "pack://application:,,,/Avatars/avatar_tier3_20-sm.(0,0,4,1).jpg";
-
-                if (ID == "30BE325A2D4B4fd0B38A69DF0F253E27")
-                    return "pack://application:,,,/Avatars/avatar_tier3_21-sm.(0,0,4,1).jpg";
-
-                if (ID == "E888B33E303249419B0795F4AE67AB45")
-                    return "pack://application:,,,/Avatars/avatar_tier3_22-sm.(0,0,4,1).jpg";
-
-                if (ID == "987EB6A563774309A5DD51E8F5A81C62")
-                    return "pack://application:,,,/Avatars/avatar_tier3_23-sm.(0,0,4,1).jpg";
-
-                if (ID == "B1F3C0149F294af78530E0299384A2A0")
-                    return "pack://application:,,,/Avatars/avatar_tier3_24-sm.(0,0,4,1).jpg";
-
-                if (ID == "8EAF68F6EA4440fa954C79CDA4A0301D")
-                    return "pack://application:,,,/Avatars/avatar_tier3_25-sm.(0,0,4,1).jpg";
-
-                if (ID == "50AEA6ABAB664a0d82C5BC3BFB4D6347")
-                    return "pack://application:,,,/Avatars/avatar_tier3_26-sm.(0,0,4,1).jpg";
-
-                if (ID == "C223306B63CA4a7f8B75800346F2C5D3")
-                    return "pack://application:,,,/Avatars/avatar_tier3_27-sm.(0,0,4,1).jpg";
-
-                if (ID == "AD9F800F4ACA4391A7309A03EEC0A8E9")
-                    return "pack://application:,,,/Avatars/avatar_tier3_28-sm.(0,0,4,1).jpg";
-
-                if (ID == "8C713428E6DD414cA50526A17420A140")
-                    return "pack://application:,,,/Avatars/avatar_tier3_29-sm.(0,0,4,1).jpg";
-
-                if (ID == "DBCF1E781B454187BF7A4AAC0255041F")
-                    return "pack://application:,,,/Avatars/avatar_tier3_30-sm.(0,0,4,1).jpg";
-
-                if (ID == "2a8fab35fd694ec7a6c7c14794b457eb")
-                    return "pack://application:,,,/Avatars/avatarX1-sm.(0,0,4,1).jpg";
-
-                if (ID == "29015d3b05a74a9bb3bf68dd242334a6")
-                    return "pack://application:,,,/Avatars/avatarX2-sm.(0,0,4,1).jpg";
-
-                if (ID == "e35df47c1b4e448da3840e5259ffd311")
-                    return "pack://application:,,,/Avatars/avatarX3-sm.(0,0,4,1).jpg";
-
-                if (ID == "5dd2c4059e4e4f1d960e35018ac8b26c")
-                    return "pack://application:,,,/Avatars/avatarX4-sm.(0,0,4,1).jpg";
-
-                if (ID == "9619a60f601641d19e9a33810d78c4c7")
-                    return "pack://application:,,,/Avatars/avatarX5-sm.(0,0,4,1).jpg";
-
-                if (ID == "c49e19280aa548bb9bfc6d5089f66743")
-                    return "pack://application:,,,/Avatars/avatarX6-sm.(0,0,4,1).jpg";
-
-                if (ID == "cd4be3e0b51b429787d0ad7c0ce1b0fe")
-                    return "pack://application:,,,/Avatars/avatarX7-sm.(0,0,4,1).jpg";
-
-                if (ID == "0a4349e3cb964366aea4959997f916d9")
-                    return "pack://application:,,,/Avatars/avatarX8-sm.(0,0,4,1).jpg";
-
-                if (ID == "8a844f16769a4d49b7fa6103ccc9a1f0")
-                    return "pack://application:,,,/Avatars/avatarX9-sm.(0,0,4,1).jpg";
-
-                if (ID == "f0e3b33595d044a0a1cae7b1be18c9ea")
-                    return "pack://application:,,,/Avatars/avatarX10-sm.(0,0,4,1).jpg";
-
-                if (ID == "67094b986d244e209c8c284d7b7771fe")
-                    return "pack://application:,,,/Avatars/avatarX11-sm.(0,0,4,1).jpg";
-
-                if (ID == "226c27899ff14e27af4ef306483153de")
-                    return "pack://application:,,,/Avatars/avatarX12-sm.(0,0,4,1).jpg";
-
-                if (ID == "5ec3d08b58114cc390802dee80223251")
-                    return "pack://application:,,,/Avatars/avatarX13-sm.(0,0,4,1).jpg";
-
-                if (ID == "c229aefa362a4f5393e5c1bd581912d1")
-                    return "pack://application:,,,/Avatars/avatarX14-sm.(0,0,4,1).jpg";
-
-                if (ID == "80a8865664384ec0aa1db21a3e757608")
-                    return "pack://application:,,,/Avatars/avatarX15-sm.(0,0,4,1).jpg";
-
-                if (ID == "a340e036956440e588f89eda1bb8c61d")
-                    return "pack://application:,,,/Avatars/avatarX16-sm.(0,0,4,1).jpg";
-
-                if (ID == "23da8e7ee1bd41eaa0298ada6cd5e68b")
-                    return "pack://application:,,,/Avatars/avatarX17-sm.(0,0,4,1).jpg";
-
-                if (ID == "e5f3f9ee6c0a49a9be29c12836cf4a13")
-                    return "pack://application:,,,/Avatars/avatarX18-sm.(0,0,4,1).jpg";
-
-                if (ID == "35a1e06319c74383903fcbc4798832ea")
-                    return "pack://application:,,,/Avatars/avatarX19-sm.(0,0,4,1).jpg";
-
-                if (ID == "db67c6899dd0469f89ee12dab6f90281")
-                    return "pack://application:,,,/Avatars/avatarX20-sm.(0,0,4,1).jpg";
-
-                if (ID == "eccebb63e6784ac184fb02077b4e198f")
-                    return "pack://application:,,,/Avatars/avatarX21-sm.(0,0,4,1).jpg";
-
-                if (ID == "f2939cd118bd4011986055fd040e07df")
-                    return "pack://application:,,,/Avatars/avatarX22-sm.(0,0,4,1).jpg";
-
-                if (ID == "b201d5fb4f7f43cebac5a1a518033536")
-                    return "pack://application:,,,/Avatars/avatarX23-sm.(0,0,4,1).jpg";
-
-                if (ID == "9e499080bde343438d3db1217458f835")
-                    return "pack://application:,,,/Avatars/avatarX24-sm.(0,0,4,1).jpg";
-
-                if (ID == "aa4e4ea8cb644398a3216c6c8eefcdf3")
-                    return "pack://application:,,,/Avatars/avatarX25-sm.(0,0,4,1).jpg";
-
-                if (ID == "698b74216a394aa9aaa708be5cf65b0c")
-                    return "pack://application:,,,/Avatars/avatarX26-sm.(0,0,4,1).jpg";
-
-                if (ID == "764b464793674a518e88526cf4e77801")
-                    return "pack://application:,,,/Avatars/avatarX27-sm.(0,0,4,1).jpg";
-
-                if (ID == "b34746fde9ae4d4488c8ad8a0fe3abc2")
-                    return "pack://application:,,,/Avatars/avatarX28-sm.(0,0,4,1).jpg";
-
-                if (ID == "acb93a843e95409ba4f61bfb9b56b973")
-                    return "pack://application:,,,/Avatars/avatarX29-sm.(0,0,4,1).jpg";
-
-                if (ID == "578f3a59dc7f40ba944a09d03cd6e9a9")
-                    return "pack://application:,,,/Avatars/avatarX30-sm.(0,0,4,1).jpg";
-
-                if (ID == "0efdbb5b250e434485228b006d4b1c4c")
-                    return "pack://application:,,,/Avatars/avatarX31-sm.(0,0,4,1).jpg";
-
-                if (ID == "578261e4ccc445bb8d1e488b2ea73347")
-                    return "pack://application:,,,/Avatars/avatarX32-sm.(0,0,4,1).jpg";
-
-                if (ID == "3662b9c67eac494c93d31f77bf8e66f6")
-                    return "pack://application:,,,/Avatars/avatarX33-sm.(0,0,4,1).jpg";
-
-                if (ID == "fb3d3bc888ed43a9ae7eec98c6cacba8")
-                    return "pack://application:,,,/Avatars/avatarX34-sm.(0,0,4,1).jpg";
-
-                if (ID == "faeb7020e0b9412f9293f96fbafb4eae")
-                    return "pack://application:,,,/Avatars/avatarX35-sm.(0,0,4,1).jpg";
-
-                if (ID == "90f5907eabbe40f3b20014b2a3007f12")
-                    return "pack://application:,,,/Avatars/avatarX36-sm.(0,0,4,1).jpg";
-
-                if (ID == "f2e89069a7694bd58705943bc536c0f9")
-                    return "pack://application:,,,/Avatars/avatarX37-sm.(0,0,4,1).jpg";
-
-                if (ID == "13288c65d272482fbe7d728c98b46038")
-                    return "pack://application:,,,/Avatars/avatarX38-sm.(0,0,4,1).jpg";
-
-                if (ID == "642620e4b96946b69c9df09212783de2")
-                    return "pack://application:,,,/Avatars/avatarX39-sm.(0,0,4,1).jpg";
-
-                if (ID == "8af12a39a2324c32ac860654a70cf4f1")
-                    return "pack://application:,,,/Avatars/avatarX40-sm.(0,0,4,1).jpg";
-
-                if (ID == "7b1b131582e645fdade348c0b1dbaa39")
-                    return "pack://application:,,,/Avatars/avatarX41-sm.(0,0,4,1).jpg";
-
-                if (ID == "3882cfd23ce74c3caa395f2660cbaff8")
-                    return "pack://application:,,,/Avatars/avatarX42-sm.(0,0,4,1).jpg";
-
-                if (ID == "7d18a487d85b4d739ef2cd3575390bf8")
-                    return "pack://application:,,,/Avatars/avatarX43-sm.(0,0,4,1).jpg";
-
-                if (ID == "bad6168cc6ad4283b6de10ab71a14388")
-                    return "pack://application:,,,/Avatars/avatarX44-sm.(0,0,4,1).jpg";
-
-                if (ID == "0c3f004631d84155bfe3f5ffb42c994f")
-                    return "pack://application:,,,/Avatars/avatarX45-sm.(0,0,4,1).jpg";
-
-                if (ID == "1d4ad522-6af1-415d-9bdf-6632f2f055ac")
-                    return "pack://application:,,,/Avatars/avatarY1-sm.(0,0,4,1).jpg";
-
-                if (ID == "38fcd4ff-ed1c-4462-853c-4cf641e7aa94")
-                    return "pack://application:,,,/Avatars/avatarY2-sm.(0,0,4,1).jpg";
-
-                if (ID == "ae0f56f3-b24f-4a82-afec-53911109a1e7")
-                    return "pack://application:,,,/Avatars/avatarY3-sm.(0,0,4,1).jpg";
-
-                if (ID == "e77b9abd-9ad8-4a32-87ea-632fa47cf7b0")
-                    return "pack://application:,,,/Avatars/avatarY4-sm.(0,0,4,1).jpg";
-
-                if (ID == "ee51b2d8-191a-406a-86eb-eb012c701eab")
-                    return "pack://application:,,,/Avatars/avatarY5-sm.(0,0,4,1).jpg";
-
-                if (ID == "d8c9dc25-1e5d-41db-91d7-8be58431042d")
-                    return "pack://application:,,,/Avatars/avatarY6-sm.(0,0,4,1).jpg";
-
-                if (ID == "c65aa1f7-43ec-4543-b21f-83a838d71ddb")
-                    return "pack://application:,,,/Avatars/avatarY7-sm.(0,0,4,1).jpg";
-
-                if (ID == "88e7634a-ad5f-4a1b-977d-56de1b9271cf")
-                    return "pack://application:,,,/Avatars/avatarY8-sm.(0,0,4,1).jpg";
-
-                if (ID == "7c76d9f5-c2ef-45fb-be7a-734da1371270")
-                    return "pack://application:,,,/Avatars/avatarY9-sm.(0,0,4,1).jpg";
-
-                if (ID == "5d7e7128-4338-4644-8101-12ec012afe77")
-                    return "pack://application:,,,/Avatars/avatarY10-sm.(0,0,4,1).jpg";
-
-                if (ID == "0b98a7d2-3088-48cf-9c8a-a2b1512a43d8")
-                    return "pack://application:,,,/Avatars/avatarY11-sm.(0,0,4,1).jpg";
-
-                if (ID == "1378c867-bf9e-4088-8d4b-6da8c3e2f6c5")
-                    return "pack://application:,,,/Avatars/avatarY12-sm.(0,0,4,1).jpg";
-
-                if (ID == "29d10719-b3b2-4b9e-8098-2064af3c911e")
-                    return "pack://application:,,,/Avatars/avatarY13-sm.(0,0,4,1).jpg";
-
-                if (ID == "0e3f2fe4-0c79-4500-bb68-4fdb7f4c47b4")
-                    return "pack://application:,,,/Avatars/avatarY14-sm.(0,0,4,1).jpg";
-
-                if (ID == "c53b642d-6f73-4e19-b224-b382d10cf160")
-                    return "pack://application:,,,/Avatars/avatarY15-sm.(0,0,4,1).jpg";
-
-                if (ID == "d94a0fa6-0cf8-4de0-85be-6aa4e9c02034")
-                    return "pack://application:,,,/Avatars/avatarY16-sm.(0,0,4,1).jpg";
-
-                if (ID == "d70ec3fb-a3c5-468c-b311-07994e1c1d8d")
-                    return "pack://application:,,,/Avatars/avatarY17-sm.(0,0,4,1).jpg";
-
-                if (ID == "745a3e78-5d11-484b-b7c3-6775db79bcdc")
-                    return "pack://application:,,,/Avatars/avatarY18-sm.(0,0,4,1).jpg";
-
-                if (ID == "ddd65676-58ad-4dc4-837d-5f4cecba1a3f")
-                    return "pack://application:,,,/Avatars/avatarY19-sm.(0,0,4,1).jpg";
-
-                if (ID == "2094631f-011a-4ce6-9eac-7a5e8d866715")
-                    return "pack://application:,,,/Avatars/avatarY20-sm.(0,0,4,1).jpg";
-
-                if (ID == "c467e531-eda9-46bf-9849-706a2f1b827f")
-                    return "pack://application:,,,/Avatars/avatarY21-sm.(0,0,4,1).jpg";
-
-                if (ID == "3b8a41db-06d6-4847-bfd2-9f560250e20d")
-                    return "pack://application:,,,/Avatars/avatarY22-sm.(0,0,4,1).jpg";
-
-                if (ID == "bef1c47d-49b7-474d-9427-fd09c6e03ad3")
-                    return "pack://application:,,,/Avatars/avatarY23-sm.(0,0,4,1).jpg";
-
-                if (ID == "ce2cbd88-2f86-4939-85c3-1a06f7a18164")
-                    return "pack://application:,,,/Avatars/avatarY24-sm.(0,0,4,1).jpg";
-
-                if (ID == "74bc7cbd-c4f1-4c76-b46c-f67b5d38ba4e")
-                    return "pack://application:,,,/Avatars/avatarY25-sm.(0,0,4,1).jpg";
-
-                if (ID == "eda5e165-4d9b-423c-89ba-24142895a406")
-                    return "pack://application:,,,/Avatars/avatarY26-sm.(0,0,4,1).jpg";
-
-                if (ID == "e08e656b-f064-4046-91de-db2f51a43676")
-                    return "pack://application:,,,/Avatars/avatarY27-sm.(0,0,4,1).jpg";
-
-                if (ID == "4cd87d4f-4638-45f8-9b5e-799a94c1c925")
-                    return "pack://application:,,,/Avatars/avatarY28-sm.(0,0,4,1).jpg";
-
-                if (ID == "14eefce3-80bf-49eb-99d2-295747760abf")
-                    return "pack://application:,,,/Avatars/avatarY29-sm.(0,0,4,1).jpg";
-
-                if (ID == "9801b5b3-c9ba-4cf1-834b-0518e3810661")
-                    return "pack://application:,,,/Avatars/avatarY30-sm.(0,0,4,1).jpg";
-
-                if (ID == "f8d40623-a83c-409d-a8b4-c549e22c972a")
-                    return "pack://application:,,,/Avatars/avatarY31-sm.(0,0,4,1).jpg";
-
-                if (ID == "9fcf71ac-f40c-4b36-bb80-623caa1949f3")
-                    return "pack://application:,,,/Avatars/avatarY32-sm.(0,0,4,1).jpg";
-
-                if (ID == "1caa08bd-3b59-4c5b-bbf0-5cec331d6e16")
-                    return "pack://application:,,,/Avatars/avatarY33-sm.(0,0,4,1).jpg";
-
-                if (ID == "fc1a26d9-bde2-4cb5-b844-8ff18ef1838b")
-                    return "pack://application:,,,/Avatars/avatarY34-sm.(0,0,4,1).jpg";
-
-                if (ID == "8cb00f49-4120-454d-b78b-d886e55a9d05")
-                    return "pack://application:,,,/Avatars/avatarY35-sm.(0,0,4,1).jpg";
-
-                if (ID == "94f210bb-aaf7-4166-887a-2dafaa229dc6")
-                    return "pack://application:,,,/Avatars/avatarY36-sm.(0,0,4,1).jpg";
-
-                if (ID == "5807abf7-2b57-4c33-8a84-449728f70f4c")
-                    return "pack://application:,,,/Avatars/avatarY37-sm.(0,0,4,1).jpg";
-
-                if (ID == "ad3226b5-5da6-479c-b696-d1650da97fd6")
-                    return "pack://application:,,,/Avatars/avatarY38-sm.(0,0,4,1).jpg";
-
-                if (ID == "8470e885-8887-457d-a489-be55f9f95055")
-                    return "pack://application:,,,/Avatars/avatarY39-sm.(0,0,4,1).jpg";
-
-                if (ID == "6abbfff5-c4cd-461e-a65a-3a5efc919cc2")
-                    return "pack://application:,,,/Avatars/avatarY40-sm.(0,0,4,1).jpg";
-
-                if (ID == "431d0124-0ef3-411d-999e-70257f99e63b")
-                    return "pack://application:,,,/Avatars/avatarY41-sm.(0,0,4,1).jpg";
-
-                if (ID == "615bf7b3-4e96-4fa5-b378-e0080073d236")
-                    return "pack://application:,,,/Avatars/avatarY42-sm.(0,0,4,1).jpg";
-
-                if (ID == "76b55472-b2d9-445e-ad1e-c4642103f860")
-                    return "pack://application:,,,/Avatars/avatarY43-sm.(0,0,4,1).jpg";
-
-                if (ID == "e96b8a53-b61d-4c0c-b9c9-0e52bd8ac02d")
-                    return "pack://application:,,,/Avatars/avatarY44-sm.(0,0,4,1).jpg";
-
-                if (ID == "c5d17f17-78b5-4b46-9a95-d78bc43272d8")
-                    return "pack://application:,,,/Avatars/avatarY45-sm.(0,0,4,1).jpg";
-
-                if (ID == "ea6022fb-19ab-4ecb-ac3d-c4469429a71f")
-                    return "pack://application:,,,/Avatars/avatarY46-sm.(0,0,4,1).jpg";
-
-                if (ID == "c21080a0-b345-474c-909b-04cb9afb718a")
-                    return "pack://application:,,,/Avatars/avatarY47-sm.(0,0,4,1).jpg";
-
-                if (ID == "5a7ce673-634d-4a37-ad43-5545a0a9e9d1")
-                    return "pack://application:,,,/Avatars/avatarY48-sm.(0,0,4,1).jpg";
-
-                if (ID == "746075d1-6254-4dec-9127-ce7ec73827da")
-                    return "pack://application:,,,/Avatars/avatarY49-sm.(0,0,4,1).jpg";
-
-                if (ID == "9140248b-5545-4954-87a5-ab463fcc7ed6")
-                    return "pack://application:,,,/Avatars/avatarY50-sm.(0,0,4,1).jpg";
-
-                if (ID == "b899b821-e586-4698-a21c-d598325dc8b5")
-                    return "pack://application:,,,/Avatars/avatarY51-sm.(0,0,4,1).jpg";
-
-                if (ID == "0c182d86-f9e0-4208-8074-0ce427e40a84")
-                    return "pack://application:,,,/Avatars/avatarY52-sm.(0,0,4,1).jpg";
-                return "pack://application:,,,/Avatars/cpai_avatar_random.(0,0,4,1).png";
-            }
 
         }
 
-        public class VPNInfo
-        {
-            public string ASN { get; set; }
-            public string ISP { get; set; }
-            public string country_code { get; set; }
-            public string region { get; set; }
-            public string city { get; set; }
-            public string organization { get; set; }
-            public double latitude { get; set; }
-            public double longitude { get; set; }
-            public bool is_crawler { get; set; }
-            public string timezone { get; set; }
-            public bool mobile { get; set; }
-            public string host { get; set; }
-            public bool proxy { get; set; }
-            public bool vpn { get; set; }
-            public bool tor { get; set; }
-            public bool success { get; set; }
-            public string message { get; set; }
-            public float fraud_score { get; set; }
-            public string request_id { get; set; }
-        }
 
-        public class City
-        {
-            public string id { get; set; }
-            public string lat { get; set; }
-            public string lon { get; set; }
-            public string name_ru { get; set; }
-            public string name_en { get; set; }
-            public string name_de { get; set; }
-            public string name_fr { get; set; }
-            public string name_it { get; set; }
-            public string name_es { get; set; }
-            public string name_pt { get; set; }
-            public string okato { get; set; }
-            public string vk { get; set; }
-            public string population { get; set; }
-        }
 
-        public class Region
-        {
-            public string id { get; set; }
-            public string lat { get; set; }
-            public string lon { get; set; }
-            public string name_ru { get; set; }
-            public string name_en { get; set; }
-            public string name_de { get; set; }
-            public string name_fr { get; set; }
-            public string name_it { get; set; }
-            public string name_es { get; set; }
-            public string name_pt { get; set; }
-            public string iso { get; set; }
-            public string timezone { get; set; }
-            public string okato { get; set; }
-            public string auto { get; set; }
-            public string vk { get; set; }
-            public string utc { get; set; }
-        }
 
-        public class Country
-        {
-            public string id { get; set; }
-            public string iso { get; set; }
-            public string continent { get; set; }
-            public string lat { get; set; }
-            public string lon { get; set; }
-            public string name_ru { get; set; }
-            public string name_en { get; set; }
-            public string name_de { get; set; }
-            public string name_fr { get; set; }
-            public string name_it { get; set; }
-            public string name_es { get; set; }
-            public string name_pt { get; set; }
-            public string timezone { get; set; }
-            public string area { get; set; }
-            public string population { get; set; }
-            public string capital_id { get; set; }
-            public string capital_ru { get; set; }
-            public string capital_en { get; set; }
-            public string cur_code { get; set; }
-            public string phone { get; set; }
-            public string neighbours { get; set; }
-            public string vk { get; set; }
-            public string utc { get; set; }
-        }
 
-        public class IPInfo
-        {
-            public string ip { get; set; }
-            public City city { get; set; }
-            public Region region { get; set; }
-            public Country country { get; set; }
-            public string error { get; set; }
-            public string request { get; set; }
-            public string created { get; set; }
-            public string timestamp { get; set; }
-        }
-
-        // IP CHECKER//
-        ///////////////
-        ///////////////
-        ///////////////
-        public class Row : INotifyPropertyChanged
-        {
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public void NotifyPropertyChanged(string propName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-
-            }
-            private string ip = "";
-            private string eso = "";
-            public string IP
-            {
-                get { return ip; }
-                set
-                {
-                    if (ip != value)
-                    {
-                        ip = value;
-                        NotifyPropertyChanged("IP");
-                    }
-                }
-            }
-            public string ESO
-            {
-                get { return eso; }
-                set
-                {
-                    if (eso != value)
-                    {
-                        eso = value;
-                        NotifyPropertyChanged("ESO");
-                    }
-                }
-            }
-        }
-
-        public ObservableCollection<Row> FullIP = new ObservableCollection<Row>();
-        public ObservableCollection<Row> BufferIP = new ObservableCollection<Row>();
-        private ObservableCollection<ListItem> MyView = new ObservableCollection<ListItem>();
-        public class ListItem : INotifyPropertyChanged
-        {
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public void NotifyPropertyChanged(string propName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-
-            }
-            private string ip = "";
-            private string eso = "";
-            private string pr = "";
-            private string avatar = "pack://application:,,,/Avatars/cpai_avatar_random.(0,0,4,1).png";
-            private string firstupdate = "";
-            private string lastupdate = "";
-            private string hint = (string)Application.Current.FindResource("Hintdefault");
-
-            private VPN Fvpn;
-            private string ping = "---";
-            private IP Fip;
-
-            public VPN Vpn
-            {
-                get { return Fvpn; }
-                set
-                {
-                    if (Fvpn.Perc != value.Perc)
-                    {
-                        Fvpn.Perc = value.Perc;
-                        Fvpn.Label = value.Label;
-                        NotifyPropertyChanged("Vpn");
-                        NotifyPropertyChanged("HintIP");
-                        NotifyPropertyChanged("Vpnperc");
-                    }
-                }
-            }
-
-            public string Ping
-            {
-                get { return ping; }
-                set
-                {
-                    if (ping != value)
-                    {
-                        ping = value;
-                        NotifyPropertyChanged("Ping");
-                    }
-                }
-            }
-
-            public IP Ip
-            {
-                get
-                {
-                    return Fip;
-                }
-                set
-                {
-                    Fip.city = value.city;
-                    Fip.country = value.country;
-                    Fip.flag = value.flag;
-                    Fip.hour = value.hour;
-                    NotifyPropertyChanged("Ip");
-                    NotifyPropertyChanged("HintIP");
-                    NotifyPropertyChanged("Flag");
-                }
-            }
-            public string Vpnperc
-            {
-                get
-                {
-                    if (string.IsNullOrEmpty(Vpn.Perc))
-                        Fvpn.Perc = "0 %";
-                    return Fvpn.Perc;
-                }
-            }
-
-            public string HintIP
-            {
-                get
-                {
-                    if (string.IsNullOrEmpty(Fip.country))
-                        Fip.country = (string)Application.Current.FindResource("● Coutry: unknown");
-                    if (string.IsNullOrEmpty(Fip.city))
-                        Fip.city = (string)Application.Current.FindResource("● City: unknown");
-                    if (string.IsNullOrEmpty(Fip.hour))
-                        Fip.hour = (string)Application.Current.FindResource("● Hours Between: unknown");
-                    if (string.IsNullOrEmpty(Fvpn.Label))
-                        Fvpn.Label = (string)Application.Current.FindResource("No VPN detected!");
-                    return Fip.country + "\n" + Fip.city + "\n" + Fip.hour + "\n\n" + Fvpn.Label;
-                }
-            }
-
-            public string IP
-            {
-                get { return ip; }
-                set
-                {
-                    if (ip != value)
-                    {
-                        ip = value;
-                        NotifyPropertyChanged("IP");
-                        NotifyPropertyChanged("IPHidden");
-                    }
-                }
-            }
-            public string IPHidden
-            {
-                get { return new string('●', ip.Length); }
-            }
-            public string ESO
-            {
-                get { return eso.Replace("_", "__"); }
-                set
-                {
-                    if (eso != value)
-                    {
-                        eso = value;
-                        NotifyPropertyChanged("ESO");
-                    }
-                }
-            }
-            public string PR
-            {
-                get { return pr; }
-                set
-                {
-                    if (pr != value)
-                    {
-                        pr = value;
-                        NotifyPropertyChanged("PR");
-                    }
-                }
-            }
-
-            public string Avatar
-            {
-                get { return avatar; }
-                set
-                {
-                    if (avatar != value)
-                    {
-                        avatar = value;
-                        NotifyPropertyChanged("Avatar");
-                    }
-                }
-            }
-
-
-            public string Flag
-            {
-                get
-                {
-                    if (string.IsNullOrEmpty(Fip.flag))
-                    {
-                        Fip.flag = "pack://application:,,,/Resources/_unknown.png";
-                    }
-                    return Fip.flag;
-                }
-            }
-
-            /* public string HomeCity
-             {
-                 get { return homecity; }
-                 set
-                 {
-                     if (homecity != value)
-                     {
-                         homecity = value;
-                         NotifyPropertyChanged("HomeCity");
-                     }
-                 }
-             }*/
-            public string FirstUpdate
-            {
-                get { return firstupdate; }
-                set
-                {
-                    if (firstupdate != value)
-                    {
-                        firstupdate = value;
-                        NotifyPropertyChanged("FirstUpdate");
-                        NotifyPropertyChanged("Combined");
-                    }
-                }
-            }
-            public string LastUpdate
-            {
-                get { return lastupdate; }
-                set
-                {
-                    if (lastupdate != value)
-                    {
-                        lastupdate = value;
-                        NotifyPropertyChanged("LastUpdate");
-                        NotifyPropertyChanged("Combined");
-                    }
-                }
-            }
-            public string Hint
-            {
-                get { return hint; }
-                set
-                {
-                    if (hint != value)
-                    {
-                        hint = value;
-                        NotifyPropertyChanged("Hint");
-                    }
-                }
-            }
-
-            public string Combined
-            {
-                get { return string.Format("{0}" + Environment.NewLine + "{1}", FirstUpdate, LastUpdate); }
-            }
-        }
-
-        private DispatcherTimer GeneralTimer = new DispatcherTimer(DispatcherPriority.Render)
-        {
-            Interval = TimeSpan.FromMilliseconds(100)
-        };
-
-        public SharpPcap.LibPcap.LibPcapLiveDevice captureDevice = null;
-        private string adresseLocale = null;
-        bool isHost = false;
-
-        public string AdresseLocale { get => adresseLocale; set => adresseLocale = value; }
-
-        private byte CompareIP(string ip1, string ip2)
-        {
-            byte R = 0;
-            try
-            {
-                byte[] IP1 = IPAddress.Parse(ip1).GetAddressBytes();
-                byte[] IP2 = IPAddress.Parse(ip2).GetAddressBytes();
-                /*  if (BitConverter.IsLittleEndian)
-                  {
-                      Array.Reverse(IP1);
-                      Array.Reverse(IP2);
-                  }*/
-                byte A = IP1[0];
-                byte B = IP1[1];
-                byte C = IP1[2];
-                byte D = IP1[3];
-
-                byte A2 = IP2[0];
-                byte B2 = IP2[1];
-                byte C2 = IP2[2];
-                byte D2 = IP2[3];
-
-                if (A == A2)
-                    R = 1;
-                else
-                    return R;
-                if (B == B2)
-                    R = 2;// "Medium probability";
-                if (C == C2)
-                    R = 3;// "High probability";
-                if (D == D2)
-                    R = 4;// "100% probability";
-            }
-            catch
-            {
-                R = 0;
-            }
-
-            return R;
-        }
-
-        string LevelToString(byte level)
-        {
-            switch (level)
-            {
-                case 2: return (string)Application.Current.FindResource("Medium probability");
-                case 3: return (string)Application.Current.FindResource("High probability");
-                case 4: return (string)Application.Current.FindResource("100% probability");
-            }
-            return "";
-        }
-        private int posNull(int start, byte[] data)
-        {
-            if (data != null)
-                for (int i = start; i < data.Length - 1; i++)
-                    if (data[i] == 0 && data[i + 1] == 0)
-                        if (data[start + 1] == 0)
-                            return i + 1;
-                        else
-                            return i;
-            return data.Length;
-        }
-        private string GetPR(byte[] data)
-        {
-            string R = "";
-            int count = 0;
-            if (data != null)
-            {
-                for (int i = 0; i < data.Length - 6; i++)
-                {
-                    if (data[i] == 0 && data[i + 1] == 0 && data[i + 2] == 6 || data[i + 2] == 4 && data[i + 3] == 0 && data[i + 4] > 47 && data[i + 4] < 58)
-                        count++;
-
-                    if (count == 2)
-                    {
-
-                        byte[] P = new byte[2];
-                        P[0] = data[i + 4];
-                        if (data[i + 6] != 0)
-                            P[1] = data[i + 6];
-                        return Encoding.ASCII.GetString(P);
-
-                    }
-                }
-            }
-            return R;
-        }
-
-        private string GetAvatar(byte[] data)
-        {
-            string R = "";
-            int start = 0;
-            //     int end = 0;
-            if (data != null)
-            {
-                for (int i = 0; i < data.Length - 3; i++)
-                {
-                    if (data[i] == 0 && data[i + 1] == 0 && data[i + 2] == 2 && data[i + 3] == 0)
-                    {
-                        start = i + 8;
-                        try
-                        {
-                            return Encoding.Unicode.GetString(data, start, posNull(start, data) - start);
-                        }
-                        catch
-                        { }
-                    }
-                }
-            }
-            return R;
-        }
-
-        private string GetHomeCity(byte[] data)
-        {
-            string R = "";
-            int start = 0;
-            //     int end = 0;
-            if (data != null)
-            {
-                for (int i = 0; i < data.Length - 3; i++)
-                {
-                    if (data[i] == 0 && data[i + 1] == 0 && (data[i + 2] == 16) && data[i + 3] == 0)
-                    {
-                        start = i + 4;
-                        try
-                        {
-                            return Encoding.Unicode.GetString(data, start, posNull(start, data) - start);
-                        }
-                        catch { }
-                    }
-
-                }
-
-
-            }
-            return R;
-        }
-
-
-        private string GetPair(string ip)
-        {
-            StringBuilder Names = new StringBuilder();
-            Dictionary<string, byte> Buffer = new Dictionary<string, byte>();
-            for (int i = 0; i < FullIP.Count; i++)
-            {
-                byte Level = CompareIP(FullIP[i].IP, ip);
-                if (Buffer.ContainsKey(FullIP[i].ESO))
-                {
-                    if (Buffer[FullIP[i].ESO] < Level)
-                        Buffer[FullIP[i].ESO] = Level;
-                }
-                else
-                    Buffer.Add(FullIP[i].ESO, Level);
-            }
-            foreach (var item in Buffer)
-                if (item.Value > 1)
-                    Names.AppendLine(item.Key + " : " + LevelToString(item.Value));
-            if (Names.Length == 0)
-                return (string)Application.Current.FindResource("Hintdefault");
-            else
-            {
-                string R = Names.ToString();
-                return R.Remove(R.Length - Environment.NewLine.Length);
-            }
-        }
-
-        private void ParseData(byte[] byteData, string srcIP, string dstIP)
-        {
-            Stat S = new Stat();
-            string localIP = AdresseLocale;
-            string IP = localIP;
-
-            if (srcIP == localIP)
-                IP = dstIP;
-            if (dstIP == localIP)
-                IP = srcIP;
-            if (IP != localIP)
-                if (byteData != null && (byteData[0] == 3 || byteData[0] == 4))
-                {
-                    if (!MyView.Any(x => x.IP == IP))
-                    {
-
-                        var LI = new ListItem()
-                        {
-                            IP = IP
-                        };
-                        // Этот пакет отдается 1 раз при заходе в комнату
-                        if (byteData[0] == 3 && byteData[8] == 6)
-                        {
-                            // Вычисляем имя хоста, если хост не мы
-                            isHost = (localIP == srcIP);
-                            if (!isHost)
-                                if (LI.ESO == "")
-                                {
-                                    LI.ESO = Encoding.Unicode.GetString(byteData, 13, posNull(13, byteData) - 13);
-                                }
-                        }
-                        if (byteData[0] == 3 && byteData[7] == 0 && byteData[8] == 1 && byteData[9] == 19 && byteData[10] == 10)
-                            if (isHost)
-                            {
-
-                                if (byteData[11] == 106 || byteData[11] == 130 || byteData[11] == 154 || byteData[11] == 178 || byteData[11] == 202 || byteData[11] == 226 || byteData[11] == 250)
-                                    if (LI.ESO == "")
-                                        LI.ESO = Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19);
-
-                                if (byteData[11] == 118 || byteData[11] == 142 || byteData[11] == 166 || byteData[11] == 190 || byteData[11] == 214 || byteData[11] == 238 || (byteData[11] == 6 && byteData[12] == 1))
-                                    if (LI.PR == "")
-                                        LI.PR = S.FormatPR(Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19));
-
-                                /*   if (byteData[11] == 125 || byteData[11] == 149 || byteData[11] == 173 || byteData[11] == 197 || byteData[11] == 221 || byteData[11] == 245 || (byteData[11] == 13 && byteData[12] == 1))
-                                       if (Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19) != "")
-                                           LI.HomeCity = (Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19));*/
-
-                                if (byteData[11] == 116 || byteData[11] == 140 || byteData[11] == 164 || byteData[11] == 188 || byteData[11] == 212 || byteData[11] == 236 || (byteData[11] == 4 && byteData[12] == 1))
-                                    if (LI.Avatar == "pack://application:,,,/Avatars/cpai_avatar_random.(0,0,4,1).png")
-                                        LI.Avatar = S.GetAvatarFromID(Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19));
-
-                            }
-                        // Если мы не хост определяем рейтинг и аватар
-                        if (byteData[0] == 4)
-                            if (!isHost)
-                            {
-                                if (LI.PR == "")
-                                    LI.PR = S.FormatPR(GetPR(byteData));
-                                if (LI.Avatar == "pack://application:,,,/Avatars/cpai_avatar_random.(0,0,4,1).png")
-                                    LI.Avatar = S.GetAvatarFromID(GetAvatar(byteData));
-                                /*if (GetHomeCity(byteData) != "")
-                                    LI.HomeCity = GetHomeCity(byteData);*/
-                            }
-
-                        //ShowCustomBalloon("User " + msg + " is connected!", LI.Avatar);
-
-                        string Date = DateTime.Now.ToLongTimeString();
-                        LI.FirstUpdate = Date;
-                        LI.LastUpdate = Date;
-                        LI.Hint = GetPair(IP);
-                        Dispatcher.Invoke((Action)(async () =>
-                        {
-                                 // История
-                                 try
-                            {
-                                if (LI.ESO != "")
-                                {
-                                    var R = new Row()
-                                    {
-                                        IP = LI.IP,
-                                        ESO = LI.ESO
-                                    };
-                                    if (!FullIP.Any(p => p.ESO == R.ESO && p.IP == R.IP))
-                                        FullIP.Add(R);
-                                    if (!BufferIP.Any(p => p.ESO == R.ESO && p.IP == R.IP))
-                                        BufferIP.Add(R);
-                                    Debug.WriteLine("1 " + R.ESO);
-                                }
-                            }
-                            catch { }
-                                 // Добавление
-                                 try
-                            {
-                                if (!MyView.Any(x => x.IP == IP))
-                                {
-                                    MyView.Add(LI);
-                                    Debug.WriteLine("2 " + LI.ESO);
-                                    Sound1.Play();
-
-                                    LI.Vpn = await GetVPN("https://www.ipqualityscore.com/api/json/ip/AGb3QZuZgJ9Z6l5n00Eym9k9VMKS2ETi/" + IP + "?strictness=1");
-                                    LI.Ip = await GetIPInfo("http://api.sypexgeo.net/json/" + IP);
-                                    GetPing(IP);
-
-                                }
-
-                            }
-                            catch { Debug.WriteLine("Ошибка добавления нового игрока"); }
-                        }));
-                    }
-                    else
-                    {
-                        string bESO = "";
-                        string bPR = "";
-                        string bAvatar = "";
-                        string bHint = "";
-
-                        if (byteData[0] == 3 && byteData[8] == 6)
-                        {
-                            isHost = (localIP == srcIP);
-                            if (!isHost)
-                                bESO = Encoding.Unicode.GetString(byteData, 13, posNull(13, byteData) - 13);
-                        }
-                        if (byteData[0] == 3 && byteData[7] == 0 && byteData[8] == 1 && byteData[9] == 19 && byteData[10] == 10)
-                            if (isHost)
-                            {
-
-                                if (byteData[11] == 106 || byteData[11] == 130 || byteData[11] == 154 || byteData[11] == 178 || byteData[11] == 202 || byteData[11] == 226 || byteData[11] == 250)
-                                    bESO = Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19);
-                                if (byteData[11] == 118 || byteData[11] == 142 || byteData[11] == 166 || byteData[11] == 190 || byteData[11] == 214 || byteData[11] == 238 || (byteData[11] == 6 && byteData[12] == 1))
-                                    bPR = S.FormatPR(Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19));
-
-                                if (byteData[11] == 116 || byteData[11] == 140 || byteData[11] == 164 || byteData[11] == 188 || byteData[11] == 212 || byteData[11] == 236 || (byteData[11] == 4 && byteData[12] == 1))
-                                    bAvatar = S.GetAvatarFromID(Encoding.Unicode.GetString(byteData, 19, posNull(19, byteData) - 19));
-                            }
-
-                        if (byteData[0] == 4)
-                            if (!isHost)
-                            {
-                                bPR = S.FormatPR(GetPR(byteData));
-                                bAvatar = S.GetAvatarFromID(GetAvatar(byteData));
-                                /*if (GetHomeCity(byteData) != "")
-                                    LI.HomeCity = GetHomeCity(byteData);*/
-
-                            }
-                        bHint = GetPair(IP);
-                        string Date = DateTime.Now.ToLongTimeString();
-                        Dispatcher.Invoke(() =>
-                       {
-                           try
-                           {
-
-
-                               if (bESO != "")
-                               {
-                                   var R = new Row()
-                                   {
-                                       IP = IP,
-                                       ESO = bESO
-                                   };
-                                   if (!FullIP.Any(p => p.ESO == R.ESO && p.IP == R.IP))
-                                       FullIP.Add(R);
-                                   if (!BufferIP.Any(p => p.ESO == R.ESO && p.IP == R.IP))
-                                       BufferIP.Add(R);
-                                   Debug.WriteLine("3 " + R.ESO);
-                               }
-                           }
-                           catch { }
-                           try
-                           {
-                               if (MyView.FirstOrDefault(x => x.IP == IP).LastUpdate != Date)
-                                   MyView.FirstOrDefault(x => x.IP == IP).LastUpdate = Date;
-                               if (MyView.FirstOrDefault(x => x.IP == IP).Avatar == "pack://application:,,,/Avatars/cpai_avatar_random.(0,0,4,1).png" && bAvatar != "")
-                                   MyView.FirstOrDefault(x => x.IP == IP).Avatar = bAvatar;
-                               if (MyView.FirstOrDefault(x => x.IP == IP).PR == "" && bPR != "")
-                                   MyView.FirstOrDefault(x => x.IP == IP).PR = bPR;
-                               if (MyView.FirstOrDefault(x => x.IP == IP).ESO == "" && bESO != "")
-                                   MyView.FirstOrDefault(x => x.IP == IP).ESO = bESO;
-                               MyView.FirstOrDefault(x => x.IP == IP).Hint = bHint;
-                               Debug.WriteLine("4 " + bESO);
-                           }
-                           catch { Debug.WriteLine("XXXXXXXXXXdsfsdfsdfXXXXXXXXXXXXXX"); }
-                       });
-                    }
-                }
-        }
-
-        private void Program_OnPacketArrival(object sender, CaptureEventArgs e)
-        {
-            Packet packet = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
-
-            var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
-            var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
-            //    captureDevice.StopCapture();
-            if (udpPacket != null && ipPacket != null)
-            {
-                var srcIP = ipPacket.SourceAddress.ToString();
-                var dstIP = ipPacket.DestinationAddress.ToString();
-                var srcPort = udpPacket.SourcePort;
-                var data = udpPacket.PayloadData;
-                if (srcPort == 2300 || srcPort == 2301)
-                {
-                    ParseData(data, srcIP, dstIP);
-
-                }
-
-            }
-            //    captureDevice.StartCapture();
-        }
-
-        private void GeneralTimer_Tick(object sender, EventArgs e)
-        {
-            GeneralTimer.Stop();
-            try
-            {
-                for (int i = 0; i < MyView.Count; i++)
-                    if (MyView[i].LastUpdate != null)
-                        if ((int)DateTime.Now.Subtract(DateTime.Parse(MyView[i].LastUpdate)).TotalMilliseconds > 2500)
-                        {
-                            MyView.RemoveAt(i);
-                            break;
-                        }
-            }
-            catch { }
-            GeneralTimer.Start();
-        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Thread myThread = new Thread(async delegate ()
+            /*Thread myThread = new Thread(async delegate ()
             {
                 SshClient client = new SshClient("ssh.pythonanywhere.com", "XaKOps", "19862007");
                 try
@@ -1785,47 +523,9 @@ namespace MultiTools
 
             });
 
-            myThread.Start();
+            myThread.Start();*/
 
 
-            byte[] strIP = null;
-            IPHostEntry HosyEntry = Dns.GetHostEntry((Dns.GetHostName()));
-            if (HosyEntry.AddressList.Length > 0)
-            {
-                foreach (IPAddress ip in HosyEntry.AddressList)
-                {
-                    strIP = ip.GetAddressBytes();
-                    if (
-                        (strIP[0] == 10) || // 10.
-                        (strIP[0] == 172 && strIP[1] > 15 && strIP[1] < 32) || // 172.16 - 172.31
-                        (strIP[0] == 192 && strIP[1] == 168) // 192.168
-                        )
-                        AdresseLocale = ip.ToString();
-                }
-            }
-
-            foreach (SharpPcap.LibPcap.LibPcapLiveDevice dev in SharpPcap.LibPcap.LibPcapLiveDeviceList.Instance)
-            {
-                for (int i = 0; i < dev.Addresses.Count; i++)
-                {
-                    var ip = dev.Addresses[i].Addr.ipAddress;
-                    if (ip != null)
-                        if (ip.ToString() == AdresseLocale)
-                        {
-                            captureDevice = dev;
-                            break;
-                        }
-
-                }
-            }
-            if (captureDevice != null)
-            {
-                captureDevice.OnPacketArrival += new PacketArrivalEventHandler(Program_OnPacketArrival);
-                captureDevice.Open(DeviceMode.Promiscuous, 1000);
-                captureDevice.Filter = "ip and udp";
-                captureDevice.StartCapture();
-
-            }
         }
 
         public MainWindow()
@@ -1835,11 +535,37 @@ namespace MultiTools
             ToolTipService.InitialShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(0));
             DataContext = this;
             InitializeComponent();
-            SQLTimer.Tick += SQLTimer_Tick;
-            SQLTimer.Start();
-            GeneralTimer.Tick += GeneralTimer_Tick;
-            GeneralTimer.Start();
-            listView1.ItemsSource = MyView;
+
+            StreamsTimer.Tick += StreamsTimer_Tick;
+            StreamsTimer.Start();
+
+            FriendPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ESO-Assistant");
+            NickForAdding = "";
+
+            if (!Directory.Exists(FriendPath))
+
+                Directory.CreateDirectory(FriendPath);
+            if (File.Exists(System.IO.Path.Combine(FriendPath, "FriendList.json")))
+            {
+                string json = File.ReadAllText(System.IO.Path.Combine(FriendPath, "FriendList.json"));
+                Friends = JsonConvert.DeserializeObject<ObservableCollection<FriendListItem>>(json);
+            }
+            else
+                Friends = new ObservableCollection<FriendListItem>();
+
+
+            listView2.ItemsSource = Friends;
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(listView2.Items);
+            collectionView.SortDescriptions.Add(new SortDescription("Status", ListSortDirection.Descending));
+            collectionView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            var view = (ICollectionViewLiveShaping)CollectionViewSource.GetDefaultView(listView2.Items);
+            view.IsLiveSorting = true;
+            FriendsTimer.Tick += FriendsTimer_Tick;
+            FriendsTimer.Start();
+
+            //SQLTimer.Tick += SQLTimer_Tick;
+            //SQLTimer.Start();
+
             /*   var LI = new ListItem()
                {
                    IP = "21.31.23.123",
@@ -1869,250 +595,157 @@ namespace MultiTools
             GameTimer.Tick += GameTimer_Tick;
             GameTimer.Start();
             Cursor = new Cursor(Application.GetResourceStream(new Uri("Cursor/AoE.cur", UriKind.Relative)).Stream);
+            AoE = new Cursor(Application.GetResourceStream(new Uri("Cursor/AoE.cur", UriKind.Relative)).Stream);
 
-        }
-        public struct VPN
-        {
-            public string Perc;
-            public string Label;
-        }
-        async Task<VPN> GetVPN(string URL)
-        {
-            VPN res;
-            res.Perc = "N/A";
-            res.Label = "";
-            string json = await HttpGetAsync(URL);
-            try
+
+
+            /// MODES
+            /// 
+            P1 = new SolidColorBrush();
+            P2 = new SolidColorBrush();
+            P3 = new SolidColorBrush();
+            P4 = new SolidColorBrush();
+            P5 = new SolidColorBrush();
+            P6 = new SolidColorBrush();
+            P7 = new SolidColorBrush();
+            P8 = new SolidColorBrush();
+            P9 = new SolidColorBrush();
+            P10 = new SolidColorBrush();
+            P11 = new SolidColorBrush();
+            using (RegistryKey R = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
             {
-                VPNInfo vpnInfo = JsonConvert.DeserializeObject<VPNInfo>(json);
-                if (!vpnInfo.success)
-                    return res;
-                else
+                object P = R.GetValue("setuppath");
+                if (P != null)
                 {
-                    if (vpnInfo.proxy)
-                    {
-                        res.Perc = "100 %";
-                        res.Label = (string)Application.Current.FindResource("VPN detected!");
-                    }
-                    else
-                    {
-                        double R = vpnInfo.fraud_score;
-                        if (R >= 0)
-                            res.Perc = Math.Round(R).ToString() + " %";
-                        else
-                            res.Perc = "N/A";
-                        if (R >= 0 && R < 75)
+                    FilePath = P.ToString();
+                    if (File.Exists(Path.Combine(FilePath, "DataPY.bar")))
+                        if (GetMD5(Path.Combine(FilePath, "DataPY.bar")) == "e6‌​c0‌​d4‌​0d‌​08‌​86‌​f5‌​97‌​a0‌​85‌​46‌​63‌​2b‌​53‌​6a‌​5d")
                         {
-                            res.Label = (string)Application.Current.FindResource("No VPN detected!");
+                            bDisableEnable.IsChecked = false;
                         }
                         else
                         {
-                            res.Label = (string)Application.Current.FindResource("VPN: High probability!");
+                            bDisableEnable.Checked -= bEnable_Click;
+                            bDisableEnable.IsChecked = true;
+                            bDisableEnable.Checked += bEnable_Click;
                         }
-
-                    }
-                }
-            }
-
-            catch
-            {
-                res.Perc = "N/A";
-                res.Label = "";
-            }
-            return res;
-        }
-        public struct IP
-        {
-            public string flag;
-            public string country;
-            public string city;
-            public string hour;
-        }
-
-        async Task<string> GetPingTracert(string IP)
-        {
-            string ping = "";
-            Ping pingSender = new Ping();
-            Ping pingSender2 = new Ping();
-            string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            byte[] buffer = Encoding.ASCII.GetBytes(data);
-            for (int ttl = 1; ttl <= 30; ttl++)
-            {
-                PingReply reply = await pingSender.SendPingAsync(IP, 1000, buffer, new PingOptions(ttl, true));
-                if (reply.Status == IPStatus.Success)
-                {
-                    ping = Math.Min(reply.RoundtripTime, 999).ToString() + " ms";
-                    break;
-                }
-                if (reply.Status == IPStatus.TtlExpired)
-                {
-                    PingReply reply2 = await pingSender2.SendPingAsync(reply.Address, 1000, buffer);
-                    if (reply2.Status == IPStatus.Success)
-                    {
-                        ping = Math.Min(reply2.RoundtripTime, 999).ToString() + " ms";
-                    }
-                    continue;
-                }
-                if (reply.Status == IPStatus.TimedOut)
-                {
-                    continue;
-                }
-                break;
-            }
-            if (ping == "")
-                ping = "N/A";
-            return ping;
-        }
-
-
-
-
-        void GetPing(string IP)
-        {
-            Ping pingSender = new Ping();
-            string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            byte[] buffer = Encoding.ASCII.GetBytes(data);
-            pingSender.PingCompleted += async delegate (object sender, PingCompletedEventArgs e)
-            {
-                try
-                {
-                    if (e.Reply != null && e.Reply.Status == IPStatus.Success)
-                    {
-                        string ping = Math.Min(e.Reply.RoundtripTime, 999).ToString() + " ms";
-                        Debug.WriteLine("SUCCESS");
-                        {
-                            await Dispatcher.InvokeAsync((Action)(() =>
-                            {
-                                try
-                                {
-                                    Debug.WriteLine("CHANGE");
-                                    MyView.FirstOrDefault(x => x.IP == IP).Ping = ping;
-                                }
-                                catch { }
-                            }));
-                            await Task.Delay(1000);
-                            if (MyView.Any(x => x.IP == IP))
-                                GetPing(IP);
-                        }
-                    }
-                    else
-                   if (e.Reply.Status == IPStatus.TtlExpired || e.Reply.Status == IPStatus.TimedOut)
-                    {
-                        Debug.WriteLine("TRACERT");
-                        {
-                            string p = await GetPingTracert(IP);
-                            await Dispatcher.InvokeAsync(() =>
-                            {
-                                try
-                                {
-                                    MyView.FirstOrDefault(x => x.IP == IP).Ping = p;
-                                }
-                                catch { }
-                            });
-                            await Task.Delay(1000);
-                            if (MyView.Any(x => x.IP == IP))
-                                GetPing(IP);
-
-                        }
-                    }
-                    else
-                    {
-                        Debug.WriteLine("ELSE");
-                        {
-                            await Dispatcher.InvokeAsync((Action)(() =>
-                            {
-                                try
-                                {
-                                    MyView.FirstOrDefault(x => x.IP == IP).Ping = "N/A";
-                                }
-                                catch { }
-                            }));
-                            if (MyView.Any(x => x.IP == IP))
-                                GetPing(IP);
-                        }
-                    }
-                }
-                catch
-                {
-                    Debug.WriteLine("CATCH");
-                    {
-                        await Dispatcher.InvokeAsync((Action)(() =>
-                        {
-                            try
-                            {
-                                MyView.FirstOrDefault(x => x.IP == IP).Ping = "N/A";
-                            }
-                            catch { }
-
-                        }));
-                        if (MyView.Any(x => x.IP == IP))
-                            GetPing(IP);
-                    }
-                }
-            };
-            pingSender.SendAsync(IP, 1000, buffer, IP);
-        }
-        async Task<IP> GetIPInfo(string URI)
-        {
-            IP res;
-            res.city = "";
-            res.country = "";
-            res.flag = "";
-            // res.time = "";
-            res.hour = "";
-            string json = await HttpGetAsync(URI);
-            try
-            {
-                IPInfo ipInfo = JsonConvert.DeserializeObject<IPInfo>(json);
-                string ip = ipInfo.ip;
-                string city = ipInfo.city.name_en;
-                string country = ipInfo.country.name_en;
-                string flag = ipInfo.country.iso;
-                string utc = ipInfo.region.utc;
-                if (city == "")
-                    utc = ipInfo.country.utc;
-                if (country != "")
-                    res.country = (string)Application.Current.FindResource("● Country: ") + " " + country;
-                else
-                    res.country = (string)Application.Current.FindResource("● Coutry: unknown");
-                if (city == "")
-                    res.city = (string)Application.Current.FindResource("● City: unknown");
-                else
-                    res.city = (string)Application.Current.FindResource("● City: ") + " " + city;
-                if (utc == "")
-                {
-                    //   res.time = (string)Application.Current.FindResource("● Local Time: unknown");
-                    res.hour = (string)Application.Current.FindResource("● Hours Between: unknown");
                 }
                 else
                 {
-                    DateTime Times = TimeZone.CurrentTimeZone.ToUniversalTime(DateTime.Now.AddMinutes(Double.Parse(utc, new CultureInfo("en-us")) * 60));
-                    //  res.time = "● Local Time: " + Times.ToString();
-                    double Hours = Double.Parse(utc, new CultureInfo("en-us")) - TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalHours;
-                    if (Hours > 0)
-                        res.hour = (string)Application.Current.FindResource("● Hours Between: +") + Hours.ToString();
-                    else
-                        res.hour = (string)Application.Current.FindResource("● Hours Between: ") + " " + Hours.ToString();
-                }
-                try
-                {
-                    res.flag = "pack://application:,,,/Resources/" + flag + ".png";
-                }
-                catch
-                {
-                    res.flag = "pack://application:,,,/Resources/_unknown.png";
-
+                    bDisableEnable.IsChecked = false;
                 }
             }
-            catch
+            Colors = typeof(Brushes).GetProperties();
+
+
+            if (gGraphics.Visibility == Visibility.Collapsed && gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed)
             {
-
+                rbDefault.IsChecked = true;
             }
-            return res;
+            rbEkantaUI.IsChecked = Paths.isEkantaInstalled();
+            rbJammsUI.IsChecked = Paths.isJammsInstalled();
+            rbQazUI.IsChecked = Paths.isQazInstalled();
+            tbArty.IsChecked = Paths.isArtyInstalled();
+            tbKeys.IsChecked = Paths.isKeysInstalled();
+
+
+            rbF1.IsChecked = Paths.IsFontInstalled("Academy");
+            rbF2.IsChecked = Paths.IsFontInstalled("Basil Regular");
+            rbF3.IsChecked = Paths.IsFontInstalled("Cambria Italic");
+            rbF4.IsChecked = Paths.IsFontInstalled("Candara Italic");
+            rbF5.IsChecked = Paths.IsFontInstalled("Kramola");
+            rbF6.IsChecked = Paths.IsFontInstalled("LugaType");
+            rbF7.IsChecked = Paths.IsFontInstalled("Margot");
+            rbF8.IsChecked = Paths.IsFontInstalled("Plainot");
+            rbF9.IsChecked = Paths.IsFontInstalled("Formal436 BT");
+            udMax.ValueChanged -= udMax_ValueChanged;
+            udMin.ValueChanged -= udMin_ValueChanged;
+            udNorm.ValueChanged -= udNorm_ValueChanged;
+
+            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+            {
+                object P = AS.GetValue("setuppath");
+                if (P != null)
+                {
+
+                    if (File.Exists(Path.Combine(P.ToString(), "Data", "playercolors.xml")))
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(Path.Combine(P.ToString(), "Data", "playercolors.xml"));
+                        XmlElement Node = doc.DocumentElement;
+                        P1 = GetFromRGB(Node.ChildNodes[1].Attributes.GetNamedItem("color1").Value);
+                        P2 = GetFromRGB(Node.ChildNodes[2].Attributes.GetNamedItem("color1").Value);
+                        P3 = GetFromRGB(Node.ChildNodes[3].Attributes.GetNamedItem("color1").Value);
+                        P4 = GetFromRGB(Node.ChildNodes[4].Attributes.GetNamedItem("color1").Value);
+                        P5 = GetFromRGB(Node.ChildNodes[5].Attributes.GetNamedItem("color1").Value);
+                        P6 = GetFromRGB(Node.ChildNodes[6].Attributes.GetNamedItem("color1").Value);
+                        P7 = GetFromRGB(Node.ChildNodes[7].Attributes.GetNamedItem("color1").Value);
+                        P8 = GetFromRGB(Node.ChildNodes[8].Attributes.GetNamedItem("color1").Value);
+                        P9 = GetFromRGB(Node.ChildNodes[13].Attributes.GetNamedItem("color1").Value);
+                        P10 = GetFromRGB(Node.ChildNodes[14].Attributes.GetNamedItem("color1").Value);
+                        P11 = GetFromRGB(Node.ChildNodes[15].Attributes.GetNamedItem("color1").Value);
+                    }
+                    else
+                    {
+                        P1.Color = Color.FromRgb(45, 45, 245);
+                        P2.Color = Color.FromRgb(210, 40, 40);
+                        P3.Color = Color.FromRgb(215, 215, 30);
+                        P4.Color = Color.FromRgb(150, 15, 250);
+                        P5.Color = Color.FromRgb(15, 210, 80);
+                        P6.Color = Color.FromRgb(255, 150, 5);
+                        P7.Color = Color.FromRgb(150, 255, 240);
+                        P8.Color = Color.FromRgb(255, 190, 255);
+
+                        P9.Color = Color.FromRgb(75, 75, 230);
+                        P10.Color = Color.FromRgb(215, 215, 30);
+                        P11.Color = Color.FromRgb(230, 40, 40);
+                    }
+                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                    {
+                        List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                        miFPS.IsChecked = S.IndexOf("showFPS") != -1;
+                        miIntro.IsChecked = S.IndexOf("noIntroCinematics") != -1;
+                        miMsecs.IsChecked = S.IndexOf("showMilliseconds") != -1;
+                        mihidepopups.IsChecked = S.IndexOf("hidepopups") != -1;
+                        int z1 = S.FindIndex(x => x.StartsWith("maxZoom"));
+
+                        if (z1 >= 0)
+                            udMax.Value = Double.Parse(S[z1].Split('=')[1]);
+                        else
+                            udMax.Value = 60;
+                        int z2 = S.FindIndex(x => x.StartsWith("normalZoom"));
+                        if (z2 >= 0)
+                            udNorm.Value = Double.Parse(S[z2].Split('=')[1]);
+                        else
+                            udNorm.Value = 50;
+                        int z3 = S.FindIndex(x => x.StartsWith("minZoom"));
+                        if (z3 >= 0)
+                            udMin.Value = Double.Parse(S[z3].Split('=')[1]);
+                        else
+                            udMin.Value = 29;
+                    }
+                    else
+                    {
+                        udMax.Value = 60;
+                        udNorm.Value = 50;
+                        udMin.Value = 29;
+                    }
+
+                    if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                    {
+                        string M = File.ReadAllText(Path.Combine(P.ToString(), "Startup", "user.con"));
+                        miRotator.IsChecked = M.Contains("uiWheelRotatePlacedUnit");
+                    }
+                }
+            }
+            udMax.ValueChanged += udMax_ValueChanged;
+            udMin.ValueChanged += udMin_ValueChanged;
+            udNorm.ValueChanged += udNorm_ValueChanged;
+
         }
 
 
-        async Task Upload()
+        /*async Task Upload()
         {
             MySqlConnection connection = new MySqlConnection("SERVER=127.0.0.1;PORT=3306;UID=XaKOps;PASSWORD=2007Add313;DATABASE=XaKOps$default");
             try
@@ -2151,90 +784,76 @@ namespace MultiTools
             {
                 await connection.CloseAsync();
             }
-        }
+        }*/
 
-        async Task Download()
-        {
-            MySqlConnection connection = new MySqlConnection("SERVER=127.0.0.1;PORT=3306;UID=XaKOps;PASSWORD=2007Add313;DATABASE=XaKOps$default");
-            try
-            {
-                XmlSerializer xs = new XmlSerializer(typeof(ObservableCollection<Row>));
-                if (File.Exists("UNSAVED.xml"))
-                {
-                    using (StreamReader rd = new StreamReader("UNSAVED.xml"))
-                    {
-                        FullIP = xs.Deserialize(rd) as ObservableCollection<Row>;
-                    }
-                    Debug.WriteLine("Loaded from xml");
-                    File.Delete("UNSAVED.xml");
-                }
-                await connection.OpenAsync();
-                string sql = "SELECT * FROM IPandESO";
-                MySqlCommand command = new MySqlCommand(sql, connection);
-                DbDataReader reader = await command.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    var R = new Row()
-                    {
-                        IP = IPAddress.Parse(reader[0].ToString()).ToString(),
-                        ESO = reader[1].ToString()
-                    };
-                    if (R.IP != "" && R.ESO != "")
-                        if (FullIP.Any(p => p.ESO == R.ESO && p.IP == R.IP) == false)
-                            FullIP.Add(R);
-                    Debug.WriteLine(IPAddress.Parse(reader[0].ToString()).ToString() + " " + reader[1].ToString());
-                }
-                reader.Close();
-            }
-            catch
-            {
-                Debug.WriteLine("MySQL error");
-                XmlSerializer xs = new XmlSerializer(typeof(ObservableCollection<Row>));
-                if (File.Exists("UNSAVED.xml"))
-                {
-                    using (StreamReader rd = new StreamReader("UNSAVED.xml"))
-                    {
-                        FullIP = xs.Deserialize(rd) as ObservableCollection<Row>;
-                    }
-                    Debug.WriteLine("Loaded from xml");
-                }
-            }
-            finally
-            {
-                await connection.CloseAsync();
-            }
-        }
+        /*  async Task Download()
+          {
+              MySqlConnection connection = new MySqlConnection("SERVER=127.0.0.1;PORT=3306;UID=XaKOps;PASSWORD=2007Add313;DATABASE=XaKOps$default");
+              try
+              {
+                  XmlSerializer xs = new XmlSerializer(typeof(ObservableCollection<Row>));
+                  if (File.Exists("UNSAVED.xml"))
+                  {
+                      using (StreamReader rd = new StreamReader("UNSAVED.xml"))
+                      {
+                          FullIP = xs.Deserialize(rd) as ObservableCollection<Row>;
+                      }
+                      Debug.WriteLine("Loaded from xml");
+                      File.Delete("UNSAVED.xml");
+                  }
+                  await connection.OpenAsync();
+                  string sql = "SELECT * FROM IPandESO";
+                  MySqlCommand command = new MySqlCommand(sql, connection);
+                  DbDataReader reader = await command.ExecuteReaderAsync();
+                  while (await reader.ReadAsync())
+                  {
+                      var R = new Row()
+                      {
+                          IP = IPAddress.Parse(reader[0].ToString()).ToString(),
+                          ESO = reader[1].ToString()
+                      };
+                      if (R.IP != "" && R.ESO != "")
+                          if (FullIP.Any(p => p.ESO == R.ESO && p.IP == R.IP) == false)
+                              FullIP.Add(R);
+                      Debug.WriteLine(IPAddress.Parse(reader[0].ToString()).ToString() + " " + reader[1].ToString());
+                  }
+                  reader.Close();
+              }
+              catch
+              {
+                  Debug.WriteLine("MySQL error");
+                  XmlSerializer xs = new XmlSerializer(typeof(ObservableCollection<Row>));
+                  if (File.Exists("UNSAVED.xml"))
+                  {
+                      using (StreamReader rd = new StreamReader("UNSAVED.xml"))
+                      {
+                          FullIP = xs.Deserialize(rd) as ObservableCollection<Row>;
+                      }
+                      Debug.WriteLine("Loaded from xml");
+                  }
+              }
+              finally
+              {
+                  await connection.CloseAsync();
+              }
+          }*/
 
-        private async void Window_Closing(object sender, CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
-            await Upload();
+            //await Upload();
+
+
+            string json = JsonConvert.SerializeObject(Friends);
+            File.WriteAllText(System.IO.Path.Combine(FriendPath, "FriendList.json"), json);
+
             Environment.Exit(0);
         }
 
-        private void Sound_Loaded(object sender, RoutedEventArgs e)
-        {
-            AnimationSound.Play();
-        }
-
-        private void Sound_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            AnimationSound.Position = TimeSpan.FromSeconds(0);
-        }
-
-        private void Animation_Loaded(object sender, RoutedEventArgs e)
-        {
-            Animation.Play();
-        }
-
-        private void Animation_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            Animation.Position = TimeSpan.FromSeconds(0);
-        }
 
         private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if ((sender as Label).Content.ToString() != "")
-                Process.Start("http://eso-community.net/ladder.php?player=" + (sender as Label).Content.ToString());
+            if (!string.IsNullOrEmpty((sender as TextBlock).Text))
+                Process.Start("http://eso-community.net/ladder.php?player=" + (sender as TextBlock).Text);
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -2282,5 +901,2476 @@ namespace MultiTools
             catch { }
         }
 
+
+
+
+
+
+
+
+        ///////////////////
+        ///////////
+        /////
+        ////
+        // MODES
+        ////
+        /////
+        ///////////////////
+
+        private string FFilePath { get; set; }
+        public string FilePath
+        {
+            get { return FFilePath; }
+            set
+            {
+                FFilePath = value;
+                NotifyPropertyChanged("FilePath");
+            }
+        }
+
+        public string GetMD5(string FileName)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(FileName))
+                {
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "‌​").ToLower();
+                }
+            }
+        }
+        private PropertyInfo[] FColors { get; set; }
+
+        public PropertyInfo[] Colors
+        {
+            get { return FColors; }
+            set
+            {
+                FColors = value;
+                NotifyPropertyChanged("Colors");
+            }
+        }
+
+        private SolidColorBrush FP1 { get; set; }
+        public SolidColorBrush P1
+        {
+            get { return FP1; }
+            set
+            {
+                FP1 = value;
+                NotifyPropertyChanged("P1");
+            }
+        }
+        private SolidColorBrush FP2 { get; set; }
+        public SolidColorBrush P2
+        {
+            get { return FP2; }
+            set
+            {
+                FP2 = value;
+                NotifyPropertyChanged("P2");
+            }
+        }
+        private SolidColorBrush FP3 { get; set; }
+        public SolidColorBrush P3
+        {
+            get { return FP3; }
+            set
+            {
+                FP3 = value;
+                NotifyPropertyChanged("P3");
+            }
+        }
+        private SolidColorBrush FP4 { get; set; }
+        public SolidColorBrush P4
+        {
+            get { return FP4; }
+            set
+            {
+                FP4 = value;
+                NotifyPropertyChanged("P4");
+            }
+        }
+        private SolidColorBrush FP5 { get; set; }
+        public SolidColorBrush P5
+        {
+            get { return FP5; }
+            set
+            {
+                FP5 = value;
+                NotifyPropertyChanged("P5");
+            }
+        }
+        private SolidColorBrush FP6 { get; set; }
+        public SolidColorBrush P6
+        {
+            get { return FP6; }
+            set
+            {
+                FP6 = value;
+                NotifyPropertyChanged("P6");
+            }
+        }
+        private SolidColorBrush FP7 { get; set; }
+        public SolidColorBrush P7
+        {
+            get { return FP7; }
+            set
+            {
+                FP7 = value;
+                NotifyPropertyChanged("P7");
+            }
+        }
+        private SolidColorBrush FP8 { get; set; }
+        public SolidColorBrush P8
+        {
+            get { return FP8; }
+            set
+            {
+                FP8 = value;
+                NotifyPropertyChanged("P8");
+            }
+        }
+        private SolidColorBrush FP9 { get; set; }
+        public SolidColorBrush P9
+        {
+            get { return FP9; }
+            set
+            {
+                FP9 = value;
+                NotifyPropertyChanged("P9");
+            }
+        }
+        private SolidColorBrush FP10 { get; set; }
+        public SolidColorBrush P10
+        {
+            get { return FP10; }
+            set
+            {
+                FP10 = value;
+                NotifyPropertyChanged("P10");
+            }
+        }
+        private SolidColorBrush FP11 { get; set; }
+        public SolidColorBrush P11
+        {
+            get { return FP11; }
+            set
+            {
+                FP11 = value;
+                NotifyPropertyChanged("P11");
+            }
+        }
+
+        private Cursor FAoE { get; set; }
+        public Cursor AoE
+        {
+            get { return FAoE; }
+            set
+            {
+                FAoE = value;
+                NotifyPropertyChanged("AoE");
+            }
+        }
+
+
+
+
+
+        private SolidColorBrush GetFromRGB(string s)
+        {
+
+            return new SolidColorBrush(Color.FromRgb(Byte.Parse(s.Split(' ')[0]), Byte.Parse(s.Split(' ')[1]), Byte.Parse(s.Split(' ')[2])));
+        }
+
+        private string GetRValue(SolidColorBrush c)
+        {
+            return ((Color)c.GetValue(SolidColorBrush.ColorProperty)).R.ToString();
+        }
+        private string GetGValue(Brush c)
+        {
+            return ((Color)c.GetValue(SolidColorBrush.ColorProperty)).G.ToString();
+        }
+        private string GetBValue(Brush c)
+        {
+            return ((Color)c.GetValue(SolidColorBrush.ColorProperty)).B.ToString();
+        }
+
+        private void SaveXML()
+        {
+            XmlDocument doc = new XmlDocument();
+
+            XmlDeclaration xmlDec = doc.CreateXmlDeclaration("1.0", "utf-8", null);
+            XmlElement root = doc.DocumentElement;
+            doc.InsertBefore(xmlDec, root);
+
+            XmlElement Node = doc.CreateElement(string.Empty, "playercolors", string.Empty);
+            doc.AppendChild(Node);
+
+            XmlElement Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "0");
+            Color.SetAttribute("color1", "130 80 0");
+            Color.SetAttribute("color2", "140 90 10");
+            Color.SetAttribute("color3", "77 51 0");
+            Color.SetAttribute("minimap", "114 94 55");
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "1");
+            Color.SetAttribute("color1", GetRValue(P1) + " " + GetGValue(P1) + " " + GetBValue(P1));
+            Color.SetAttribute("color2", GetRValue(P1) + " " + GetGValue(P1) + " " + GetBValue(P1));
+            Color.SetAttribute("color3", GetRValue(P1) + " " + GetGValue(P1) + " " + GetBValue(P1));
+            Color.SetAttribute("minimap", GetRValue(P1) + " " + GetGValue(P1) + " " + GetBValue(P1));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "2");
+            Color.SetAttribute("color1", GetRValue(P2) + " " + GetGValue(P2) + " " + GetBValue(P2));
+            Color.SetAttribute("color2", GetRValue(P2) + " " + GetGValue(P2) + " " + GetBValue(P2));
+            Color.SetAttribute("color3", GetRValue(P2) + " " + GetGValue(P2) + " " + GetBValue(P2));
+            Color.SetAttribute("minimap", GetRValue(P2) + " " + GetGValue(P2) + " " + GetBValue(P2));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "3");
+            Color.SetAttribute("color1", GetRValue(P3) + " " + GetGValue(P3) + " " + GetBValue(P3));
+            Color.SetAttribute("color2", GetRValue(P3) + " " + GetGValue(P3) + " " + GetBValue(P3));
+            Color.SetAttribute("color3", GetRValue(P3) + " " + GetGValue(P3) + " " + GetBValue(P3));
+            Color.SetAttribute("minimap", GetRValue(P3) + " " + GetGValue(P3) + " " + GetBValue(P3));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "4");
+            Color.SetAttribute("color1", GetRValue(P4) + " " + GetGValue(P4) + " " + GetBValue(P4));
+            Color.SetAttribute("color2", GetRValue(P4) + " " + GetGValue(P4) + " " + GetBValue(P4));
+            Color.SetAttribute("color3", GetRValue(P4) + " " + GetGValue(P4) + " " + GetBValue(P4));
+            Color.SetAttribute("minimap", GetRValue(P4) + " " + GetGValue(P4) + " " + GetBValue(P4));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "5");
+            Color.SetAttribute("color1", GetRValue(P5) + " " + GetGValue(P5) + " " + GetBValue(P5));
+            Color.SetAttribute("color2", GetRValue(P5) + " " + GetGValue(P5) + " " + GetBValue(P5));
+            Color.SetAttribute("color3", GetRValue(P5) + " " + GetGValue(P5) + " " + GetBValue(P5));
+            Color.SetAttribute("minimap", GetRValue(P5) + " " + GetGValue(P5) + " " + GetBValue(P5));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "6");
+            Color.SetAttribute("color1", GetRValue(P6) + " " + GetGValue(P6) + " " + GetBValue(P6));
+            Color.SetAttribute("color2", GetRValue(P6) + " " + GetGValue(P6) + " " + GetBValue(P6));
+            Color.SetAttribute("color3", GetRValue(P6) + " " + GetGValue(P6) + " " + GetBValue(P6));
+            Color.SetAttribute("minimap", GetRValue(P6) + " " + GetGValue(P6) + " " + GetBValue(P6));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "7");
+            Color.SetAttribute("color1", GetRValue(P7) + " " + GetGValue(P7) + " " + GetBValue(P7));
+            Color.SetAttribute("color2", GetRValue(P7) + " " + GetGValue(P7) + " " + GetBValue(P7));
+            Color.SetAttribute("color3", GetRValue(P7) + " " + GetGValue(P7) + " " + GetBValue(P7));
+            Color.SetAttribute("minimap", GetRValue(P7) + " " + GetGValue(P7) + " " + GetBValue(P7));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "8");
+            Color.SetAttribute("color1", GetRValue(P8) + " " + GetGValue(P8) + " " + GetBValue(P8));
+            Color.SetAttribute("color2", GetRValue(P8) + " " + GetGValue(P8) + " " + GetBValue(P8));
+            Color.SetAttribute("color3", GetRValue(P8) + " " + GetGValue(P8) + " " + GetBValue(P8));
+            Color.SetAttribute("minimap", GetRValue(P8) + " " + GetGValue(P8) + " " + GetBValue(P8));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "9");
+            Color.SetAttribute("color1", "0 0 0");
+            Color.SetAttribute("color2", "10 10 10");
+            Color.SetAttribute("color3", "35 35 35");
+            Color.SetAttribute("minimap", "0 0 0");
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "10");
+            Color.SetAttribute("color1", "180 250 190");
+            Color.SetAttribute("color2", "190 255 200");
+            Color.SetAttribute("color3", "202 227 204");
+            Color.SetAttribute("minimap", "179 251 186");
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "11");
+            Color.SetAttribute("color1", "80 80 80");
+            Color.SetAttribute("color2", "90 90 90");
+            Color.SetAttribute("color3", "124 124 124");
+            Color.SetAttribute("minimap", "80 80 80");
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "player", string.Empty);
+            Color.SetAttribute("num", "12");
+            Color.SetAttribute("color1", "255 0 100");
+            Color.SetAttribute("color2", "255 10 110");
+            Color.SetAttribute("color3", "174 87 122");
+            Color.SetAttribute("minimap", "255 0 102");
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "friendorfoeself", string.Empty);
+            Color.SetAttribute("color1", GetRValue(P9) + " " + GetGValue(P9) + " " + GetBValue(P9));
+            Color.SetAttribute("color2", GetRValue(P9) + " " + GetGValue(P9) + " " + GetBValue(P9));
+            Color.SetAttribute("color3", GetRValue(P9) + " " + GetGValue(P9) + " " + GetBValue(P9));
+            Color.SetAttribute("minimap", GetRValue(P9) + " " + GetGValue(P9) + " " + GetBValue(P9));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "friendorfoeally", string.Empty);
+            Color.SetAttribute("color1", GetRValue(P10) + " " + GetGValue(P10) + " " + GetBValue(P10));
+            Color.SetAttribute("color2", GetRValue(P10) + " " + GetGValue(P10) + " " + GetBValue(P10));
+            Color.SetAttribute("color3", GetRValue(P10) + " " + GetGValue(P10) + " " + GetBValue(P10));
+            Color.SetAttribute("minimap", GetRValue(P10) + " " + GetGValue(P10) + " " + GetBValue(P10));
+            Node.AppendChild(Color);
+
+            Color = doc.CreateElement(string.Empty, "friendorfoeenemy", string.Empty);
+            Color.SetAttribute("color1", GetRValue(P11) + " " + GetGValue(P11) + " " + GetBValue(P11));
+            Color.SetAttribute("color2", GetRValue(P11) + " " + GetGValue(P11) + " " + GetBValue(P11));
+            Color.SetAttribute("color3", GetRValue(P11) + " " + GetGValue(P11) + " " + GetBValue(P11));
+            Color.SetAttribute("minimap", GetRValue(P11) + " " + GetGValue(P11) + " " + GetBValue(P11));
+            Node.AppendChild(Color);
+
+            using (RegistryKey R = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+            {
+                object P = R.GetValue("setuppath");
+                if (P != null)
+                {
+                    doc.Save(Path.Combine(P.ToString(), "Data", "playercolors.xml"));
+                }
+            }
+        }
+
+
+        private async void bEnable_Click(object sender, RoutedEventArgs e)
+        {
+            bDisableEnable.IsEnabled = false;
+            try
+            {
+                if (File.Exists(Path.Combine(FilePath, "DataPY.bar")))
+                {
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Mod.DataPY.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(FilePath, x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(FilePath, x.FullName), true);
+                        }));
+                    }
+                }
+            }
+            catch { }
+            bDisableEnable.IsEnabled = true;
+
+        }
+
+        private async void bDisable_Click(object sender, RoutedEventArgs e)
+        {
+            bDisableEnable.IsEnabled = false;
+            try
+            {
+                if (File.Exists(Path.Combine(FilePath, "DataPY.bar")))
+                {
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Original.DataPY.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(FilePath, x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(FilePath, x.FullName), true);
+                        }));
+                    }
+                }
+            }
+            catch { }
+            bDisableEnable.IsEnabled = true;
+        }
+
+        private void bNote_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show((string)Application.Current.FindResource("This mod will level up your homecity by 100.") + Environment.NewLine +
+(string)Application.Current.FindResource("I am not responsible for the consequences of using this mod!") + Environment.NewLine + Environment.NewLine +
+(string)Application.Current.FindResource("1. Find a partner with the same mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("2. Enable mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("3. Start the game.") + Environment.NewLine +
+(string)Application.Current.FindResource("4. Play a game on fast mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("5. Wait 2 minutes and resign (the winner will receive the XP).") + Environment.NewLine +
+(string)Application.Current.FindResource("6. Close the game.") + Environment.NewLine +
+(string)Application.Current.FindResource("7. Disable mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("8. Done!"));
+        }
+
+
+
+        private void miMsecs_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("showMilliseconds") == -1;
+                        }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("showMilliseconds");
+                            }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void miMsecs_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("showMilliseconds");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
+            }
+            catch { }
+        }
+
+        private void miIntro_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("noIntroCinematics") == -1;
+                        }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("noIntroCinematics");
+                            }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void miIntro_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("noIntroCinematics");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
+            }
+            catch { }
+        }
+
+        private void miFPS_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("showFPS") == -1;
+                        }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("showFPS");
+                            }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void miFPS_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("showFPS");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
+            }
+            catch { }
+        }
+
+        private void miRotator_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                        {
+                            string M = File.ReadAllText(Path.Combine(P.ToString(), "Startup", "user.con"));
+                            NotExist = !M.Contains("uiWheelRotatePlacedUnit");
+                        }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.con"), true))
+                            {
+                                w.WriteLine("map(\"mousez\", \"building\", \"uiWheelRotatePlacedUnit\")");
+                            }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void miRotator_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.con")).ToList();
+                            S.RemoveAt(S.FindIndex(x => x.EndsWith("uiWheelRotatePlacedUnit\")")));
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.con"), S.ToArray());
+                        }
+                }
+            }
+            catch { }
+        }
+
+
+        private void udMax_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
+                            if (z1 >= 0)
+                                S.RemoveAt(z1);
+                            S.Add("maxZoom=" + Math.Round(udMax.Value).ToString());
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                        else
+                        {
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("maxZoom=" + Math.Round(udMax.Value).ToString());
+                            }
+                        }
+
+                }
+            }
+            catch { }
+        }
+
+        private void udNorm_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
+                            if (z2 >= 0)
+                                S.RemoveAt(z2);
+                            S.Add("normalZoom=" + Math.Round(udNorm.Value).ToString());
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                        else
+                        {
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("normalZoom=" + Math.Round(udMax.Value).ToString());
+                            }
+                        }
+
+                }
+            }
+            catch { }
+        }
+
+        private void udMin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
+                            if (z3 >= 0)
+                                S.RemoveAt(z3);
+                            S.Add("minZoom=" + Math.Round(udMin.Value).ToString());
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                        else
+                        {
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("minZoom=" + Math.Round(udMax.Value).ToString());
+                            }
+                        }
+
+                }
+            }
+            catch { }
+        }
+
+        private void Button_Click_6m(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            udMax.ValueChanged -= udMax_ValueChanged;
+                            udMin.ValueChanged -= udMin_ValueChanged;
+                            udNorm.ValueChanged -= udNorm_ValueChanged;
+                            udMax.Value = 60;
+                            udNorm.Value = 50;
+                            udMin.Value = 29;
+                            udMax.ValueChanged += udMax_ValueChanged;
+                            udMin.ValueChanged += udMin_ValueChanged;
+                            udNorm.ValueChanged += udNorm_ValueChanged;
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
+                            if (z1 >= 0)
+                                S.RemoveAt(z1);
+                            int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
+                            if (z2 >= 0)
+                                S.RemoveAt(z2);
+                            int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
+                            if (z3 >= 0)
+                                S.RemoveAt(z3);
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                        else
+                        {
+                            udMax.ValueChanged -= udMax_ValueChanged;
+                            udMin.ValueChanged -= udMin_ValueChanged;
+                            udNorm.ValueChanged -= udNorm_ValueChanged;
+                            udMax.Value = 60;
+                            udNorm.Value = 50;
+                            udMin.Value = 29;
+                            udMax.ValueChanged += udMax_ValueChanged;
+                            udMin.ValueChanged += udMin_ValueChanged;
+                            udNorm.ValueChanged += udNorm_ValueChanged;
+                        }
+
+                }
+            }
+            catch { }
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (gInterface != null)
+                gInterface.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            gInterface.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButton_Unchecked_1(object sender, RoutedEventArgs e)
+        {
+            gMods.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        {
+            gMods.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButton_Checked_2(object sender, RoutedEventArgs e)
+        {
+            gGraphics.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButton_Unchecked_2(object sender, RoutedEventArgs e)
+        {
+            gGraphics.Visibility = Visibility.Collapsed;
+
+        }
+
+        private void colorList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P1 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P2 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_2(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P3 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_3(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P4 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_4(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P5 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_5(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P6 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_6(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P7 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_7(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P8 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_8(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P9 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_9(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P10 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void colorList_SelectionChanged_10(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                P11 = (SolidColorBrush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
+                SaveXML();
+            }
+            catch { }
+        }
+
+        private void Button_Clickm(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey R = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = R.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        if (File.Exists(Path.Combine(P.ToString(), "Data", "playercolors.xml")))
+                            File.Delete(Path.Combine(P.ToString(), "Data", "playercolors.xml"));
+                    }
+                }
+
+
+                P1.Color = Color.FromRgb(45, 45, 245);
+                P2.Color = Color.FromRgb(210, 40, 40);
+                P3.Color = Color.FromRgb(215, 215, 30);
+                P4.Color = Color.FromRgb(150, 15, 250);
+                P5.Color = Color.FromRgb(15, 210, 80);
+                P6.Color = Color.FromRgb(255, 150, 5);
+                P7.Color = Color.FromRgb(150, 255, 240);
+                P8.Color = Color.FromRgb(255, 190, 255);
+
+                P9.Color = Color.FromRgb(75, 75, 230);
+                P10.Color = Color.FromRgb(215, 215, 30);
+                P11.Color = Color.FromRgb(230, 40, 40);
+            }
+            catch { }
+
+        }
+
+        private async void RadioButton_Checked_3(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        if (!Paths.isQazInstalled())
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.UI.QazUI.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private void rbQazUI_Unchecked(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                Paths.RemovesQazIfInstalled();
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private void rbJammsUI_Unchecked(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                Paths.RemoveJammsIfInstalled();
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private void rbEkantaUI_Unchecked(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                Paths.RemoveEkantaIfInstalled();
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private async void rbEkantaUI_Checked(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        if (!Paths.isEkantaInstalled())
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.UI.EkantaUI.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private async void rbJammsUI_Checked(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        if (!Paths.isJammsInstalled())
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.UI.JammsUI.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private void rbRemoveUI_Checked(object sender, RoutedEventArgs e)
+        {
+            rbEkantaUI.IsEnabled = false;
+            rbJammsUI.IsEnabled = false;
+            rbQazUI.IsEnabled = false;
+            rbRemoveUI.IsEnabled = false;
+            try
+            {
+                Paths.RemoveEkantaIfInstalled();
+                Paths.RemoveJammsIfInstalled();
+                Paths.RemovesQazIfInstalled();
+            }
+            catch
+            { }
+            rbEkantaUI.IsEnabled = true;
+            rbJammsUI.IsEnabled = true;
+            rbQazUI.IsEnabled = true;
+            rbRemoveUI.IsEnabled = true;
+        }
+
+        private async void tbArty_Checked(object sender, RoutedEventArgs e)
+        {
+            tbArty.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        if (!Paths.isArtyInstalled())
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Mods.Art.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            tbArty.IsEnabled = true;
+        }
+
+        private void tbArty_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tbArty.IsEnabled = false;
+            try
+            {
+                Paths.RemoveArtyIfInstalled();
+            }
+            catch { }
+            tbArty.IsEnabled = true;
+        }
+
+        private async void tbCows_Checked(object sender, RoutedEventArgs e)
+        {
+            tbCows.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        if (!Paths.isCowsInstalled())
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Mods.Cows.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            tbCows.IsEnabled = true;
+        }
+
+        private void tbCows_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tbCows.IsEnabled = false;
+            try
+            {
+                Paths.RemoveCowsIfInstalled();
+            }
+            catch { }
+            tbCows.IsEnabled = true;
+        }
+
+        private async void tbKeys_Checked(object sender, RoutedEventArgs e)
+        {
+            tbKeys.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        if (!Paths.isKeysInstalled())
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Mods.Keys.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            tbKeys.IsEnabled = true;
+        }
+
+        private void tbKeys_Unchecked(object sender, RoutedEventArgs e)
+        {
+            tbKeys.IsEnabled = false;
+            try
+            {
+                Paths.RemoveKeysIfInstalled();
+            }
+            catch { }
+            tbKeys.IsEnabled = true;
+        }
+
+        private async void Button_Click_1m(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile3.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile2.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName), true);
+                        }));
+                    }
+                Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml"));
+                Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml"));
+                Paths.SetOptions(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml"));
+            }
+            catch { }
+        }
+
+        private async void Button_Click_2m(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.HomeCities.HC.zip")))
+                {
+                    await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                    {
+                        if (x.Name == "")
+                            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetHCDirectory(), x.FullName)));
+                        else
+                            x.ExtractToFile(Path.Combine(Paths.GetHCDirectory(), x.FullName), true);
+                    }));
+                }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile3.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTAD(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile2.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryTWC(), x.FullName), true);
+                        }));
+                    }
+                if (!File.Exists(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml")))
+                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Options.NewProfile.zip")))
+                    {
+                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                        {
+                            if (x.Name == "")
+                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName)));
+                            else
+                                x.ExtractToFile(Path.Combine(Paths.GetOptDirectoryNilla(), x.FullName), true);
+                        }));
+                    }
+                Paths.SetHC(Path.Combine(Paths.GetOptDirectoryTAD(), "NewProfile3.xml"));
+                Paths.SetHC(Path.Combine(Paths.GetOptDirectoryTWC(), "NewProfile2.xml"));
+                Paths.SetHC(Path.Combine(Paths.GetOptDirectoryNilla(), "NewProfile.xml"));
+            }
+            catch { }
+        }
+
+        private async void RadioButton_Checked_4(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Formal436 BT"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void RadioButton_Checked_5(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Plainot"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Plainot");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF7_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Margot"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Margot");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF6_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("LugaType"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("LugaType");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF5_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Kramola"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Kramola");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF4_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Candara Italic"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Candara Italic");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF3_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Cambria Italic"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Cambria Italic");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF2_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Basil Regular"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Basil Regular");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private async void rbF1_Checked(object sender, RoutedEventArgs e)
+        {
+            rbF1.IsEnabled = false;
+            rbF2.IsEnabled = false;
+            rbF3.IsEnabled = false;
+            rbF4.IsEnabled = false;
+            rbF5.IsEnabled = false;
+            rbF6.IsEnabled = false;
+            rbF7.IsEnabled = false;
+            rbF8.IsEnabled = false;
+            rbF9.IsEnabled = false;
+            try
+            {
+                if (!Paths.IsFontInstalled("Academy"))
+                    using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                    {
+                        object P = AS.GetValue("setuppath");
+
+                        if (P != null)
+                        {
+                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Fonts.FONTS.zip")))
+                            {
+                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                                {
+                                    if (x.Name == "")
+                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), "FONTS", x.FullName)));
+                                    else
+                                        x.ExtractToFile(Path.Combine(P.ToString(), "FONTS", x.FullName), true);
+                                }));
+                            }
+                            Paths.ChangeFont("Academy");
+                        }
+                    }
+            }
+            catch { }
+            rbF1.IsEnabled = true;
+            rbF2.IsEnabled = true;
+            rbF3.IsEnabled = true;
+            rbF4.IsEnabled = true;
+            rbF5.IsEnabled = true;
+            rbF6.IsEnabled = true;
+            rbF7.IsEnabled = true;
+            rbF8.IsEnabled = true;
+            rbF9.IsEnabled = true;
+        }
+
+        private void RadioButton_Checked_6(object sender, RoutedEventArgs e)
+        {
+            gSettings.Visibility = Visibility.Hidden;
+            bFriends.IsEnabled = true;
+            bStreams.IsEnabled = true;
+        }
+
+        private async void bRus_Click(object sender, RoutedEventArgs e)
+        {
+            bRus.IsEnabled = false;
+            bEng.IsEnabled = false;
+            bFra.IsEnabled = false;
+            bGer.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Rus.zip")))
+                        {
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
+                    }
+                }
+            }
+            catch { }
+            bRus.IsEnabled = true;
+            bEng.IsEnabled = true;
+            bFra.IsEnabled = true;
+            bGer.IsEnabled = true;
+        }
+
+        private async void bEng_Click(object sender, RoutedEventArgs e)
+        {
+            bRus.IsEnabled = false;
+            bEng.IsEnabled = false;
+            bFra.IsEnabled = false;
+            bGer.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Eng.zip")))
+                        {
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
+                    }
+                }
+            }
+            catch { }
+            bRus.IsEnabled = true;
+            bEng.IsEnabled = true;
+            bFra.IsEnabled = true;
+            bGer.IsEnabled = true;
+        }
+
+        private async void bGer_Click(object sender, RoutedEventArgs e)
+        {
+            bRus.IsEnabled = false;
+            bEng.IsEnabled = false;
+            bFra.IsEnabled = false;
+            bGer.IsEnabled = false;
+            try
+            {
+
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.Ger.zip")))
+                        {
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
+                    }
+                }
+            }
+            catch { }
+            bRus.IsEnabled = true;
+            bEng.IsEnabled = true;
+            bFra.IsEnabled = true;
+            bGer.IsEnabled = true;
+        }
+
+        private async void bFra_Click(object sender, RoutedEventArgs e)
+        {
+            bRus.IsEnabled = false;
+            bEng.IsEnabled = false;
+            bFra.IsEnabled = false;
+            bGer.IsEnabled = false;
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+
+                    if (P != null)
+                    {
+                        using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Localizations.French.zip")))
+                        {
+                            await Task.Run(() => zip.Entries.ToList().ForEach(x =>
+                            {
+                                if (x.Name == "")
+                                    Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
+                                else
+                                    x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
+                            }));
+                        }
+                    }
+                }
+            }
+            catch { }
+            bRus.IsEnabled = true;
+            bEng.IsEnabled = true;
+            bFra.IsEnabled = true;
+            bGer.IsEnabled = true;
+        }
+
+        ///////////////
+        ////////
+        ///////
+        /// FRIENDS
+        /// ////
+        /// 
+        ///////
+
+        private int FThreadCount;
+
+        private ObservableCollection<FriendListItem> Friends = new ObservableCollection<FriendListItem>();
+        private FriendListItem selectedItem;
+        public FriendListItem SelectedItem
+        {
+            get { return selectedItem; }
+            set
+            {
+                if (selectedItem != value)
+                {
+                    selectedItem = value;
+                    NotifyPropertyChanged("SelectedItem");
+                }
+            }
+        }
+
+        [DataContract]
+        public class FriendListItem : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public void NotifyPropertyChanged(string propName)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+            }
+            private string name = "";
+            private int status = 0;
+            private string icon = "pack://application:,,,/Icons/0.png";
+            private string hint = "";
+
+
+            public string Icon
+            {
+                get { return icon; }
+                set
+                {
+                    if (icon != value)
+                    {
+                        icon = value;
+                        NotifyPropertyChanged("Icon");
+                    }
+                }
+            }
+            [DataMember]
+            public string Name
+            {
+                get { return name; }
+                set
+                {
+                    if (name != value)
+                    {
+                        name = value;
+                        NotifyPropertyChanged("Name");
+                    }
+                }
+            }
+
+            public string Hint
+            {
+                get { return hint; }
+                set
+                {
+                    if (hint != value)
+                    {
+                        hint = value;
+                        NotifyPropertyChanged("Hint");
+                    }
+                }
+            }
+            public int Status
+            {
+                get { return status; }
+                set
+                {
+                    if (status != value)
+                    {
+                        status = value;
+                        NotifyPropertyChanged("Status");
+                    }
+                }
+            }
+        }
+
+        public class RelayCommand : ICommand
+        {
+            private Action<object> execute;
+            private Func<object, bool> canExecute;
+
+            public event EventHandler CanExecuteChanged
+            {
+                add { CommandManager.RequerySuggested += value; }
+                remove { CommandManager.RequerySuggested -= value; }
+            }
+
+            public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+            {
+                this.execute = execute;
+                this.canExecute = canExecute;
+            }
+
+            public bool CanExecute(object parameter)
+            {
+                return canExecute == null || canExecute(parameter);
+            }
+
+            public void Execute(object parameter)
+            {
+                execute(parameter);
+            }
+        }
+
+
+        private string FNickForAdding { get; set; }
+        public string NickForAdding
+        {
+            get { return FNickForAdding; }
+            set
+            {
+                FNickForAdding = value;
+                NotifyPropertyChanged("NickForAdding");
+            }
+        }
+
+
+
+
+        private ICommand deleteCommand;
+        public ICommand DeleteCommand
+        {
+            get { return deleteCommand ?? (deleteCommand = new RelayCommand(param => this.DeleteItem(), null)); }
+        }
+
+
+        public void AddItem()
+        {
+            if (FriendsIndexOf(NickForAdding) == -1 && !string.IsNullOrEmpty(NickForAdding))
+            {
+                Friends.Add(new FriendListItem { Name = NickForAdding, Status = 0 });
+                NickForAdding = "";
+            }
+
+        }
+
+        public void DeleteItem()
+        {
+            if (SelectedItem != null)
+                Friends.Remove(SelectedItem);
+        }
+
+        private DispatcherTimer FriendsTimer = new DispatcherTimer()
+        {
+            Interval = TimeSpan.FromMilliseconds(100)
+        };
+        string FriendPath;
+
+
+
+        private int FriendsIndexOf(string Name)
+        {
+            for (int i = 0; i < Friends.Count; i++)
+                if (Name.ToLower() == Friends[i].Name.ToLower())
+                    return i;
+            return -1;
+        }
+
+        private void FriendsTimer_Tick(object sender, EventArgs e)
+        {
+            FriendsTimer.Stop();
+            FriendsTimer.Interval = TimeSpan.FromMilliseconds(5000);
+            FThreadCount = Friends.Count;
+            if (Friends.Count == 0)
+                FriendsTimer.Start();
+            else
+                for (int i = 0; i < Friends.Count; i++)
+                {
+                    Debug.WriteLine(i);
+                    GetFriendInfo(Friends[i].Name);
+                }
+        }
+
+
+        async void GetFriendInfo(string Name)
+        {
+
+            try
+            {
+
+                string Data = await HttpGetAsync("http://www.agecommunity.com/query/query.aspx?md=user&name=" + WebUtility.UrlEncode(Name));
+                UserStatus US = new UserStatus(Name);
+                US.Get(Data);
+
+
+                int Index = FriendsIndexOf(Name);
+                if (Index != -1)
+                {
+
+                    if (US.Status != -1)
+                    {
+                        Friends[Index].Name = US.Nick;
+                        Friends[Index].Status = US.Status;
+                        Friends[Index].Icon = US.Icon;
+                        List<string> A = new List<string>();
+                        if (!string.IsNullOrEmpty(US.LastLogin))
+                            A.Add("Last login: " + US.LastLogin);
+                        if (!string.IsNullOrEmpty(US.Clan))
+                            A.Add("Clan: " + US.Clan);
+                        A.Add(US.PRYS);
+                        A.Add(US.PRYT);
+                        Friends[Index].Hint = string.Join(Environment.NewLine, A.ToArray());
+                    }
+                    else
+                    {
+                        Friends.RemoveAt(Index);
+                    }
+
+                }
+            }
+            catch { }
+            FThreadCount--;
+            if (FThreadCount == 0)
+                FriendsTimer.Start();
+        }
+
+
+
+
+
+        private void Button_Click_3f(object sender, RoutedEventArgs e)
+        {
+            AddItem();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (tbFriend.Text != "" && e.Key == System.Windows.Input.Key.Enter)
+            {
+                bAdd.Focus();
+                bAdd.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+                tbFriend.Focus();
+            }
+        }
+
+        private void listView1_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+            pFriends.IsOpen = true;
+
+        }
+
+        private void bFriends_Click(object sender, RoutedEventArgs e)
+        {
+            if (gFriends.Visibility == Visibility.Visible)
+                gFriends.Visibility = Visibility.Collapsed;
+            else
+            {
+                gStreams.Visibility = Visibility.Collapsed;
+                gFriends.Visibility = Visibility.Visible;
+            }
+        }
+
+
+        // STREAMS //
+        //////////
+        ///
+        //
+
+        public class Preview
+        {
+            public string small { get; set; }
+            public string medium { get; set; }
+            public string large { get; set; }
+            public string template { get; set; }
+        }
+
+        public class Links
+        {
+            public string self { get; set; }
+            public string follows { get; set; }
+            public string commercial { get; set; }
+            public string stream_key { get; set; }
+            public string chat { get; set; }
+            public string features { get; set; }
+            public string subscriptions { get; set; }
+            public string editors { get; set; }
+            public string teams { get; set; }
+            public string videos { get; set; }
+        }
+
+        public class Channel
+        {
+            public bool mature { get; set; }
+            public bool partner { get; set; }
+            public string status { get; set; }
+            public string broadcaster_language { get; set; }
+            public string display_name { get; set; }
+            public string game { get; set; }
+            public string language { get; set; }
+            public int _id { get; set; }
+            public string name { get; set; }
+            public string created_at { get; set; }
+            public string updated_at { get; set; }
+            public object delay { get; set; }
+            public string logo { get; set; }
+            public object banner { get; set; }
+            public string video_banner { get; set; }
+            public object background { get; set; }
+            public string profile_banner { get; set; }
+            public string profile_banner_background_color { get; set; }
+            public string url { get; set; }
+            public int views { get; set; }
+            public int followers { get; set; }
+            public Links _links { get; set; }
+        }
+
+        public class Links2
+        {
+            public string self { get; set; }
+        }
+
+        public class Stream
+        {
+            public object _id { get; set; }
+            public string game { get; set; }
+            public int viewers { get; set; }
+            public int video_height { get; set; }
+            public double average_fps { get; set; }
+            public int delay { get; set; }
+            public string created_at { get; set; }
+            public bool is_playlist { get; set; }
+            public string stream_type { get; set; }
+            public Preview preview { get; set; }
+            public Channel channel { get; set; }
+            public Links2 _links { get; set; }
+        }
+
+        public class Links3
+        {
+            public string self { get; set; }
+            public string next { get; set; }
+            public string featured { get; set; }
+            public string summary { get; set; }
+            public string followed { get; set; }
+        }
+
+        public class Twitch
+        {
+            public int _total { get; set; }
+            public List<Stream> streams { get; set; }
+            public Links3 _links { get; set; }
+        }
+
+        private ObservableCollection<StreamItem> FStreams = new ObservableCollection<StreamItem>();
+        public ObservableCollection<StreamItem> Streams
+        {
+            get { return FStreams; }
+            set
+            {
+                FStreams = value;
+                NotifyPropertyChanged("Streams");
+            }
+        }
+
+        public class StreamItem : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public void NotifyPropertyChanged(string propName)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+            }
+            private string FName = "";
+            private int FViewers = 0;
+            private string FStatus = "";
+            private int FFollowers = 0;
+            private TimeSpan FLength;
+            private string FURL;
+
+            public string Name
+            {
+                get { return FName; }
+                set
+                {
+                    if (FName != value)
+                    {
+                        FName = value;
+                        NotifyPropertyChanged("Name");
+                        NotifyPropertyChanged("Hint");
+                    }
+                }
+            }
+
+            public string URL
+            {
+                get { return FURL; }
+                set
+                {
+                    if (FURL != value)
+                    {
+                        FURL = value;
+                        NotifyPropertyChanged("URL");
+                    }
+                }
+            }
+
+            public string Status
+            {
+                get { return FStatus; }
+                set
+                {
+                    if (FStatus != value)
+                    {
+                        FStatus = value;
+                        NotifyPropertyChanged("Status");
+                        NotifyPropertyChanged("Hint");
+                    }
+                }
+            }
+
+            public TimeSpan Length
+            {
+                get { return FLength; }
+                set
+                {
+                    if (FLength != value)
+                    {
+                        FLength = value;
+                        NotifyPropertyChanged("Length");
+                        NotifyPropertyChanged("Hint");
+                    }
+                }
+            }
+
+            public int Viewers
+            {
+                get { return FViewers; }
+                set
+                {
+                    if (FViewers != value)
+                    {
+                        FViewers = value;
+                        NotifyPropertyChanged("Viewers");
+                        NotifyPropertyChanged("Hint");
+                    }
+                }
+            }
+
+            public int Followers
+            {
+                get { return FFollowers; }
+                set
+                {
+                    if (FFollowers != value)
+                    {
+                        FFollowers = value;
+                        NotifyPropertyChanged("Followers");
+                        NotifyPropertyChanged("Hint");
+                    }
+                }
+            }
+
+            public string Hint
+            {
+                get
+                {
+                    return Name + Environment.NewLine + "Status: " + Status + Environment.NewLine + "Followers: " + Followers.ToString() + Environment.NewLine + "Viewers: " + Viewers.ToString() + Environment.NewLine + "Length: " + Length.ToString(@"hh\:mm\:ss");
+                }
+            }
+
+        }
+        private DispatcherTimer StreamsTimer = new DispatcherTimer()
+        {
+            Interval = TimeSpan.FromMilliseconds(100)
+        };
+
+
+
+        private void StreamsTimer_Tick(object sender, EventArgs e)
+        {
+            StreamsTimer.Stop();
+            StreamsTimer.Interval = TimeSpan.FromMilliseconds(30000);
+            GetTwitchStreamsTAD();
+
+        }
+
+        async void GetTwitchStreamsTAD()
+        {
+
+            string Data = await HttpGetAsync("https://api.twitch.tv/kraken/streams/?game=" + WebUtility.UrlEncode("Age of Empires III: The Asian Dynasties") + "&live&client_id=9rrpybi820nvoixrr2lkqk19ae8k4ef");
+            try
+            {
+                Twitch root = JsonConvert.DeserializeObject<Twitch>(Data);
+                ObservableCollection<StreamItem> streams = new ObservableCollection<StreamItem>();
+
+                foreach (Stream S in root.streams)
+                {
+                    streams.Add(new StreamItem() { Name = S.channel.display_name, Followers = S.channel.followers, Viewers = S.viewers, Status = S.channel.status, Length = DateTime.Now - DateTime.Parse(S.created_at).ToLocalTime(), URL = S.channel.url });
+                }
+
+
+                /*   if (Streams.Count != 0)
+                   {
+                       var excludedIDs = new HashSet<string>(Streams.Select(p => p.Name));
+                       var result = streams.Where(p => !excludedIDs.Contains(p.Name));
+                       foreach (StreamItem f in result)
+                       {
+                           Notifications.Insert(0, new Notification { Owner = "Twitch Streams - Age of Empires III: The Asian Dynasties", Title = f.Name + " is online!", Date = DateTime.Now.ToString(), Icon = "pack://application:,,,/Launcher/twitch.png" });
+                           NotifyPropertyChanged("NotificationCount");
+                       }
+                   }*/
+
+                Streams = new ObservableCollection<StreamItem>(streams);
+            }
+            catch { }
+            StreamsTimer.Start();
+        }
+
+
+        private void ListViewItem_OnItemSelected(object sender, RoutedEventArgs e)
+        {
+            /*   var item = sender as ListViewItem;
+               if (item != null && item.IsSelected)
+               {
+                   item as Stre
+               }*/
+            if (listView3.SelectedItem != null)
+                if (listView3.SelectedItem is StreamItem)
+                    Process.Start((listView3.SelectedItem as StreamItem).URL);
+        }
+
+        private void bStreams_Click(object sender, RoutedEventArgs e)
+        {
+            if (gStreams.Visibility == Visibility.Visible)
+                gStreams.Visibility = Visibility.Collapsed;
+            else
+            {
+                gFriends.Visibility = Visibility.Collapsed;
+                gStreams.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void mihidepopups_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            NotExist = S.IndexOf("hidepopups") == -1;
+                        }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
+                            {
+                                w.WriteLine("hidepopups");
+                            }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void mihidepopups_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
+                            S.Remove("hidepopups");
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
+                        }
+                }
+            }
+            catch { }
+        }
+
+
+
+
+        private void Image_MouseLeftButtonDown_5(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("Economic Calculator.exe");
+        }
     }
 }

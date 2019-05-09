@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TrimUnusedDependencies>true</TrimUnusedDependencies>
+    <RootPackageReference>false</RootPackageReference>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,7 +12,8 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MultiTools</RootNamespace>
     <AssemblyName>MultiTools</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -47,46 +52,21 @@
     <ApplicationIcon>9090.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>packages\MySql.Data.6.10.6\lib\net452\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PacketDotNet">
-      <HintPath>packages\PacketDotNet.0.16.0\lib\PacketDotNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <HintPath>packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpPcap">
-      <HintPath>packages\SharpPcap.4.4.0\lib\SharpPcap.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Design" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Remoting" />
-    <Reference Include="System.Transactions" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -96,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SingleInstance.cs" />
+    <Compile Include="UserStatus.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,9 +84,6 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Modes.xaml.cs">
-      <DependentUpon>Modes.xaml</DependentUpon>
     </Compile>
     <Compile Include="ServerStatus.cs" />
     <Compile Include="App.xaml.cs">
@@ -132,10 +110,6 @@
       <SubType>Designer</SubType>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
-    <Page Include="Modes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Paths.cs" />
@@ -156,7 +130,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -178,6 +154,16 @@
     <EmbeddedResource Include="Localizations\French.zip" />
     <EmbeddedResource Include="Localizations\Ger.zip" />
     <EmbeddedResource Include="Localizations\Rus.zip" />
+    <Resource Include="Font\ACADEMY.TTF" />
+    <Resource Include="Font\Basil-Regular.otf" />
+    <Resource Include="Font\cambriai.ttf" />
+    <Resource Include="Font\Candarai_0.ttf" />
+    <Resource Include="Font\formal-436-bt-5947cc2c8b950.ttf" />
+    <Resource Include="Font\Kramola.ttf" />
+    <Resource Include="Font\Lugatype.otf" />
+    <Resource Include="Font\Margot.ttf" />
+    <Resource Include="Font\MTCORSVA.TTF" />
+    <Resource Include="Font\Plainot.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -337,476 +323,13 @@
     <Resource Include="Launcher\twc.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Avatars\avatarX1-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX10-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX11-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX12-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX13-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX14-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX15-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX16-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX17-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX18-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX19-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX2-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX20-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX21-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX22-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX23-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX24-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX25-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX26-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX27-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX28-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX29-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX3-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX30-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX31-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX32-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX33-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX34-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX35-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX36-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX37-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX38-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX39-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX4-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX40-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX41-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX42-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX43-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX44-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX45-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX5-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX6-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX7-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX8-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarX9-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY1-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY10-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY11-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY12-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY13-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY14-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY15-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY16-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY17-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY18-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY19-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY2-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY20-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY21-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY22-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY23-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY24-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY25-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY26-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY27-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY28-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY29-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY3-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY30-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY31-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY32-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY33-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY34-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY35-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY36-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY37-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY38-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY39-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY4-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY40-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY41-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY42-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY43-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY44-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY45-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY46-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY47-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY48-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY49-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY5-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY50-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY51-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY52-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY6-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY7-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY8-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatarY9-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_01-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_02-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_03-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_04-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_05-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_06-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_07-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_08-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_09-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_10-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_11-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_12-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_13-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_14-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_15-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_16-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_17-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_18-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_19-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier1_20-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_01-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_02-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_03-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_04-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_05-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_06-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_07-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_08-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_09-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_10-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_11-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_12-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_13-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_14-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_15-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_16-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_17-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_18-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_19-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_20-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_21-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_22-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_23-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_24-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_25-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier2_26-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_01-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_02-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_03-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_04-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_05-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_06-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_07-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_08-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_09-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_10-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_11-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_12-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_13-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_14-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_15-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_16-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_17-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_18-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_19-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_20-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_21-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_22-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_23-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_24-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_25-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_26-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_27-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_28-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_29-sm.%280,0,4,1%29.jpg" />
-    <Resource Include="Avatars\avatar_tier3_30-sm.%280,0,4,1%29.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Без имени-1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ad.png" />
-    <Resource Include="Resources\ae.png" />
-    <Resource Include="Resources\af.png" />
-    <Resource Include="Resources\ag.png" />
-    <Resource Include="Resources\ai.png" />
-    <Resource Include="Resources\al.png" />
-    <Resource Include="Resources\am.png" />
-    <Resource Include="Resources\an.png" />
-    <Resource Include="Resources\ao.png" />
-    <Resource Include="Resources\aq.png" />
-    <Resource Include="Resources\ar.png" />
-    <Resource Include="Resources\as.png" />
-    <Resource Include="Resources\at.png" />
-    <Resource Include="Resources\au.png" />
-    <Resource Include="Resources\aw.png" />
-    <Resource Include="Resources\ax.png" />
-    <Resource Include="Resources\az.png" />
-    <Resource Include="Resources\ba.png" />
-    <Resource Include="Resources\bb.png" />
-    <Resource Include="Resources\bd.png" />
-    <Resource Include="Resources\be.png" />
-    <Resource Include="Resources\bf.png" />
-    <Resource Include="Resources\bg.png" />
-    <Resource Include="Resources\bh.png" />
-    <Resource Include="Resources\bi.png" />
-    <Resource Include="Resources\bj.png" />
-    <Resource Include="Resources\bl.png" />
-    <Resource Include="Resources\bm.png" />
-    <Resource Include="Resources\bn.png" />
-    <Resource Include="Resources\bo.png" />
-    <Resource Include="Resources\bq.png" />
-    <Resource Include="Resources\br.png" />
-    <Resource Include="Resources\bs.png" />
-    <Resource Include="Resources\bt.png" />
-    <Resource Include="Resources\bv.png" />
-    <Resource Include="Resources\bw.png" />
-    <Resource Include="Resources\by.png" />
-    <Resource Include="Resources\bz.png" />
-    <Resource Include="Resources\ca.png" />
-    <Resource Include="Resources\cc.png" />
-    <Resource Include="Resources\cd.png" />
-    <Resource Include="Resources\cf.png" />
-    <Resource Include="Resources\cg.png" />
-    <Resource Include="Resources\ch.png" />
-    <Resource Include="Resources\ci.png" />
-    <Resource Include="Resources\ck.png" />
-    <Resource Include="Resources\cl.png" />
-    <Resource Include="Resources\cm.png" />
-    <Resource Include="Resources\cn.png" />
-    <Resource Include="Resources\co.png" />
-    <Resource Include="Resources\cr.png" />
-    <Resource Include="Resources\cu.png" />
-    <Resource Include="Resources\cv.png" />
-    <Resource Include="Resources\cw.png" />
-    <Resource Include="Resources\cx.png" />
-    <Resource Include="Resources\cy.png" />
-    <Resource Include="Resources\cz.png" />
-    <Resource Include="Resources\de.png" />
-    <Resource Include="Resources\dj.png" />
-    <Resource Include="Resources\dk.png" />
-    <Resource Include="Resources\dm.png" />
-    <Resource Include="Resources\do.png" />
-    <Resource Include="Resources\dz.png" />
-    <Resource Include="Resources\ec.png" />
-    <Resource Include="Resources\ee.png" />
-    <Resource Include="Resources\eg.png" />
-    <Resource Include="Resources\eh.png" />
-    <Resource Include="Resources\er.png" />
-    <Resource Include="Resources\es.png" />
-    <Resource Include="Resources\et.png" />
-    <Resource Include="Resources\fi.png" />
-    <Resource Include="Resources\fj.png" />
-    <Resource Include="Resources\fk.png" />
-    <Resource Include="Resources\fm.png" />
-    <Resource Include="Resources\fo.png" />
-    <Resource Include="Resources\fr.png" />
-    <Resource Include="Resources\ga.png" />
-    <Resource Include="Resources\gb.png" />
-    <Resource Include="Resources\gd.png" />
-    <Resource Include="Resources\ge.png" />
-    <Resource Include="Resources\gf.png" />
-    <Resource Include="Resources\gg.png" />
-    <Resource Include="Resources\gh.png" />
-    <Resource Include="Resources\gi.png" />
-    <Resource Include="Resources\gl.png" />
-    <Resource Include="Resources\gm.png" />
-    <Resource Include="Resources\gn.png" />
-    <Resource Include="Resources\gp.png" />
-    <Resource Include="Resources\gq.png" />
-    <Resource Include="Resources\gr.png" />
-    <Resource Include="Resources\gs.png" />
-    <Resource Include="Resources\gt.png" />
-    <Resource Include="Resources\gu.png" />
-    <Resource Include="Resources\gw.png" />
-    <Resource Include="Resources\gy.png" />
-    <Resource Include="Resources\hk.png" />
-    <Resource Include="Resources\hm.png" />
-    <Resource Include="Resources\hn.png" />
-    <Resource Include="Resources\hr.png" />
-    <Resource Include="Resources\ht.png" />
-    <Resource Include="Resources\hu.png" />
-    <Resource Include="Resources\id.png" />
-    <Resource Include="Resources\ie.png" />
-    <Resource Include="Resources\il.png" />
-    <Resource Include="Resources\im.png" />
-    <Resource Include="Resources\in.png" />
-    <Resource Include="Resources\io.png" />
-    <Resource Include="Resources\iq.png" />
-    <Resource Include="Resources\ir.png" />
-    <Resource Include="Resources\is.png" />
-    <Resource Include="Resources\it.png" />
-    <Resource Include="Resources\je.png" />
-    <Resource Include="Resources\jm.png" />
-    <Resource Include="Resources\jo.png" />
-    <Resource Include="Resources\jp.png" />
-    <Resource Include="Resources\ke.png" />
-    <Resource Include="Resources\kg.png" />
-    <Resource Include="Resources\kh.png" />
-    <Resource Include="Resources\ki.png" />
-    <Resource Include="Resources\km.png" />
-    <Resource Include="Resources\kn.png" />
-    <Resource Include="Resources\kp.png" />
-    <Resource Include="Resources\kr.png" />
-    <Resource Include="Resources\kw.png" />
-    <Resource Include="Resources\ky.png" />
-    <Resource Include="Resources\kz.png" />
-    <Resource Include="Resources\la.png" />
-    <Resource Include="Resources\lb.png" />
-    <Resource Include="Resources\lc.png" />
-    <Resource Include="Resources\li.png" />
-    <Resource Include="Resources\lk.png" />
-    <Resource Include="Resources\lr.png" />
-    <Resource Include="Resources\ls.png" />
-    <Resource Include="Resources\lt.png" />
-    <Resource Include="Resources\lu.png" />
-    <Resource Include="Resources\lv.png" />
-    <Resource Include="Resources\ly.png" />
-    <Resource Include="Resources\ma.png" />
-    <Resource Include="Resources\mc.png" />
-    <Resource Include="Resources\md.png" />
-    <Resource Include="Resources\me.png" />
-    <Resource Include="Resources\mf.png" />
-    <Resource Include="Resources\mg.png" />
-    <Resource Include="Resources\mh.png" />
-    <Resource Include="Resources\mk.png" />
-    <Resource Include="Resources\ml.png" />
-    <Resource Include="Resources\mm.png" />
-    <Resource Include="Resources\mn.png" />
-    <Resource Include="Resources\mo.png" />
-    <Resource Include="Resources\mp.png" />
-    <Resource Include="Resources\mq.png" />
-    <Resource Include="Resources\mr.png" />
-    <Resource Include="Resources\ms.png" />
-    <Resource Include="Resources\mt.png" />
-    <Resource Include="Resources\mu.png" />
-    <Resource Include="Resources\mv.png" />
-    <Resource Include="Resources\mw.png" />
-    <Resource Include="Resources\mx.png" />
-    <Resource Include="Resources\my.png" />
-    <Resource Include="Resources\mz.png" />
-    <Resource Include="Resources\na.png" />
-    <Resource Include="Resources\nc.png" />
-    <Resource Include="Resources\ne.png" />
-    <Resource Include="Resources\nf.png" />
-    <Resource Include="Resources\ng.png" />
-    <Resource Include="Resources\ni.png" />
-    <Resource Include="Resources\nl.png" />
-    <Resource Include="Resources\no.png" />
-    <Resource Include="Resources\np.png" />
-    <Resource Include="Resources\nr.png" />
-    <Resource Include="Resources\nu.png" />
-    <Resource Include="Resources\nz.png" />
-    <Resource Include="Resources\om.png" />
-    <Resource Include="Resources\pa.png" />
-    <Resource Include="Resources\pe.png" />
-    <Resource Include="Resources\pf.png" />
-    <Resource Include="Resources\pg.png" />
-    <Resource Include="Resources\ph.png" />
-    <Resource Include="Resources\pk.png" />
-    <Resource Include="Resources\pl.png" />
-    <Resource Include="Resources\pm.png" />
-    <Resource Include="Resources\pn.png" />
-    <Resource Include="Resources\pr.png" />
-    <Resource Include="Resources\ps.png" />
-    <Resource Include="Resources\pt.png" />
-    <Resource Include="Resources\pw.png" />
-    <Resource Include="Resources\py.png" />
-    <Resource Include="Resources\qa.png" />
-    <Resource Include="Resources\re.png" />
-    <Resource Include="Resources\ro.png" />
-    <Resource Include="Resources\rs.png" />
-    <Resource Include="Resources\ru.png" />
-    <Resource Include="Resources\rw.png" />
-    <Resource Include="Resources\sa.png" />
-    <Resource Include="Resources\sb.png" />
-    <Resource Include="Resources\sc.png" />
-    <Resource Include="Resources\sd.png" />
-    <Resource Include="Resources\se.png" />
-    <Resource Include="Resources\sg.png" />
-    <Resource Include="Resources\sh.png" />
-    <Resource Include="Resources\si.png" />
-    <Resource Include="Resources\sj.png" />
-    <Resource Include="Resources\sk.png" />
-    <Resource Include="Resources\sl.png" />
-    <Resource Include="Resources\sm.png" />
-    <Resource Include="Resources\sn.png" />
-    <Resource Include="Resources\so.png" />
-    <Resource Include="Resources\sr.png" />
-    <Resource Include="Resources\ss.png" />
-    <Resource Include="Resources\st.png" />
-    <Resource Include="Resources\sv.png" />
-    <Resource Include="Resources\sx.png" />
-    <Resource Include="Resources\sy.png" />
-    <Resource Include="Resources\sz.png" />
-    <Resource Include="Resources\tc.png" />
-    <Resource Include="Resources\td.png" />
-    <Resource Include="Resources\tf.png" />
-    <Resource Include="Resources\tg.png" />
-    <Resource Include="Resources\th.png" />
-    <Resource Include="Resources\tj.png" />
-    <Resource Include="Resources\tk.png" />
-    <Resource Include="Resources\tl.png" />
-    <Resource Include="Resources\tm.png" />
-    <Resource Include="Resources\tn.png" />
-    <Resource Include="Resources\to.png" />
-    <Resource Include="Resources\tr.png" />
-    <Resource Include="Resources\tt.png" />
-    <Resource Include="Resources\tv.png" />
-    <Resource Include="Resources\tw.png" />
-    <Resource Include="Resources\tz.png" />
-    <Resource Include="Resources\ua.png" />
-    <Resource Include="Resources\ug.png" />
-    <Resource Include="Resources\um.png" />
-    <Resource Include="Resources\us.png" />
-    <Resource Include="Resources\uy.png" />
-    <Resource Include="Resources\uz.png" />
-    <Resource Include="Resources\va.png" />
-    <Resource Include="Resources\vc.png" />
-    <Resource Include="Resources\ve.png" />
-    <Resource Include="Resources\vg.png" />
-    <Resource Include="Resources\vi.png" />
-    <Resource Include="Resources\vn.png" />
-    <Resource Include="Resources\vu.png" />
-    <Resource Include="Resources\wf.png" />
-    <Resource Include="Resources\ws.png" />
-    <Resource Include="Resources\ye.png" />
-    <Resource Include="Resources\yt.png" />
-    <Resource Include="Resources\za.png" />
-    <Resource Include="Resources\zm.png" />
-    <Resource Include="Resources\zw.png" />
-    <Resource Include="Resources\_unknown.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Avatars\cpai_avatar_random.%280,0,4,1%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\click.png" />
-    <Resource Include="Flags\normal.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\flag.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\u1.png" />
-    <Resource Include="Flags\u2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\u3.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Click.wav" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="music.wav" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\n1.png" />
-    <Resource Include="Flags\n2.png" />
-    <Resource Include="Flags\n3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\g1.png" />
-    <Resource Include="Flags\g2.png" />
-    <Resource Include="Flags\g3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Flags\f1.png" />
-    <Resource Include="Flags\f2.png" />
-    <Resource Include="Flags\f3.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Audio\1.png" />
@@ -820,43 +343,72 @@
     <Resource Include="Images\1.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="music.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\0.png" />
+    <Resource Include="Icons\1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Scroll\Без имени-1.png" />
+    <Resource Include="Scroll\Без имени-10.png" />
+    <Resource Include="Scroll\Без имени-2.png" />
+    <Resource Include="Scroll\Без имени-3.png" />
+    <Resource Include="Scroll\Без имени-4.png" />
+    <Resource Include="Scroll\Без имени-5.png" />
+    <Resource Include="Scroll\Без имени-6.png" />
+    <Resource Include="Scroll\Без имени-7.png" />
+    <Resource Include="Scroll\Без имени-8.png" />
+    <Resource Include="Scroll\Без имени-9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\FActive.png" />
+    <Resource Include="Buttons\FClicked.png" />
+    <Resource Include="Buttons\FDisabled.png" />
+    <Resource Include="Buttons\FNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\sActive.png" />
+    <Resource Include="Buttons\sClicked.png" />
+    <Resource Include="Buttons\sDisabled.png" />
+    <Resource Include="Buttons\sNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Borders3\bottom.png" />
+    <Resource Include="Borders3\bottomleft.png" />
+    <Resource Include="Borders3\bottomright.png" />
+    <Resource Include="Borders3\left.png" />
+    <Resource Include="Borders3\right.png" />
+    <Resource Include="Borders3\top.png" />
+    <Resource Include="Borders3\topleft.png" />
+    <Resource Include="Borders3\topright.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Launcher\ecocalcLauncher.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Launcher\ecocalc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Flags\click.png" />
     <Resource Include="Flags\d1.png" />
     <Resource Include="Flags\d2.png" />
     <Resource Include="Flags\d3.png" />
     <Resource Include="Flags\d4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlTransaction.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlParameterCollection.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlParameter.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlHelper.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlException.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlDataReader.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlDataAdapter.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlConnectionStringBuilder.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlConnection.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlCommandBuilder.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="docs\MySqlCommand.xml" />
+    <Resource Include="Flags\f1.png" />
+    <Resource Include="Flags\f2.png" />
+    <Resource Include="Flags\f3.png" />
+    <Resource Include="Flags\flag.png" />
+    <Resource Include="Flags\g1.png" />
+    <Resource Include="Flags\g2.png" />
+    <Resource Include="Flags\g3.png" />
+    <Resource Include="Flags\n1.png" />
+    <Resource Include="Flags\n2.png" />
+    <Resource Include="Flags\n3.png" />
+    <Resource Include="Flags\normal.png" />
+    <Resource Include="Flags\u1.png" />
+    <Resource Include="Flags\u2.png" />
+    <Resource Include="Flags\u3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

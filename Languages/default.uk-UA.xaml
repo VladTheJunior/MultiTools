@@ -1,38 +1,60 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:v="clr-namespace:System;assembly=mscorlib"
-                    xmlns:local="clr-namespace:MultiTools.Languages">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MultiTools.Languages"
+    xmlns:v="clr-namespace:System;assembly=mscorlib">
+
+
+    <v:String x:Key="MinDWindow">Мінімізувати вікно паузи</v:String>
     <v:String x:Key="TitleMods">MultiTools - Модифікації</v:String>
     <v:String x:Key="Switcher">Перемикач локалізації гри</v:String>
     <v:String x:Key="Projects">Інші проекти</v:String>
     <v:String x:Key="Mods">Модифікації</v:String>
     <v:String x:Key="Exit">Вихід</v:String>
     <v:String x:Key="jpELO">Натисніть для перевірки ELO</v:String>
-    <v:String x:Key="Larger">Крупніше </v:String>
-    <v:String x:Key="Smaller"> Меньше</v:String>
+    <v:String x:Key="Larger">Крупніше</v:String>
+    <v:String x:Key="Smaller">Меньше</v:String>
     <v:String x:Key="Interface">Интерфейс</v:String>
     <v:String x:Key="Settings">Игрові параметри</v:String>
     <v:String x:Key="Mod">Моди</v:String>
     <v:String x:Key="Back">Назад</v:String>
-    <v:String x:Key="UI">Игровe Меню</v:String> <!--Игровое меню-->
-    <v:String x:Key="defaultUI">Скинути UI до стандарту</v:String><!--Скинути UI до стандарту-->
+    <v:String x:Key="UI">Игровe Меню</v:String>
+    <!--  Игровое меню  -->
+    <v:String x:Key="defaultUI">Скинути UI до стандарту</v:String>
+    <!--  Скинути UI до стандарту  -->
     <v:String x:Key="Misc">Різне</v:String>
-    <v:String x:Key="Cows">Зміна кольору відгодованих корів</v:String> <!--Зміна кольору відгодованих корів-->
-    <v:String x:Key="ROF">Коло огляду артилерії і місіонерів</v:String> <!--Коло &quot;огляду&quot; артилерії і місіонерів-->
-    <v:String x:Key="Hotkeys">Настроені горячі клавіщі</v:String><!--Настроені горячі клавіщі-->
-    <v:String x:Key="Rotator">Обертання будівель</v:String><!--Обертання будівель-->
-    <v:String x:Key="GymXP">Прокачування метрополій ESO</v:String><!--Прокачування метрополій ESO-->
-    <v:String x:Key="More">Детальніше</v:String>    <!--Детальніше-->
-    <v:String x:Key="SingleDeck">Прокачення метрополії для сингла з деками</v:String>    <!--Прокачення метрополії для сингла з деками-->
-    <v:String x:Key="Install">Установити</v:String>    <!--Установити-->
-    <v:String x:Key="Intro">Пропуск початкового ролика</v:String><!--Пропуск початкового ролика-->
-    <v:String x:Key="FPS">Включити FPS</v:String>    <!--Включити FPS-->
-    <v:String x:Key="Msecs">Мілісекунди в таймері</v:String><!--Мілісекунди в таймері-->
-    <v:String x:Key="Zoom">Масштаб</v:String><!--Масштаб-->
-    <v:String x:Key="Min">Мінімальний:</v:String>    <!--Мінімальний:-->
-    <v:String x:Key="Norm">Нормальний:</v:String>    <!--Нормальний:-->
-    <v:String x:Key="Max">Максимальний:</v:String>    <!--Максимальний:-->
-    <v:String x:Key="Colors">Колоря игроків</v:String> <!--Колоря игроків-->
+    <v:String x:Key="Cows">Зміна кольору відгодованих корів</v:String>
+    <!--  Зміна кольору відгодованих корів  -->
+    <v:String x:Key="ROF">Коло огляду артилерії і місіонерів</v:String>
+    <!--  Коло &quot;огляду&quot; артилерії і місіонерів  -->
+    <v:String x:Key="Hotkeys">Настроені горячі клавіщі</v:String>
+    <!--  Настроені горячі клавіщі  -->
+    <v:String x:Key="Rotator">Обертання будівель</v:String>
+    <!--  Обертання будівель  -->
+    <v:String x:Key="GymXP">Прокачування метрополій ESO</v:String>
+    <!--  Прокачування метрополій ESO  -->
+    <v:String x:Key="More">Детальніше</v:String>
+    <!--  Детальніше  -->
+    <v:String x:Key="SingleDeck">Прокачення метрополії для сингла з деками</v:String>
+    <!--  Прокачення метрополії для сингла з деками  -->
+    <v:String x:Key="Install">Установити</v:String>
+    <!--  Установити  -->
+    <v:String x:Key="Intro">Пропуск початкового ролика</v:String>
+    <!--  Пропуск початкового ролика  -->
+    <v:String x:Key="FPS">Включити FPS</v:String>
+    <!--  Включити FPS  -->
+    <v:String x:Key="Msecs">Мілісекунди в таймері</v:String>
+    <!--  Мілісекунди в таймері  -->
+    <v:String x:Key="Zoom">Масштаб</v:String>
+    <!--  Масштаб  -->
+    <v:String x:Key="Min">Мінімальний:</v:String>
+    <!--  Мінімальний:  -->
+    <v:String x:Key="Norm">Нормальний:</v:String>
+    <!--  Нормальний:  -->
+    <v:String x:Key="Max">Максимальний:</v:String>
+    <!--  Максимальний:  -->
+    <v:String x:Key="Colors">Колоря игроків</v:String>
+    <!--  Колоря игроків  -->
     <v:String x:Key="Player1">Игрок 1</v:String>
     <v:String x:Key="Player2">Игрок 2</v:String>
     <v:String x:Key="Player3">Игрок 3</v:String>
@@ -50,12 +72,16 @@
     <v:String x:Key="Fonts">Шрифти</v:String>
     <v:String x:Key="Apply">Применити</v:String>
 
-    <v:String x:Key="Auto">Автоналаштування графики, звука та опций</v:String><!-- Автоналаштування графики, звука та опций-->
+    <v:String x:Key="Auto">Автоналаштування графики, звука та опций</v:String>
+    <!--  Автоналаштування графики, звука та опций  -->
 
-    <v:String x:Key="ESOon">Статус: ESO працюе.</v:String> <!--Статус: ESO працюе.-->
+    <v:String x:Key="ESOon">Статус: ESO працюе.</v:String>
+    <!--  Статус: ESO працюе.  -->
     <v:String x:Key="ESOoff">Статус: ESO не працюе.</v:String>
-    <v:String x:Key="Updated">Обновлено:</v:String>    <!--Обновлено: -->
-    <v:String x:Key="Cause">Можлива причина: Перезавантаження сервера.</v:String>    <!--Можлива причина: Перезавантаження сервера.-->
+    <v:String x:Key="Updated">Обновлено:</v:String>
+    <!--  Обновлено:  -->
+    <v:String x:Key="Cause">Можлива причина: Перезавантаження сервера.</v:String>
+    <!--  Можлива причина: Перезавантаження сервера.  -->
     <v:String x:Key="Conscript">Новобранец</v:String>
     <v:String x:Key="Private">Рядовий</v:String>
     <v:String x:Key="Lance Corporal">Молодший капрал</v:String>

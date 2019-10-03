@@ -30,7 +30,7 @@ using Microsoft.Win32;
 using System.Windows;
 using System.Security.Cryptography;
 using System.Xml;
-
+using System.Linq;
 
 namespace ESO_Assistant.Classes
 {
@@ -69,7 +69,7 @@ namespace ESO_Assistant.Classes
 
         public static void OpenTAD(string Name)
         {
-            if (Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3p").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0)
+            if (Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3p").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0 || Process.GetProcessesByName("age3xpmod").Length != 0)
                 MessageBox.Show((string)Application.Current.FindResource("The game is already running!"));
             else
             {
@@ -103,6 +103,17 @@ namespace ESO_Assistant.Classes
         }
 
 
+        public static string getGamePath()
+        {
+            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack\\1.0"))
+            {
+                object P = AS.GetValue("setuppath");
+
+                return P.ToString();
+            }
+
+        }
+
 
         public static Visibility IsEPInstalled()
         {
@@ -121,6 +132,27 @@ namespace ESO_Assistant.Classes
         }
 
 
+        public static string GetEPVersion()
+        {
+            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack\\1.0"))
+            {
+                object P = AS.GetValue("setuppath");
+
+                if (P != null)
+                {
+                    if (File.Exists(Path.Combine(P.ToString(), "age3f.exe")))
+                    {
+                        var versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(P.ToString(), "age3f.exe"));
+                        return versionInfo.FileVersion.Split('.').Last();
+                    }
+
+                    }
+            }
+            return null;
+        }
+
+
+
         public static Visibility IsTPInstalled()
         {
             using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack\\1.0"))
@@ -137,9 +169,26 @@ namespace ESO_Assistant.Classes
             return Visibility.Collapsed;
         }
 
+
+        public static Visibility IsXPInstalled()
+        {
+            using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack\\1.0"))
+            {
+                object P = AS.GetValue("setuppath");
+
+                if (P != null)
+                {
+                    if (File.Exists(Path.Combine(P.ToString(), "age3xpmod.exe")))
+                        return Visibility.Visible;
+
+                }
+            }
+            return Visibility.Collapsed;
+        }
+
         public static void OpenTWC(string Name)
         {
-            if (Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3p").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0)
+            if (Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3p").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0 || Process.GetProcessesByName("age3xpmod").Length != 0)
                 MessageBox.Show((string)Application.Current.FindResource("The game is already running!"));
             else
             {
@@ -173,7 +222,7 @@ namespace ESO_Assistant.Classes
         }
         public static void OpenNilla(string Name)
         {
-            if (Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3p").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0)
+            if (Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3p").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0 || Process.GetProcessesByName("age3xpmod").Length != 0)
                 MessageBox.Show((string)Application.Current.FindResource("The game is already running!"));
             else
             {
@@ -775,23 +824,21 @@ namespace ESO_Assistant.Classes
             XmlDocument doc = new XmlDocument();
             doc.Load(FilePath);
             XmlElement Node = doc.DocumentElement;
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionsoundlevel']").InnerText = "0.35";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionmusiclevel']").InnerText = "0";
+            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionsoundlevel']").InnerText = "1";
+            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionmusiclevel']").InnerText = "1";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optiongrfxshaderquality']").InnerText = "0";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optiongrfxres']").InnerText = SystemParameters.PrimaryScreenWidth.ToString() + " x " + SystemParameters.PrimaryScreenHeight.ToString();
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optiongrfxwindowmode']").InnerText = "true";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optiongrfxtexfilterquality']").InnerText = "0";
+           
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optioncamerarotation']").InnerText = "true";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optioneasydragmilitary']").InnerText = "true";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionuishowtraining']").InnerText = "true";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionuishowgametime']").InnerText = "true";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionuishowvillagertasks']").InnerText = "true";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionuishowscore']").InnerText = "true";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionenableblooms']").InnerText = "false";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optiongrfxparticletracers']").InnerText = "false";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optiongrfxshadowdetail']").InnerText = "0";
+
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optioncamerazoom']").InnerText = "3";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionambientsoundlevel']").InnerText = "0.35";
+            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionambientsoundlevel']").InnerText = "1";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionadvancedformationui']").InnerText = "true";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionskirmishnickname']").InnerText = "User";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionenablerobustrollover']").InnerText = "true";
@@ -806,7 +853,7 @@ namespace ESO_Assistant.Classes
 
 
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionlanguagefilter']").InnerText = "false";
-            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionsoundchatvolume']").InnerText = "0.35";
+            Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionsoundchatvolume']").InnerText = "1";
             Node.SelectSingleNode("//GameSettings[@Name='GameOptions']//Settings//Setting[@Name='optionmusiconoff']").InnerText = "false";
 
             Node.SelectSingleNode("//Profile//UserInformation//SaveESOName").InnerText = "1";

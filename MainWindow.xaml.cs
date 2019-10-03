@@ -2,7 +2,9 @@
 using ESO_Assistant.Classes;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-
+using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +20,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
+using System.ServiceModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +29,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml;
 
@@ -91,6 +96,20 @@ namespace MultiTools
             get { return !GamesOpen; }
         }
 
+
+
+
+
+        private string FCurrentState { get; set; }
+        public string CurrentState
+        {
+            get { return FCurrentState; }
+            set
+            {
+                FCurrentState = value;
+                NotifyPropertyChanged("CurrentState");
+            }
+        }
 
         private string hESO { get; set; }
         public string ESOHint
@@ -198,6 +217,21 @@ namespace MultiTools
                 NotifyPropertyChanged("TPVisible");
             }
         }
+
+
+
+
+        private Visibility FXPVisible { get; set; }
+        public Visibility XPVisible
+        {
+            get { return FXPVisible; }
+            set
+            {
+                FXPVisible = value;
+                NotifyPropertyChanged("XPVisible");
+            }
+        }
+
         SoundPlayer Click = new SoundPlayer(Application.GetResourceStream(new Uri("Click.wav", UriKind.Relative)).Stream);
 
 
@@ -206,6 +240,8 @@ namespace MultiTools
             try
             {
                 HttpClient hc = new HttpClient();
+                hc.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.twitchtv.v5+json");
+                hc.DefaultRequestHeaders.Add("Client-ID", "9rrpybi820nvoixrr2lkqk19ae8k4ef");
                 Task<System.IO.Stream> result = hc.GetStreamAsync(URI);
 
                 System.IO.Stream vs = await result;
@@ -216,6 +252,7 @@ namespace MultiTools
             }
             catch
             {
+
                 return "";
             }
         }
@@ -253,11 +290,12 @@ namespace MultiTools
             GameTimer.Stop();
             PopTimer.Interval = TimeSpan.FromMilliseconds(100);
             bool LastGame = GamesOpen;
-            GamesOpen = Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3f").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0;
+            GamesOpen = Process.GetProcessesByName("age3").Length != 0 || Process.GetProcessesByName("age3y").Length != 0 || Process.GetProcessesByName("age3f").Length != 0 || Process.GetProcessesByName("age3t").Length != 0 || Process.GetProcessesByName("age3x").Length != 0 || Process.GetProcessesByName("age3xpmod").Length != 0;
             if (GamesOpen && !LastGame)
             {
                 EPVisible = Visibility.Collapsed;
                 TPVisible = Visibility.Collapsed;
+                XPVisible = Visibility.Collapsed;
                 NVisible = Visibility.Collapsed;
                 XVisible = Visibility.Collapsed;
                 YVisible = Visibility.Collapsed;
@@ -266,6 +304,7 @@ namespace MultiTools
             {
                 EPVisible = Paths.IsEPInstalled();
                 TPVisible = Paths.IsTPInstalled();
+                XPVisible = Paths.IsXPInstalled();
                 NVisible = Visibility.Visible;
                 XVisible = Visibility.Visible;
                 YVisible = Visibility.Visible;
@@ -370,13 +409,52 @@ namespace MultiTools
             Paths.OpenTAD("age3y.exe");
         }
 
-        private void Image_MouseLeftButtonDown_2(object sender, MouseButtonEventArgs e)
+        private async void Image_MouseLeftButtonDown_2(object sender, MouseButtonEventArgs e)
         {
+            iEP.Visibility = Visibility.Collapsed;
+            gEP.Visibility = Visibility.Visible;
+            window.IsEnabled = false;
+            var newVer = await GetNewVersion();
+            var curVer = Paths.GetEPVersion();
+            if (newVer.Item1 != null && curVer != null && curVer != newVer.Item1)
+            {
+                var ESOCPatchLauncher = Process.GetProcesses().
+                     Where(pr => pr.ProcessName == "ESOCPatchLauncher");
+
+                foreach (var process in ESOCPatchLauncher)
+                {
+                    process.Kill();
+                }
+                await InstallEPUpdates(newVer.Item2);
+            }
+            window.IsEnabled = true;
+            iEP.Visibility = Visibility.Visible;
+            gEP.Visibility = Visibility.Collapsed;
+
             Paths.OpenTAD("age3f.exe");
         }
 
-        private void Image_MouseLeftButtonDown_3(object sender, MouseButtonEventArgs e)
+        private async void Image_MouseLeftButtonDown_3(object sender, MouseButtonEventArgs e)
         {
+            iTP.Visibility = Visibility.Collapsed;
+            gTP.Visibility = Visibility.Visible;
+            window.IsEnabled = false;
+            var newVer = await GetNewVersion();
+            var curVer = Paths.GetEPVersion();
+            if (newVer.Item1 != null && curVer != null && curVer != newVer.Item1)
+            {
+                var ESOCPatchLauncher = Process.GetProcesses().
+                     Where(pr => pr.ProcessName == "ESOCPatchLauncher");
+
+                foreach (var process in ESOCPatchLauncher)
+                {
+                    process.Kill();
+                }
+                await InstallEPUpdates(newVer.Item2);
+            }
+            window.IsEnabled = true;
+            iTP.Visibility = Visibility.Visible;
+            gTP.Visibility = Visibility.Collapsed;
             Paths.OpenTAD("age3t.exe");
         }
 
@@ -384,7 +462,7 @@ namespace MultiTools
         {
             rbDefault.IsChecked = true;
             gMods.Visibility = Visibility.Collapsed;
-            gGraphics.Visibility = Visibility.Collapsed;
+
             gSettings.Visibility = Visibility.Visible;
             bFriends.IsEnabled = false;
             bStreams.IsEnabled = false;
@@ -404,27 +482,6 @@ namespace MultiTools
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            //       const string guidFWPolicy2 = "{E2B3C97F-6AE1-41AC-817A-F6F92166D7DD}";
-            //     const string guidRWRule = "{2C5BC43E-3369-4C33-AB0C-BE9469677AF4}";
-
-            //    FWCtrl ctrl = new FWCtrl();
-            //  ctrl.Setup();
-            /*
-                            Type typeFWPolicy2 = Type.GetTypeFromCLSID(new Guid(guidFWPolicy2));
-                            Type typeFWRule = Type.GetTypeFromCLSID(new Guid(guidRWRule));
-                            INetFwPolicy2 fwPolicy2 = (INetFwPolicy2)Activator.CreateInstance(typeFWPolicy2);
-                            INetFwRule newRule = (INetFwRule)Activator.CreateInstance(typeFWRule);
-                            newRule.Name = "InBound_Rule";
-                            newRule.Description = "Block inbound traffic from 192.168.0.2 over TCP port 4000";
-                            newRule.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_ANY;
-                        //    newRule.LocalPorts = "2300";
-                            newRule.RemoteAddresses = "23.124.156.176";
-                            newRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN;
-                            newRule.Enabled = true;
-                            newRule.Grouping = "@firewallapi.dll,-23255";
-                            newRule.Profiles = fwPolicy2.CurrentProfileTypes;
-                            newRule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
-                            fwPolicy2.Rules.Add(newRule);*/
             Process.Start("http://eso-community.net");
         }
 
@@ -499,9 +556,148 @@ namespace MultiTools
 
 
 
+        public async Task<(string, string)> GetNewVersion()
+        {
+            try
+            {
+                CurrentState = "Checking for updates...";
+                var getVersionXml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:pat=""http://patch.esoc.com/""><soapenv:Header/><soapenv:Body><pat:getLatestPatchVersion><releaseType>Stable</releaseType></pat:getLatestPatchVersion></soapenv:Body></soapenv:Envelope>";
+
+                XmlDocument soapEnvelopeXml = CreateSoapEnvelope(getVersionXml);
+                HttpWebRequest webRequest = CreateWebRequest();
+                InsertSoapEnvelopeIntoWebRequest(soapEnvelopeXml, webRequest);
+
+
+                using (var webResponse = await webRequest.GetResponseAsync())
+                {
+                    var result = await new StreamReader(webResponse.GetResponseStream()).ReadToEndAsync();
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(result);
+
+                    XmlNamespaceManager xmlnsManager = new System.Xml.XmlNamespaceManager(xmlDoc.NameTable);
+
+                    xmlnsManager.AddNamespace("soap", "http://schemas.xmlsoap.org/soap/envelope/");
+                    xmlnsManager.AddNamespace("ns1", "http://patch.esoc.com/");
+
+
+                    var updateFileName = xmlDoc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:getLatestPatchVersionResponse/return/updateFileName", xmlnsManager).InnerText;
+                    var NewVersion = xmlDoc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:getLatestPatchVersionResponse/return/versionName", xmlnsManager).InnerText;
+                    var releaseDate = xmlDoc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:getLatestPatchVersionResponse/return/releaseDate", xmlnsManager).InnerText;
+                    var size = Convert.ToInt32(xmlDoc.SelectSingleNode("/soap:Envelope/soap:Body/ns1:getLatestPatchVersionResponse/return/size", xmlnsManager).InnerText);
+                    return (NewVersion.Replace(".", ""), updateFileName);
+                }
+            }
+            catch { return (null, null); }
+
+        }
+
+
+        public async Task<bool> InstallEPUpdates(string name)
+        {
+            try
+            {
+                CurrentState = "Downloading updates...";
+                var downloadupdateXml = @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:pat=""http://patch.esoc.com/""><soapenv:Header/><soapenv:Body><pat:downloadFile><fileName>" + name + "</fileName></pat:downloadFile></soapenv:Body></soapenv:Envelope>";
+                XmlDocument soapEnvelopeXml2 = CreateSoapEnvelope(downloadupdateXml);
+                HttpWebRequest webRequest2 = CreateWebRequest();
+                InsertSoapEnvelopeIntoWebRequest(soapEnvelopeXml2, webRequest2);
+
+
+
+                using (var webResponse2 = await webRequest2.GetResponseAsync())
+                {
+
+
+
+                    var result2 = await new StreamReader(webResponse2.GetResponseStream()).ReadToEndAsync();
+                    XmlDocument xmlDoc2 = new XmlDocument();
+                    xmlDoc2.LoadXml(result2);
+
+                    XmlNamespaceManager xmlnsManager2 = new System.Xml.XmlNamespaceManager(xmlDoc2.NameTable);
+
+                    xmlnsManager2.AddNamespace("soap", "http://schemas.xmlsoap.org/soap/envelope/");
+                    xmlnsManager2.AddNamespace("ns1", "http://patch.esoc.com/");
+
+
+                    XmlNode node2 = xmlDoc2.SelectSingleNode("/soap:Envelope/soap:Body/ns1:downloadFileResponse/return/fileBytes", xmlnsManager2);
+
+
+
+                    byte[] fileBytes = Convert.FromBase64String(node2.InnerText);
+
+
+
+                    using (MemoryStream stream = new MemoryStream(fileBytes))
+                    {
+                        var archive = ArchiveFactory.Open(stream);
+
+
+                        await Task.Run(() =>
+                        {
+                            int progress = 0;
+                            var reader = archive.ExtractAllEntries();
+                            int count = archive.Entries.Count();
+                            while (reader.MoveToNextEntry())
+                            {
+                                if (!reader.Entry.IsDirectory)
+                                {
+                                    if (reader.Entry.Key == "NEW_ESOCPatchLauncher.exe")
+                                        reader.WriteEntryToFile(Path.Combine(Paths.getGamePath(), "ESOCPatchLauncher.exe"), new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                                    else if (reader.Entry.Key == "NEW_ESOCPatchLauncher.exe.config")
+                                        reader.WriteEntryToFile(Path.Combine(Paths.getGamePath(), "ESOCPatchLauncher.exe.config"), new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                                    else
+                                        reader.WriteEntryToDirectory(Paths.getGamePath(), new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
+                                }
+                                progress++;
+                                CurrentState = "Update progress: " + Math.Round(progress * 100.0 / count, 0) + " %";
+                            }
+                        }
+                        );
+
+                    }
+
+                }
+
+                return true;
+            }
+            catch
+            { return false; }
+        }
+
+        private HttpWebRequest CreateWebRequest()
+        {
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://services.eso-community.net/ESOC/PatchService?WSDL");
+            webRequest.Headers.Add("SOAPAction", "");
+            webRequest.ContentType = "text/xml;charset=utf-8";
+            webRequest.Accept = "text/xml";
+
+            webRequest.Method = "POST";
+            return webRequest;
+        }
+
+        private XmlDocument CreateSoapEnvelope(string xml)
+        {
+            XmlDocument soapEnvelopeDocument = new XmlDocument();
+            soapEnvelopeDocument.LoadXml(xml);
+            return soapEnvelopeDocument;
+        }
+
+        private void InsertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
+        {
+            using (System.IO.Stream stream = webRequest.GetRequestStream())
+            {
+                soapEnvelopeXml.Save(stream);
+            }
+        }
+
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //    CallWebService();
+
+            //     Console.WriteLine(     a.releaseDate);
+            //   ver.getLatestPatchVersionCompleted += Ver_getLatestPatchVersionCompleted;
             /*Thread myThread = new Thread(async delegate ()
             {
                 SshClient client = new SshClient("ssh.pythonanywhere.com", "XaKOps", "19862007");
@@ -528,11 +724,14 @@ namespace MultiTools
 
         }
 
+
+
         public MainWindow()
         {
             GamesOpen = false;
             ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(Int32.MaxValue));
-            ToolTipService.InitialShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(0));
+            ToolTipService.InitialShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(200));
+
             DataContext = this;
             InitializeComponent();
 
@@ -582,7 +781,7 @@ namespace MultiTools
                MyView.Add(LI);*/
             EPVisible = Paths.IsEPInstalled();
             TPVisible = Paths.IsTPInstalled();
-
+            XPVisible = Paths.IsXPInstalled();
             ESOHint = (string)Application.Current.FindResource("Checking ESO servers...");
             ESOPop = "- - -";
             TADPop = "- - -";
@@ -612,33 +811,11 @@ namespace MultiTools
             P9 = new SolidColorBrush();
             P10 = new SolidColorBrush();
             P11 = new SolidColorBrush();
-            using (RegistryKey R = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-            {
-                object P = R.GetValue("setuppath");
-                if (P != null)
-                {
-                    FilePath = P.ToString();
-                    if (File.Exists(Path.Combine(FilePath, "DataPY.bar")))
-                        if (GetMD5(Path.Combine(FilePath, "DataPY.bar")) == "e6‌​c0‌​d4‌​0d‌​08‌​86‌​f5‌​97‌​a0‌​85‌​46‌​63‌​2b‌​53‌​6a‌​5d")
-                        {
-                            bDisableEnable.IsChecked = false;
-                        }
-                        else
-                        {
-                            bDisableEnable.Checked -= bEnable_Click;
-                            bDisableEnable.IsChecked = true;
-                            bDisableEnable.Checked += bEnable_Click;
-                        }
-                }
-                else
-                {
-                    bDisableEnable.IsChecked = false;
-                }
-            }
+
             Colors = typeof(Brushes).GetProperties();
 
 
-            if (gGraphics.Visibility == Visibility.Collapsed && gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed)
+            if (gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed)
             {
                 rbDefault.IsChecked = true;
             }
@@ -646,7 +823,7 @@ namespace MultiTools
             rbJammsUI.IsChecked = Paths.isJammsInstalled();
             rbQazUI.IsChecked = Paths.isQazInstalled();
             tbArty.IsChecked = Paths.isArtyInstalled();
-            tbKeys.IsChecked = Paths.isKeysInstalled();
+
 
 
             rbF1.IsChecked = Paths.IsFontInstalled("Academy");
@@ -659,8 +836,7 @@ namespace MultiTools
             rbF8.IsChecked = Paths.IsFontInstalled("Plainot");
             rbF9.IsChecked = Paths.IsFontInstalled("Formal436 BT");
             udMax.ValueChanged -= udMax_ValueChanged;
-            udMin.ValueChanged -= udMin_ValueChanged;
-            udNorm.ValueChanged -= udNorm_ValueChanged;
+
 
             using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
             {
@@ -713,34 +889,27 @@ namespace MultiTools
                             udMax.Value = Double.Parse(S[z1].Split('=')[1]);
                         else
                             udMax.Value = 60;
-                        int z2 = S.FindIndex(x => x.StartsWith("normalZoom"));
-                        if (z2 >= 0)
-                            udNorm.Value = Double.Parse(S[z2].Split('=')[1]);
-                        else
-                            udNorm.Value = 50;
-                        int z3 = S.FindIndex(x => x.StartsWith("minZoom"));
-                        if (z3 >= 0)
-                            udMin.Value = Double.Parse(S[z3].Split('=')[1]);
-                        else
-                            udMin.Value = 29;
+
                     }
                     else
                     {
                         udMax.Value = 60;
-                        udNorm.Value = 50;
-                        udMin.Value = 29;
                     }
 
                     if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
                     {
                         string M = File.ReadAllText(Path.Combine(P.ToString(), "Startup", "user.con"));
                         miRotator.IsChecked = M.Contains("uiWheelRotatePlacedUnit");
+                        miFastESO.IsChecked = M.Contains("startRandomGame() modeEnter(\"Pregame\") doMPSetup(true)");
                     }
+
+
+
+
                 }
             }
             udMax.ValueChanged += udMax_ValueChanged;
-            udMin.ValueChanged += udMin_ValueChanged;
-            udNorm.ValueChanged += udNorm_ValueChanged;
+
 
         }
 
@@ -1242,66 +1411,9 @@ namespace MultiTools
         }
 
 
-        private async void bEnable_Click(object sender, RoutedEventArgs e)
-        {
-            bDisableEnable.IsEnabled = false;
-            try
-            {
-                if (File.Exists(Path.Combine(FilePath, "DataPY.bar")))
-                {
-                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Mod.DataPY.zip")))
-                    {
-                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
-                        {
-                            if (x.Name == "")
-                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(FilePath, x.FullName)));
-                            else
-                                x.ExtractToFile(Path.Combine(FilePath, x.FullName), true);
-                        }));
-                    }
-                }
-            }
-            catch { }
-            bDisableEnable.IsEnabled = true;
 
-        }
 
-        private async void bDisable_Click(object sender, RoutedEventArgs e)
-        {
-            bDisableEnable.IsEnabled = false;
-            try
-            {
-                if (File.Exists(Path.Combine(FilePath, "DataPY.bar")))
-                {
-                    using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Original.DataPY.zip")))
-                    {
-                        await Task.Run(() => zip.Entries.ToList().ForEach(x =>
-                        {
-                            if (x.Name == "")
-                                Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(FilePath, x.FullName)));
-                            else
-                                x.ExtractToFile(Path.Combine(FilePath, x.FullName), true);
-                        }));
-                    }
-                }
-            }
-            catch { }
-            bDisableEnable.IsEnabled = true;
-        }
 
-        private void bNote_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show((string)Application.Current.FindResource("This mod will level up your homecity by 100.") + Environment.NewLine +
-(string)Application.Current.FindResource("I am not responsible for the consequences of using this mod!") + Environment.NewLine + Environment.NewLine +
-(string)Application.Current.FindResource("1. Find a partner with the same mod.") + Environment.NewLine +
-(string)Application.Current.FindResource("2. Enable mod.") + Environment.NewLine +
-(string)Application.Current.FindResource("3. Start the game.") + Environment.NewLine +
-(string)Application.Current.FindResource("4. Play a game on fast mod.") + Environment.NewLine +
-(string)Application.Current.FindResource("5. Wait 2 minutes and resign (the winner will receive the XP).") + Environment.NewLine +
-(string)Application.Current.FindResource("6. Close the game.") + Environment.NewLine +
-(string)Application.Current.FindResource("7. Disable mod.") + Environment.NewLine +
-(string)Application.Current.FindResource("8. Done!"));
-        }
 
 
 
@@ -1516,65 +1628,7 @@ namespace MultiTools
             catch { }
         }
 
-        private void udNorm_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            try
-            {
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-                    if (P != null)
-                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                        {
-                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                            int z2 = S.FindIndex(x => x.StartsWith("normalZoom="));
-                            if (z2 >= 0)
-                                S.RemoveAt(z2);
-                            S.Add("normalZoom=" + Math.Round(udNorm.Value).ToString());
-                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                        }
-                        else
-                        {
-                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
-                            {
-                                w.WriteLine("normalZoom=" + Math.Round(udMax.Value).ToString());
-                            }
-                        }
 
-                }
-            }
-            catch { }
-        }
-
-        private void udMin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            try
-            {
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-                    if (P != null)
-                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
-                        {
-                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
-                            int z3 = S.FindIndex(x => x.StartsWith("minZoom="));
-                            if (z3 >= 0)
-                                S.RemoveAt(z3);
-                            S.Add("minZoom=" + Math.Round(udMin.Value).ToString());
-                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg"), S.ToArray());
-                        }
-                        else
-                        {
-                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.cfg"), true))
-                            {
-                                w.WriteLine("minZoom=" + Math.Round(udMax.Value).ToString());
-                            }
-                        }
-
-                }
-            }
-            catch { }
-        }
 
         private void Button_Click_6m(object sender, RoutedEventArgs e)
         {
@@ -1587,14 +1641,11 @@ namespace MultiTools
                         if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.cfg")))
                         {
                             udMax.ValueChanged -= udMax_ValueChanged;
-                            udMin.ValueChanged -= udMin_ValueChanged;
-                            udNorm.ValueChanged -= udNorm_ValueChanged;
+
                             udMax.Value = 60;
-                            udNorm.Value = 50;
-                            udMin.Value = 29;
+
                             udMax.ValueChanged += udMax_ValueChanged;
-                            udMin.ValueChanged += udMin_ValueChanged;
-                            udNorm.ValueChanged += udNorm_ValueChanged;
+
                             List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.cfg")).ToList();
                             int z1 = S.FindIndex(x => x.StartsWith("maxZoom="));
                             if (z1 >= 0)
@@ -1610,14 +1661,11 @@ namespace MultiTools
                         else
                         {
                             udMax.ValueChanged -= udMax_ValueChanged;
-                            udMin.ValueChanged -= udMin_ValueChanged;
-                            udNorm.ValueChanged -= udNorm_ValueChanged;
+
                             udMax.Value = 60;
-                            udNorm.Value = 50;
-                            udMin.Value = 29;
+
                             udMax.ValueChanged += udMax_ValueChanged;
-                            udMin.ValueChanged += udMin_ValueChanged;
-                            udNorm.ValueChanged += udNorm_ValueChanged;
+
                         }
 
                 }
@@ -1636,24 +1684,16 @@ namespace MultiTools
             gInterface.Visibility = Visibility.Collapsed;
         }
 
-        private void RadioButton_Unchecked_1(object sender, RoutedEventArgs e)
-        {
-            gMods.Visibility = Visibility.Collapsed;
-        }
 
-        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+
+        private void RadioButton_Checked_2(object sender, RoutedEventArgs e)
         {
             gMods.Visibility = Visibility.Visible;
         }
 
-        private void RadioButton_Checked_2(object sender, RoutedEventArgs e)
-        {
-            gGraphics.Visibility = Visibility.Visible;
-        }
-
         private void RadioButton_Unchecked_2(object sender, RoutedEventArgs e)
         {
-            gGraphics.Visibility = Visibility.Collapsed;
+            gMods.Visibility = Visibility.Collapsed;
 
         }
 
@@ -2071,47 +2111,6 @@ namespace MultiTools
             tbCows.IsEnabled = true;
         }
 
-        private async void tbKeys_Checked(object sender, RoutedEventArgs e)
-        {
-            tbKeys.IsEnabled = false;
-            try
-            {
-                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3 expansion pack 2\\1.0"))
-                {
-                    object P = AS.GetValue("setuppath");
-
-                    if (P != null)
-                    {
-                        if (!Paths.isKeysInstalled())
-                        {
-                            using (ZipArchive zip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("MultiTools.Mods.Keys.zip")))
-                            {
-                                await Task.Run(() => zip.Entries.ToList().ForEach(x =>
-                                {
-                                    if (x.Name == "")
-                                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(P.ToString(), x.FullName)));
-                                    else
-                                        x.ExtractToFile(Path.Combine(P.ToString(), x.FullName), true);
-                                }));
-                            }
-                        }
-                    }
-                }
-            }
-            catch { }
-            tbKeys.IsEnabled = true;
-        }
-
-        private void tbKeys_Unchecked(object sender, RoutedEventArgs e)
-        {
-            tbKeys.IsEnabled = false;
-            try
-            {
-                Paths.RemoveKeysIfInstalled();
-            }
-            catch { }
-            tbKeys.IsEnabled = true;
-        }
 
         private async void Button_Click_1m(object sender, RoutedEventArgs e)
         {
@@ -2986,6 +2985,9 @@ namespace MultiTools
                             A.Add("Clan: " + US.Clan);
                         A.Add(US.PRYS);
                         A.Add(US.PRYT);
+                        A.Add(US.PRS);
+                        A.Add("");
+                        A.Add("Click to open ELO page");
                         Friends[Index].Hint = string.Join(Environment.NewLine, A.ToArray());
                     }
                     else
@@ -3021,12 +3023,7 @@ namespace MultiTools
             }
         }
 
-        private void listView1_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
 
-            pFriends.IsOpen = true;
-
-        }
 
         private void bFriends_Click(object sender, RoutedEventArgs e)
         {
@@ -3244,7 +3241,7 @@ namespace MultiTools
             {
                 get
                 {
-                    return Name + Environment.NewLine + "Status: " + Status + Environment.NewLine + "Followers: " + Followers.ToString() + Environment.NewLine + "Viewers: " + Viewers.ToString() + Environment.NewLine + "Length: " + Length.ToString(@"hh\:mm\:ss");
+                    return Name + Environment.NewLine + "Status: " + Status + Environment.NewLine + "Followers: " + Followers.ToString() + Environment.NewLine + "Viewers: " + Viewers.ToString() + Environment.NewLine + "Length: " + Length.ToString(@"hh\:mm\:ss") + Environment.NewLine + Environment.NewLine + "Click to open in browser";
                 }
             }
 
@@ -3267,7 +3264,7 @@ namespace MultiTools
         async void GetTwitchStreamsTAD()
         {
 
-            string Data = await HttpGetAsync("https://api.twitch.tv/kraken/streams/?game=" + WebUtility.UrlEncode("Age of Empires III: The Asian Dynasties") + "&live&client_id=9rrpybi820nvoixrr2lkqk19ae8k4ef");
+            string Data = await HttpGetAsync("https://api.twitch.tv/kraken/streams/?game=" + WebUtility.UrlEncode("Age of Empires III: The Asian Dynasties") + "&live");
             try
             {
                 Twitch root = JsonConvert.DeserializeObject<Twitch>(Data);
@@ -3297,17 +3294,17 @@ namespace MultiTools
         }
 
 
-        private void ListViewItem_OnItemSelected(object sender, RoutedEventArgs e)
+        private void ListView3_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*   var item = sender as ListViewItem;
-               if (item != null && item.IsSelected)
-               {
-                   item as Stre
-               }*/
             if (listView3.SelectedItem != null)
                 if (listView3.SelectedItem is StreamItem)
                     Process.Start((listView3.SelectedItem as StreamItem).URL);
         }
+
+
+
+
+
 
         private void bStreams_Click(object sender, RoutedEventArgs e)
         {
@@ -3368,9 +3365,232 @@ namespace MultiTools
 
 
 
-        private void Image_MouseLeftButtonDown_5(object sender, MouseButtonEventArgs e)
+        private void Image_MouseLeftButtonDown_5(object sender, RoutedEventArgs e)
         {
             Process.Start("Economic Calculator.exe");
         }
+
+
+
+        private void TextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("http://aoe3.jpcommunity.com/rating2/player?n=" + (sender as TextBlock).Text);
+        }
+
+        private void Button_MouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+            var path = GetPathForExe("{BE5FCEDA-3AE1-4A57-8C9D-D4C7713FA7F1}_is1");
+            if (!string.IsNullOrEmpty(path))
+            {
+                var startInfo = new ProcessStartInfo();
+
+                startInfo.WorkingDirectory = path;
+                startInfo.FileName = Path.Combine(path, "ESO Tracker.exe");
+
+                Process.Start(startInfo);
+
+            }
+
+        }
+
+
+
+
+
+
+        private const string keyBase = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\";
+        private string GetPathForExe(string fileName)
+        {
+            RegistryKey localMachine = Registry.LocalMachine;
+            RegistryKey fileKey = localMachine.OpenSubKey(string.Format(@"{0}\{1}", keyBase, fileName));
+            object result = null;
+            if (fileKey != null)
+            {
+                result = fileKey.GetValue("InstallLocation");
+                fileKey.Close();
+            }
+
+
+            return (string)result;
+        }
+
+        private void MiFastESO_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                    {
+                        bool NotExist = true;
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                        {
+                            string M = File.ReadAllText(Path.Combine(P.ToString(), "Startup", "user.con"));
+                            NotExist = !M.Contains("startRandomGame() modeEnter(\"Pregame\") doMPSetup(true)");
+                        }
+                        if (NotExist)
+                            using (StreamWriter w = new StreamWriter(Path.Combine(P.ToString(), "Startup", "user.con"), true))
+                            {
+                                w.WriteLine("startRandomGame() modeEnter(\"Pregame\") doMPSetup(true)");
+                            }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void MiFastESO_Unchecked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (RegistryKey AS = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\microsoft games\\age of empires 3\\1.0"))
+                {
+                    object P = AS.GetValue("setuppath");
+                    if (P != null)
+                        if (File.Exists(Path.Combine(P.ToString(), "Startup", "user.con")))
+                        {
+                            List<string> S = File.ReadAllLines(Path.Combine(P.ToString(), "Startup", "user.con")).ToList();
+                            S.RemoveAt(S.FindIndex(x => x.EndsWith("startRandomGame() modeEnter(\"Pregame\") doMPSetup(true)")));
+                            File.WriteAllLines(Path.Combine(P.ToString(), "Startup", "user.con"), S.ToArray());
+                        }
+                }
+            }
+            catch { }
+        }
+
+        private void TbPLayer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (tbPlayer.Text != "" && e.Key == System.Windows.Input.Key.Enter)
+            {
+                bSearch.Focus();
+                bSearch.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+                bSearch.Focus();
+            }
+        }
+
+        private void BSearch_Click(object sender, RoutedEventArgs e)
+        {
+            if (tbPlayer.Text != "")
+                Process.Start("http://aoe3.jpcommunity.com/rating2/player?n=" + tbPlayer.Text);
+        }
+
+        private void Button_Click_10(object sender, RoutedEventArgs e)
+        {
+
+            Storyboard story = new Storyboard();
+            story.FillBehavior = FillBehavior.HoldEnd;
+
+
+            DiscreteStringKeyFrame discreteStringKeyFrame;
+            StringAnimationUsingKeyFrames stringAnimationUsingKeyFrames = new StringAnimationUsingKeyFrames();
+            stringAnimationUsingKeyFrames.Duration = new Duration(TimeSpan.FromMilliseconds(20000));
+            stringAnimationUsingKeyFrames.BeginTime = TimeSpan.FromMilliseconds(500);
+            string tmp = string.Empty;
+            foreach (char c in (string)Application.Current.FindResource("Joke"))
+            {
+                discreteStringKeyFrame = new DiscreteStringKeyFrame();
+                discreteStringKeyFrame.KeyTime = KeyTime.Paced;
+                tmp += c;
+                discreteStringKeyFrame.Value = tmp;
+                stringAnimationUsingKeyFrames.KeyFrames.Add(discreteStringKeyFrame);
+            }
+
+
+
+            DiscreteStringKeyFrame discreteStringKeyFrame4 = new DiscreteStringKeyFrame(string.Empty);
+            StringAnimationUsingKeyFrames stringAnimationUsingKeyFrames4 = new StringAnimationUsingKeyFrames();
+            stringAnimationUsingKeyFrames4.Duration = new Duration(TimeSpan.FromMilliseconds(0));
+            stringAnimationUsingKeyFrames4.BeginTime = TimeSpan.FromMilliseconds(0);
+            stringAnimationUsingKeyFrames4.KeyFrames.Add(discreteStringKeyFrame4);
+            Storyboard.SetTargetName(stringAnimationUsingKeyFrames4, tbHackJoke.Name);
+            Storyboard.SetTargetProperty(stringAnimationUsingKeyFrames4, new PropertyPath(TextBlock.TextProperty));
+            story.Children.Add(stringAnimationUsingKeyFrames4);
+
+
+
+
+            DiscreteObjectKeyFrame discreteStringKeyFrame3 = new DiscreteObjectKeyFrame(Visibility.Visible);
+            ObjectAnimationUsingKeyFrames stringAnimationUsingKeyFrames3 = new ObjectAnimationUsingKeyFrames();
+
+
+            stringAnimationUsingKeyFrames3.BeginTime = TimeSpan.FromMilliseconds(0);
+            stringAnimationUsingKeyFrames3.Duration = TimeSpan.FromMilliseconds(0);
+            stringAnimationUsingKeyFrames3.KeyFrames.Add(discreteStringKeyFrame3);
+            Storyboard.SetTargetName(stringAnimationUsingKeyFrames3, tbHackJoke.Name);
+            Storyboard.SetTargetProperty(stringAnimationUsingKeyFrames3, new PropertyPath(TextBlock.VisibilityProperty));
+            story.Children.Add(stringAnimationUsingKeyFrames3);
+
+
+
+            Storyboard.SetTargetName(stringAnimationUsingKeyFrames, tbHackJoke.Name);
+            Storyboard.SetTargetProperty(stringAnimationUsingKeyFrames, new PropertyPath(TextBlock.TextProperty));
+            story.Children.Add(stringAnimationUsingKeyFrames);
+
+
+
+
+
+
+            DiscreteObjectKeyFrame discreteStringKeyFrame2 = new DiscreteObjectKeyFrame(Visibility.Collapsed);
+            ObjectAnimationUsingKeyFrames stringAnimationUsingKeyFrames2 = new ObjectAnimationUsingKeyFrames();
+
+            stringAnimationUsingKeyFrames2.BeginTime = TimeSpan.FromMilliseconds(25000);
+            stringAnimationUsingKeyFrames2.Duration = TimeSpan.FromMilliseconds(0);
+            stringAnimationUsingKeyFrames2.KeyFrames.Add(discreteStringKeyFrame2);
+            Storyboard.SetTargetName(stringAnimationUsingKeyFrames2, tbHackJoke.Name);
+            Storyboard.SetTargetProperty(stringAnimationUsingKeyFrames2, new PropertyPath(TextBlock.VisibilityProperty));
+            story.Children.Add(stringAnimationUsingKeyFrames2);
+
+            story.Begin(tbHackJoke);
+        }
+
+        private async void Image_MouseLeftButtonDown_6(object sender, MouseButtonEventArgs e)
+        {
+            iXP.Visibility = Visibility.Collapsed;
+            gXP.Visibility = Visibility.Visible;
+            window.IsEnabled = false;
+            var newVer = await GetNewVersion();
+            var curVer = Paths.GetEPVersion();
+            if (newVer.Item1 != null && curVer != null && curVer != newVer.Item1)
+            {
+                var ESOCPatchLauncher = Process.GetProcesses().
+                     Where(pr => pr.ProcessName == "ESOCPatchLauncher");
+
+                foreach (var process in ESOCPatchLauncher)
+                {
+                    process.Kill();
+                }
+                await InstallEPUpdates(newVer.Item2);
+            }
+            window.IsEnabled = true;
+            iXP.Visibility = Visibility.Visible;
+            gXP.Visibility = Visibility.Collapsed;
+
+
+
+
+
+            MessageBox.Show((string)Application.Current.FindResource("This mod will level up your homecity by 100.") + Environment.NewLine + Environment.NewLine +
+(string)Application.Current.FindResource("1. Find a partner with the same mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("2. Enable mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("3. Start the game.") + Environment.NewLine +
+(string)Application.Current.FindResource("4. Play a game on fast mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("5. Wait 2 minutes and resign (the winner will receive the XP).") + Environment.NewLine +
+(string)Application.Current.FindResource("6. Close the game.") + Environment.NewLine +
+(string)Application.Current.FindResource("7. Disable mod.") + Environment.NewLine +
+(string)Application.Current.FindResource("8. Done!"));
+            Paths.OpenTAD("age3xpmod.exe");
+        }
+
+
+
+
     }
+
+
+
+
+
+
 }

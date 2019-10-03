@@ -4,6 +4,21 @@
     xmlns:local="clr-namespace:MultiTools.Languages"
     xmlns:v="clr-namespace:System;assembly=mscorlib">
 
+
+
+    <v:String x:Key="FastESO">Launch game onto ESO login screen</v:String>
+    <v:String x:Key="EconomicCalculator">Economic Calculator</v:String>
+    <v:String x:Key="ESOTracker">ESO Tracker</v:String>
+    <v:String x:Key="LiveStreams">Live Twitch streams</v:String>
+    <v:String x:Key="FriendsOnline">Friends Online</v:String>
+    <v:String x:Key="RemoveFriend">Remove from friend list</v:String>
+    <v:String x:Key="Search">Search player</v:String>
+    <v:String x:Key="ESOName">ESO Name...</v:String>
+    <v:String x:Key="InstallCheats">Activate Hacks</v:String>
+    <v:String x:Key="Joke" xml:space="preserve">Unpacking files...&#13;Disabling ESOC anti-cheat...&#13;Maphack installed!&#13;Out of Sync hack installed!&#13;Freezes hack installed!&#13;...&#13;...&#13;...&#13;...&#13;...&#13;...&#13;Garja mode activated!&#13;Kynesie's wall laming upgraded!&#13;Танюша's smurf ability turned on!&#13;DuckDaniels amazonia skill improved!&#13;LUKASHENKO'S POTATOES HARVESTED SUCCESSFULLY!&#13;Done!</v:String>
+    
+
+
     <v:String x:Key="MinDWindow">Minimize the pause window</v:String>
     <v:String x:Key="TitleMods">MultiTools - Modifications</v:String>
     <v:String x:Key="Switcher">Game localization</v:String>
@@ -14,7 +29,7 @@
     <v:String x:Key="Larger">Larger</v:String>
     <v:String x:Key="Smaller">Smaller</v:String>
     <v:String x:Key="Interface">Interface</v:String>
-    <v:String x:Key="Settings">Game settings</v:String>
+    <v:String x:Key="Settings">Configs</v:String>
     <v:String x:Key="Mod">Mods</v:String>
     <v:String x:Key="Back">Back</v:String>
     <v:String x:Key="UI">User Interface</v:String>
@@ -71,7 +86,7 @@
     <v:String x:Key="Fonts">Fonts</v:String>
     <v:String x:Key="Apply">Apply</v:String>
 
-    <v:String x:Key="Auto">Auto-setup of graphics, sound and options</v:String>
+    <v:String x:Key="Auto">Quick setup of game options</v:String>
     <!--  Автонастройка графики, звука и опций  -->
 
     <v:String x:Key="ESOon">Status: ESO servers are online.</v:String>

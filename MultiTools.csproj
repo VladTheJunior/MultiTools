@@ -55,12 +55,22 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -73,6 +83,12 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WinFormAnimation, Version=1.6.0.4, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>packages\WinFormAnimation.1.6.0.4\lib\net40\WinFormAnimation.dll</HintPath>
+    </Reference>
+    <Reference Include="XamlAnimatedGif, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\XamlAnimatedGif.1.2.2\lib\net45\XamlAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SingleInstance.cs" />
@@ -136,7 +152,6 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="Mod\DataPY.zip" />
     <EmbeddedResource Include="Original\DataPY.zip" />
     <EmbeddedResource Include="Mods\Art.zip" />
     <EmbeddedResource Include="Mods\Cows.zip" />
@@ -162,8 +177,8 @@
     <Resource Include="Font\Kramola.ttf" />
     <Resource Include="Font\Lugatype.otf" />
     <Resource Include="Font\Margot.ttf" />
-    <Resource Include="Font\MTCORSVA.TTF" />
     <Resource Include="Font\Plainot.ttf" />
+    <Resource Include="Font\MTCORSVA.TTF" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -216,9 +231,6 @@
     <Resource Include="Borders\TopRight.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\WallPapper.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Menu.png" />
   </ItemGroup>
   <ItemGroup>
@@ -240,15 +252,7 @@
     <Resource Include="Launcher\age3.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Launcher\tp.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Cursor\AoE.cur" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Launcher\esoc.png" />
-    <Resource Include="Launcher\tad.png" />
-    <Resource Include="Launcher\vanilla.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Launcher\age3p.png" />
@@ -320,9 +324,6 @@
     <Resource Include="Launcher\age3x.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Launcher\twc.png" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
@@ -338,9 +339,6 @@
     <Resource Include="Audio\4.png" />
     <Resource Include="Audio\5.png" />
     <Resource Include="Audio\6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\1.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="music.wav" />
@@ -384,12 +382,6 @@
     <Resource Include="Borders3\topright.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Launcher\ecocalcLauncher.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Launcher\ecocalc.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Flags\click.png" />
     <Resource Include="Flags\d1.png" />
     <Resource Include="Flags\d2.png" />
@@ -409,6 +401,66 @@
     <Resource Include="Flags\u1.png" />
     <Resource Include="Flags\u2.png" />
     <Resource Include="Flags\u3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\AddActive.png" />
+    <Resource Include="Buttons\AddClicked.png" />
+    <Resource Include="Buttons\AddDisabled.png" />
+    <Resource Include="Buttons\AddNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\ExtActive.png" />
+    <Resource Include="Buttons\ExtClicked.png" />
+    <Resource Include="Buttons\ExtDisabled.png" />
+    <Resource Include="Buttons\ExtNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\calcClicked.png" />
+    <Resource Include="Buttons\calcNormal.png" />
+    <Resource Include="Buttons\calcOver.png" />
+    <Resource Include="Buttons\trackerClicked.png" />
+    <Resource Include="Buttons\trackerOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\trackerNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\friendsClicked.png" />
+    <Resource Include="Buttons\friendsNormal.png" />
+    <Resource Include="Buttons\friendsOver.png" />
+    <Resource Include="Buttons\twitchClicked.png" />
+    <Resource Include="Buttons\twitchNormal.png" />
+    <Resource Include="Buttons\twitchOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\wp1826601-age-of-empires-wallpapers.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Screenshots\ekantaScreen.png" />
+    <Resource Include="Screenshots\jamsScreen.png" />
+    <Resource Include="Screenshots\qazScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\tab_icons_search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\tab_icons_searchClicked.png" />
+    <Resource Include="Buttons\tab_icons_searchOver.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\LauncherPanel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\largeActive.png" />
+    <Resource Include="Buttons\largeClicked.png" />
+    <Resource Include="Buttons\largeDisabled.png" />
+    <Resource Include="Buttons\largeNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\8.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Launcher\age3xpmod.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

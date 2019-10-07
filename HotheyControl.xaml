@@ -1,0 +1,121 @@
+﻿<UserControl x:Name="hotkey" x:Class="MultiTools.HotheyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MultiTools"
+             mc:Ignorable="d" 
+            Padding="0,5,5,5"
+             d:DesignHeight="90" d:DesignWidth="350">
+    <UserControl.Resources>
+        <local:UsedByConverter x:Key="UsedByConverter"/>
+        <ControlTemplate x:Key="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
+            <Border Padding="4,2,4,5" Background="{TemplateBinding Background}" 
+                x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="1"/>
+                </Border.Effect>
+                <ScrollViewer x:Name="PART_ContentHost"/>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+
+        </Grid.ColumnDefinitions>
+        <Image Width="64" Height="64" Source="{Binding ElementName=hotkey, Path=HotkeyIcon}" Margin="0,0,5,0" VerticalAlignment="Top" />
+        <Grid  Width="64" Height="64"  Margin="0,0,5,0" Background="#FFFFFFFF"  PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Opacity" Value="0"/>
+                    <Style.Triggers>
+                       
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="0.2"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="Opacity" Value="0"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Padding="0,0,0,4" Text="{Binding ElementName=hotkey, Path=HotkeyName}" FontFamily="/MultiTools;component/Font/#Formal436 BT" FontSize="14" TextDecorations="Underline" FontWeight="Bold" HorizontalAlignment="Left"/>
+            <TextBox IsReadOnly="True" Width="236"
+                     Template="{StaticResource TextBoxBaseControlTemplate}"
+                     PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
+             IsReadOnlyCaretVisible="False" BorderThickness="2"
+             IsUndoEnabled="False" x:Name="hk" Grid.Row="1" Text="{Binding Hotkey, ElementName=hotkey, Mode=OneWay, TargetNullValue=Unassigned}" FontFamily="/MultiTools;component/Font/#Formal436 BT" FontSize="16" SelectionBrush="{x:Null}" Foreground="#FFFDFDFD" HorizontalAlignment="Left">
+                <TextBox.Style>
+                    
+                    <Style TargetType="TextBox">
+                        <Setter Property="Background" Value="#4C000000"/>
+                        <Setter Property="BorderBrush" Value="Green"/>
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="GotKeyboardFocus" >
+                                <BeginStoryboard>
+                                    <Storyboard TargetProperty="(BorderBrush).(SolidColorBrush.Color)">
+                                        <ColorAnimation To="Yellow" Duration="0:0:0.5">
+                                            <ColorAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseOut"/>
+                                            </ColorAnimation.EasingFunction>
+                                        </ColorAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                              
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="LostKeyboardFocus" >
+                                <BeginStoryboard>
+                                    <Storyboard  TargetProperty="(BorderBrush).(SolidColorBrush.Color)">
+                                        <ColorAnimation To="Green" Duration="0:0:0.5">
+                                            <ColorAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseOut"/>
+                                            </ColorAnimation.EasingFunction>
+                                        </ColorAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+                <TextBox.ContextMenu>
+                    <ContextMenu Visibility="Collapsed" />
+                </TextBox.ContextMenu>
+            </TextBox>
+
+                <DockPanel  Margin="0,4" Grid.Row="2">
+                    <Image ToolTip="{DynamicResource British}" Source="Civs/British.png" Visibility="{Binding UsedBy, ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=br}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Dutch}" Source="Civs/Dutch.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=du}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource French}" Source="Civs/French.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=fr}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Germans}" Source="Civs/Germans.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=ge}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Ottomans}" Source="Civs/Ottomans.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=ot}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Portuguese}" Source="Civs/Portuguese.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=po}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Russians}" Source="Civs/Russians.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=ru}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Spanish}" Source="Civs/Spanish.png" Visibility="{Binding UsedBy, ElementName=hotkey,Converter={StaticResource UsedByConverter}, ConverterParameter=sp}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                 
+            
+             
+                    <Image ToolTip="{DynamicResource Aztecs}"  Source="Civs/XPAztec.png" Visibility="{Binding UsedBy, ElementName=hotkey,Converter={StaticResource UsedByConverter}, ConverterParameter=az}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Iroquois}"  Source="Civs/XPIroquois.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=ir}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Sioux}"  Source="Civs/XPSioux.png" Visibility="{Binding UsedBy, ElementName=hotkey,Converter={StaticResource UsedByConverter}, ConverterParameter=si}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+             
+                    <Image ToolTip="{DynamicResource Chinese}"  Source="Civs/Chinese.png" Visibility="{Binding UsedBy,ElementName=hotkey, Converter={StaticResource UsedByConverter}, ConverterParameter=ch}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Indians}"  Source="Civs/Indians.png" Visibility="{Binding UsedBy, ElementName=hotkey,Converter={StaticResource UsedByConverter}, ConverterParameter=in}" Height="10" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                    <Image ToolTip="{DynamicResource Japanese}"  Source="Civs/Japanese.png" Visibility="{Binding UsedBy, ElementName=hotkey,Converter={StaticResource UsedByConverter}, ConverterParameter=ja}" Height="10" HorizontalAlignment="Left"/>
+                </DockPanel>
+           
+        
+        </Grid>
+    </Grid>
+
+</UserControl>

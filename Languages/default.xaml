@@ -4,8 +4,56 @@
     xmlns:local="clr-namespace:MultiTools.Languages"
     xmlns:v="clr-namespace:System;assembly=mscorlib">
 
-
-
+    <v:String x:Key="British">British</v:String>
+    <v:String x:Key="Dutch">Dutch</v:String>
+    <v:String x:Key="French">French</v:String>
+    <v:String x:Key="Germans">Germans</v:String>
+    <v:String x:Key="Ottomans">Ottomans</v:String>
+    <v:String x:Key="Portuguese">Portuguese</v:String>
+    <v:String x:Key="Russians">Russians</v:String>
+    <v:String x:Key="Spanish">Spanish</v:String>
+    <v:String x:Key="Iroquois">Iroquois</v:String>
+    <v:String x:Key="Sioux">Sioux</v:String>
+    <v:String x:Key="Aztecs">Aztecs</v:String>
+    <v:String x:Key="Chinese">Chinese</v:String>
+    <v:String x:Key="Indians">Indians</v:String>
+    <v:String x:Key="Japanese">Japanese</v:String>
+    
+    <v:String x:Key="Hotkeys1">General Game Hotkeys</v:String>
+    <v:String x:Key="Hotkeys2">Game World Hotkeys</v:String>
+    <v:String x:Key="Hotkeys3">Selection Group Hotkeys</v:String>
+    <v:String x:Key="Hotkeys4">Find Unit Hotkeys</v:String>
+    <v:String x:Key="Hotkeys5">Building Construction Hotkeys</v:String>
+    <v:String x:Key="Hotkeys6">Town Center Hotkeys</v:String>
+    <v:String x:Key="Hotkeys7">Barracks Hotkeys</v:String>
+    <v:String x:Key="Hotkeys8">Village Hotkeys</v:String>
+    <v:String x:Key="Hotkeys9">Blockhouse Hotkeys</v:String>
+    <v:String x:Key="Hotkeys10">War Hut Hotkeys</v:String>
+    <v:String x:Key="Hotkeys11">Nobles' Hut Hotkeys</v:String>
+    <v:String x:Key="Hotkeys12">Stable Hotkeys</v:String>
+    <v:String x:Key="Hotkeys13">Corral Hotkeys</v:String>
+    <v:String x:Key="Hotkeys14">Caravanserai Hotkeys</v:String>
+    <v:String x:Key="Hotkeys15">Artillery Foundry Hotkeys</v:String>
+    <v:String x:Key="Hotkeys16">Dock Hotkeys</v:String>
+    <v:String x:Key="Hotkeys17">Castle Hotkeys</v:String>
+    <v:String x:Key="Hotkeys18">Consulate Hotkeys</v:String>
+    <v:String x:Key="Hotkeys19">Saloon Hotkeys</v:String>
+    <v:String x:Key="Hotkeys20">Monastery Hotkeys</v:String>
+    <v:String x:Key="Hotkeys21">War Academy Hotkeys</v:String>
+    <v:String x:Key="Hotkeys22">Native Embassy Hotkeys</v:String>
+    <v:String x:Key="Hotkeys23">Fire Pit Hotkeys</v:String>
+    <v:String x:Key="Hotkeys24">Church or Mosque Hotkeys</v:String>
+    <v:String x:Key="Hotkeys25">Livestock Hotkeys</v:String>
+    <v:String x:Key="Hotkeys26">Native Farms Hotkeys</v:String>
+    <v:String x:Key="Hotkeys27">Trading Post Hotkeys</v:String>
+    <v:String x:Key="Hotkeys28">Dojo Hotkeys</v:String>
+    <v:String x:Key="Hotkeys29">Shrine Hotkeys</v:String>
+    <v:String x:Key="Hotkeys30">Rice Paddy and Mill Hotkeys</v:String>
+    <v:String x:Key="Hotkeys31">Abilities Hotkeys</v:String>
+    <v:String x:Key="Hotkeys32">Command Hotkeys</v:String>
+    <v:String x:Key="Hotkeys33">Unit Tactics Hotkeys</v:String>
+    <v:String x:Key="Hotkeys34">Wonder Hotkeys</v:String>
+    <v:String x:Key="Hotkeys35">Hero Pets and Disciples Hotkeys</v:String>
     <v:String x:Key="FastESO">Launch game onto ESO login screen</v:String>
     <v:String x:Key="EconomicCalculator">Economic Calculator</v:String>
     <v:String x:Key="ESOTracker">ESO Tracker</v:String>
@@ -41,7 +89,7 @@
     <!--  Изменение цвета откормленных коров  -->
     <v:String x:Key="ROF">Show the range of artillery units and the missionaries aura</v:String>
     <!--  Круг &quot;обзора&quot; артиллерии и миссионеров  -->
-    <v:String x:Key="Hotkeys">Customized hotkeys</v:String>
+    <v:String x:Key="Hotkeys">Hotkeys Editor</v:String>
     <!--  Настроенные горячие клавиши  -->
     <v:String x:Key="Rotator">Building placement rotator</v:String>
     <!--  Вращение зданий  -->

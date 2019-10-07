@@ -39,6 +39,19 @@ namespace MultiTools
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
+    /// 
+    public class MultiplyConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new GridLength((double)values[0] * (double)values[1], GridUnitType.Pixel);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
@@ -462,7 +475,7 @@ namespace MultiTools
         {
             rbDefault.IsChecked = true;
             gMods.Visibility = Visibility.Collapsed;
-
+            gHotkeysEditor.Visibility = Visibility.Collapsed;
             gSettings.Visibility = Visibility.Visible;
             bFriends.IsEnabled = false;
             bStreams.IsEnabled = false;
@@ -815,7 +828,7 @@ namespace MultiTools
             Colors = typeof(Brushes).GetProperties();
 
 
-            if (gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed)
+            if (gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed && gHotkeysEditor.Visibility == Visibility.Collapsed)
             {
                 rbDefault.IsChecked = true;
             }
@@ -3583,9 +3596,25 @@ namespace MultiTools
             Paths.OpenTAD("age3xpmod.exe");
         }
 
+        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        {
+            gHotkeysEditor.Visibility = Visibility.Visible;
+        }
 
+        private void RadioButton_Unchecked_1(object sender, RoutedEventArgs e)
+        {
+            gHotkeysEditor.Visibility = Visibility.Collapsed;
+        }
 
+        private void BAdd1_Checked(object sender, RoutedEventArgs e)
+        {
+            gBuildingConstruction.Visibility = Visibility.Visible;
+        }
 
+        private void BAdd1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            gBuildingConstruction.Visibility = Visibility.Collapsed;
+        }
     }
 
 

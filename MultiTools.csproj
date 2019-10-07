@@ -55,6 +55,7 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Classic" />
     <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
@@ -80,6 +81,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Tyrrrz.Extensions, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Tyrrrz.Extensions.1.6.3\lib\net45\Tyrrrz.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -91,6 +95,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HotheyControl.xaml.cs">
+      <DependentUpon>HotheyControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SingleInstance.cs" />
     <Compile Include="UserStatus.cs" />
     <Page Include="App.xaml">
@@ -106,6 +113,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="HotheyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Languages\default.fr-FR.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -461,6 +472,98 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Launcher\age3xpmod.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\title.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hotkeys Editor\arsenal_icon.jpg" />
+    <Resource Include="Hotkeys Editor\artillery_depot_icon.jpg" />
+    <Resource Include="Hotkeys Editor\bank_icon.jpg" />
+    <Resource Include="Hotkeys Editor\barracks_icon.jpg" />
+    <Resource Include="Hotkeys Editor\blockhouse_icon.jpg" />
+    <Resource Include="Hotkeys Editor\capitol_icon.jpg" />
+    <Resource Include="Hotkeys Editor\church_icon.jpg" />
+    <Resource Include="Hotkeys Editor\dock_icon.jpg" />
+    <Resource Include="Hotkeys Editor\factory_icon.jpg" />
+    <Resource Include="Hotkeys Editor\house_icon.jpg" />
+    <Resource Include="Hotkeys Editor\livestock_pen_icon.jpg" />
+    <Resource Include="Hotkeys Editor\market_icon.jpg" />
+    <Resource Include="Hotkeys Editor\mill_icon.jpg" />
+    <Resource Include="Hotkeys Editor\outpost_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\plantation_icon.jpg" />
+    <Resource Include="Hotkeys Editor\stables_icon.jpg" />
+    <Resource Include="Hotkeys Editor\towncenter_icon.jpg" />
+    <Resource Include="Hotkeys Editor\wall_icon_64x64.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hotkeys Editor\trading_post_icon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hotkeys Editor\native_embassy_icon.jpg" />
+    <Resource Include="Hotkeys Editor\saloon_icon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hotkeys Editor\az_house_icon.jpg" />
+    <Resource Include="Hotkeys Editor\caravanserai_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\china_rice_paddy_icon.jpg" />
+    <Resource Include="Hotkeys Editor\china_trade_market_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\china_waracademy_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\chinese_castle_icon.jpg" />
+    <Resource Include="Hotkeys Editor\chinese_village_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\command_attack_move.jpg" />
+    <Resource Include="Hotkeys Editor\consulate_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\corral_icon.jpg" />
+    <Resource Include="Hotkeys Editor\cpai_avatar_random.jpg" />
+    <Resource Include="Hotkeys Editor\dojo_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\farm_icon.jpg" />
+    <Resource Include="Hotkeys Editor\field_hostpital_icon.jpg" />
+    <Resource Include="Hotkeys Editor\Fire_Pit_icon.jpg" />
+    <Resource Include="Hotkeys Editor\fort_icon.jpg" />
+    <Resource Include="Hotkeys Editor\grove_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\house_indian_icon.jpg" />
+    <Resource Include="Hotkeys Editor\indian_castle_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\india_barracks_icon.jpg" />
+    <Resource Include="Hotkeys Editor\india_dock_icon.jpg" />
+    <Resource Include="Hotkeys Editor\india_rice_paddy_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\india_trade_market_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\japanese_market_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\japan_barracks_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\japan_castle_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\monastery_icon.jpg" />
+    <Resource Include="Hotkeys Editor\nobles_hut_icon.jpg" />
+    <Resource Include="Hotkeys Editor\orchard_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\sacredfield_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\shrine_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_attack_move_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_stand_ground_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_stealth_avl.jpg" />
+    <Resource Include="Hotkeys Editor\teepee_icon.jpg" />
+    <Resource Include="Hotkeys Editor\trading_post_asian_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\war_hut_icon.jpg" />
+    <Resource Include="Hotkeys Editor\war_hut_icon_1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Civs\British.png" />
+    <Resource Include="Civs\Chinese.png" />
+    <Resource Include="Civs\Dutch.png" />
+    <Resource Include="Civs\French.png" />
+    <Resource Include="Civs\Germans.png" />
+    <Resource Include="Civs\Indians.png" />
+    <Resource Include="Civs\Japanese.png" />
+    <Resource Include="Civs\Ottomans.png" />
+    <Resource Include="Civs\Portuguese.png" />
+    <Resource Include="Civs\Russians.png" />
+    <Resource Include="Civs\Spanish.png" />
+    <Resource Include="Civs\XPAztec.png" />
+    <Resource Include="Civs\XPIroquois.png" />
+    <Resource Include="Civs\XPSioux.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\etc\ExtActive.png" />
+    <Resource Include="Buttons\etc\ExtClicked.png" />
+    <Resource Include="Buttons\etc\ExtDisabled.png" />
+    <Resource Include="Buttons\etc\ExtNormal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

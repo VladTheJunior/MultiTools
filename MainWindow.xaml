@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:MultiTools"
         xmlns:gif="clr-namespace:XamlAnimatedGif;assembly=XamlAnimatedGif"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tz="http://schemas.abtsoftware.co.uk/transitionz"
 
         Title="MultiTools"
         Width="1280"
@@ -19,10 +20,12 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         mc:Ignorable="d">
-
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:MainWindow.MyCommand}" Executed="MyCommandExecuted"/>
+    </Window.CommandBindings>
     <Window.Resources>
 
-
+        <BooleanToVisibilityConverter x:Key="b2vc"></BooleanToVisibilityConverter>
 
         <ControlTemplate x:Key="AddSubButton" TargetType="{x:Type ToggleButton}">
             <Grid>
@@ -352,7 +355,7 @@
                     x:Name="iButton"
                     Grid.Column="0"
                     
-                    Height="24">
+                    Height="20">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source" Value="Buttons/ExtNormal.png" />
@@ -1208,6 +1211,51 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </ControlTemplate>
+        <ControlTemplate x:Key="SliderTemplate2" TargetType="Slider">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                
+                </Grid.ColumnDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Height="16"
+                    VerticalAlignment="Center">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="Slider/Slider.png" />
+                    </Grid.Background>
+                    <Track
+                        Name="PART_Track"
+                        Width="128"
+                        Height="16">
+
+                        <Track.Thumb>
+                            <Thumb
+                                Width="16"
+                                Height="16"
+                                Foreground="{x:Null}"
+                                Grid.IsSharedSizeScope="False"
+                                SnapsToDevicePixels="True">
+                                <Thumb.Template>
+                                    <ControlTemplate>
+                                        <Image Source="Slider/SliderThumb.png" />
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+                        </Track.Thumb>
+
+                    </Track>
+                </Grid>
+
+            </Grid>
+        </ControlTemplate>
         <ControlTemplate x:Key="SliderTemplate" TargetType="Slider">
             <Grid>
 
@@ -1515,7 +1563,7 @@
             </DockPanel.Background>
 
             <Button
-                Margin="728,0,10,0"
+                Margin="850,0,10,0"
                 Padding="0"
                 VerticalAlignment="Top"
                 BorderThickness="0"
@@ -1551,7 +1599,7 @@
                 </Button.Template>
             </Button>
             <Button
-                Margin="0,0,0,0"
+                Margin="0,0,10,0"
                 Padding="0"
                 VerticalAlignment="Top"
                 BorderThickness="0"
@@ -1587,6 +1635,7 @@
                 </Button.Template>
             </Button>
             <Button
+                Visibility="Collapsed"
                 Margin="10,0,0,0"
                 Padding="0"
                 VerticalAlignment="Top"
@@ -1623,6 +1672,7 @@
                 </Button.Template>
             </Button>
             <Button
+                Visibility="Collapsed"
                 Margin="10,0,0,0"
                 Padding="0"
                 VerticalAlignment="Top"
@@ -1659,6 +1709,7 @@
                 </Button.Template>
             </Button>
             <Button
+                Visibility="Collapsed"
                 Margin="10,0,9,0"
                 Padding="0"
                 VerticalAlignment="Top"
@@ -1694,7 +1745,7 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
-            <Grid>
+            <Grid Width="230" HorizontalAlignment="Right">
                 <Grid.Background>
                     <ImageBrush ImageSource="Images/Copyright.png"/>
                 </Grid.Background>
@@ -2446,7 +2497,7 @@
             Grid.RowSpan="3"
             Grid.Column="1"
             Grid.ColumnSpan="3"
-            Visibility="Visible">
+            Visibility="Collapsed">
             <Grid.Background>
                 <ImageBrush
                     ImageSource="Images/Wood.png"
@@ -2468,6 +2519,8 @@
                 Grid.RowSpan="4"
                 Grid.Column="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -2498,7 +2551,7 @@
                 </Border>
 
 
-                <Border Grid.Row="2" Padding="0,10,0,0">
+                <Border Visibility="Collapsed" Grid.Row="2" Padding="0,10,0,0">
                     <RadioButton
                         Height="32"
                         HorizontalAlignment="Right"
@@ -2509,7 +2562,29 @@
                  />
                 </Border>
 
-                <Border Grid.Row="3" Padding="0,10,0,0">
+                <Border x:Name="bHackAccounts" Visibility="Collapsed" Grid.Row="3" Padding="0,10,0,0">
+                    <RadioButton
+                        Height="32"
+                        HorizontalAlignment="Right"
+                     
+                        Content="{DynamicResource HackAccounts}"
+                        GroupName="Menu"
+                        Template="{StaticResource MenuTemplate}" Checked="RadioButton_Checked_7" Unchecked="RadioButton_Unchecked_3"  
+                 />
+                </Border>
+
+                <Border x:Name="bGenerateLogins" Visibility="Collapsed" Grid.Row="4" Padding="0,10,0,0">
+                    <RadioButton
+                        Height="32"
+                        HorizontalAlignment="Right"
+                     
+                        Content="{DynamicResource GenerateLogins}"
+                        GroupName="Menu"
+                        Template="{StaticResource MenuTemplate}" Unchecked="RadioButton_Unchecked_4" Checked="RadioButton_Checked_8" 
+                 />
+                </Border>
+
+                <Border Grid.Row="5" Padding="0,10,0,0">
                     <RadioButton
                         Height="32"
                         HorizontalAlignment="Right"
@@ -2848,7 +2923,7 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Padding="10"
-                        Visibility="Collapsed">
+                        Visibility="Visible">
                         <ScrollViewer VerticalScrollBarVisibility="Visible" VirtualizingPanel.ScrollUnit="Pixel">
                             <Grid>
 
@@ -3458,21 +3533,23 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         Padding="10"
-                        Visibility="Visible">
+                        Visibility="Collapsed">
                         <ScrollViewer  VerticalScrollBarVisibility="Visible" VirtualizingPanel.ScrollUnit="Pixel">
                             <StackPanel>
 
                                 <ToggleButton
                         x:Name="bAdd1"
-                        Grid.Row="0"
+                   
            Content="{DynamicResource Hotkeys5}"
-                
+         
                         Margin="0,10"
                                     Template="{StaticResource AddSubButton}"
                         HorizontalAlignment="Left"
-                        Checked="BAdd1_Checked" Unchecked="BAdd1_Unchecked" />
+                         />
 
-                                <Grid Visibility="Collapsed" x:Name="gBuildingConstruction" Grid.Row="1">
+                                <Grid tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"
+            tz:Transitionz.Translate="{tz:TranslateParams From='-100,0', To='0,0', Duration=200, TransitionOn=Visibility}"
+            tz:Transitionz.Visibility="{Binding ElementName=bAdd1, Path=IsChecked, Converter={StaticResource b2vc}}" x:Name="gBuildingConstruction" Grid.Row="1">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
@@ -3541,17 +3618,1268 @@
                                     <local:HotheyControl UsedBy="br,du,fr,gr,ot,po,ru,sp"  HotkeyIcon="Hotkeys Editor/dojo_icon_64.jpg" Grid.Column="2" Grid.Row="9" HotkeyName="Build Dojo" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
 
                                     <local:HotheyControl UsedBy="br,du,fr,gr,ot,po,ru,sp"  HotkeyIcon="Hotkeys Editor/orchard_icon_64.jpg" Grid.Column="0" Grid.Row="10" HotkeyName="Build Cherry Orchard" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
-                                    <local:HotheyControl UsedBy="br,du,fr,gr,ot,po,ru,sp"  HotkeyIcon="Hotkeys Editor/native_embassy_icon.jpg" Grid.Column="1" Grid.Row="10" HotkeyName="Build Wonder" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy="br,du,fr,gr,ot,po,ru,sp"  HotkeyIcon="Hotkeys Editor/cpai_avatar_random.jpg" Grid.Column="1" Grid.Row="10" HotkeyName="Build Wonder" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
                                     <local:HotheyControl UsedBy="br,du,fr,gr,ot,po,ru,sp"  HotkeyIcon="Hotkeys Editor/teepee_icon.jpg" Grid.Column="2" Grid.Row="10" HotkeyName="Build Teepee" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
 
                                 </Grid>
+                                <ToggleButton
+                        x:Name="bAdd2"
+                       
+           Content="{DynamicResource Hotkeys6}"
+            
+                        Margin="0,10"
+                              
+                                    Template="{StaticResource AddSubButton}"
+                        HorizontalAlignment="Left"
+                         />
+
+                                <Grid tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"
+            tz:Transitionz.Translate="{tz:TranslateParams From='-100,0', To='0,0', Duration=200, TransitionOn=Visibility}"
+            tz:Transitionz.Visibility="{Binding ElementName=bAdd2, Path=IsChecked, Converter={StaticResource b2vc}}" x:Name="gTownCenterHotkeys" Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <local:HotheyControl UsedBy="none"  HotkeyIcon="Hotkeys Editor/town_bell.jpg" Grid.Column="0" Grid.Row="0" HotkeyName="Ring Town Bell" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy="none"  HotkeyIcon="Hotkeys Editor/town_bell_back_to_work.jpg" Grid.Column="1" Grid.Row="0" HotkeyName="Return To Work" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy="none"  HotkeyIcon="Hotkeys Editor/garrison_out.jpg" Grid.Column="2" Grid.Row="0" HotkeyName="Eject Garrisoned Units" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/colonial_militia_icon.jpg" Grid.Column="0" Grid.Row="1" HotkeyName="Train Colonial Militia" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/colonial_militia_icon.jpg" Grid.Column="1" Grid.Row="1" HotkeyName="Train Multiple Colonial Militia" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/d_envoy_icon.jpg" Grid.Column="2" Grid.Row="1" HotkeyName="Train Envoy" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/d_envoy_icon.jpg" Grid.Column="0" Grid.Row="2" HotkeyName="Train Multiple Envoy" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/villager_icon.jpg" Grid.Column="1" Grid.Row="2" HotkeyName="Train Settler / Coureur" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/villager_icon.jpg" Grid.Column="2" Grid.Row="2" HotkeyName="Train Multiple Settler / Coureur" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/panel_gather_point_military01.jpg" Grid.Column="0" Grid.Row="3" HotkeyName="Set Military Way Point" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cougar_icon_64x64.jpg" Grid.Column="1" Grid.Row="3" HotkeyName="Train Pet Cougar" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cougar_icon_64x64.jpg" Grid.Column="2" Grid.Row="3" HotkeyName="Train Multiple Pet Cougar" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                </Grid>
+
+                                <ToggleButton
+                        x:Name="bAdd3"
+                       IsChecked="True"
+           Content="{DynamicResource Hotkeys7}"
+            
+                        Margin="0,10"
+                              
+                                    Template="{StaticResource AddSubButton}"
+                        HorizontalAlignment="Left"
+                         />
+
+                                <Grid tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"
+            tz:Transitionz.Translate="{tz:TranslateParams From='-100,0', To='0,0', Duration=200, TransitionOn=Visibility}"
+            tz:Transitionz.Visibility="{Binding ElementName=bAdd3, Path=IsChecked, Converter={StaticResource b2vc}}" x:Name="gBarracksHotkeys" Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/colonial_militia_icon.jpg" Grid.Column="0" Grid.Row="1" HotkeyName="Train Colonial Militia" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/colonial_militia_icon.jpg" Grid.Column="1" Grid.Row="1" HotkeyName="Train Multiple Colonial Militia" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/halberdier_icon_64x64.jpg" Grid.Column="2" Grid.Row="1" HotkeyName="Train Halberdier" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/halberdier_icon_64x64.jpg" Grid.Column="0" Grid.Row="2" HotkeyName="Train Multiple Halberdiers" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/dopplesoldner_icon.jpg" Grid.Column="1" Grid.Row="2" HotkeyName="Train Doppelsoldner" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/dopplesoldner_icon.jpg" Grid.Column="2" Grid.Row="2" HotkeyName="Train Multiple Doppelsoldner" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cacadore_icon_64x64.jpg" Grid.Column="0" Grid.Row="3" HotkeyName="Train Cassador" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cacadore_icon_64x64.jpg" Grid.Column="1" Grid.Row="3" HotkeyName="Train Multiple Cassadores" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cougar_icon_64x64.jpg" Grid.Column="2" Grid.Row="3" HotkeyName="Train Janissary" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/janissary_icon_64x64.jpg" Grid.Column="0" Grid.Row="4" HotkeyName="Train Multiple Janissaries" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/janissary_icon_64x64.jpg" Grid.Column="1" Grid.Row="4" HotkeyName="Train Multiple Cassadores" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cree_tracker_icon_64x64.jpg" Grid.Column="2" Grid.Row="4" HotkeyName="Train Cree Tracker" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/cree_tracker_icon_64x64.jpg" Grid.Column="0" Grid.Row="5" HotkeyName="Train Multiple Cree Tracker" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/longbow_icon.jpg" Grid.Column="1" Grid.Row="5" HotkeyName="Train Longbowman" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/longbow_icon.jpg" Grid.Column="2" Grid.Row="5" HotkeyName="Train Multiple Longbowmen" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/musketeer_icon_64x64.jpg" Grid.Column="0" Grid.Row="6" HotkeyName="Train Musketeer" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/musketeer_icon_64x64.jpg" Grid.Column="1" Grid.Row="6" HotkeyName="Train Multiple Musketeers" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/pikeman_icon.jpg" Grid.Column="2" Grid.Row="6" HotkeyName="Train Pikeman" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/pikeman_icon.jpg" Grid.Column="0" Grid.Row="7" HotkeyName="Train Multiple Pikemen" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/redolero_icon_64x64.jpg" Grid.Column="1" Grid.Row="7" HotkeyName="Train Rodelero" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/redolero_icon_64x64.jpg" Grid.Column="2" Grid.Row="7" HotkeyName="Train Multiple Rodeleros" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/skirmisher_icon.jpg" Grid.Column="0" Grid.Row="8" HotkeyName="Train Skirmisher" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/skirmisher_icon.jpg" Grid.Column="1" Grid.Row="8" HotkeyName="Train Multiple Skirmishers" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/crossbow_icon_64x64.jpg" Grid.Column="2" Grid.Row="8" HotkeyName="Train Crossbowman" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/crossbow_icon_64x64.jpg" Grid.Column="0" Grid.Row="9" HotkeyName="Train Multiple Crossbowmen" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/yumi_icon_64.jpg" Grid.Column="1" Grid.Row="9" HotkeyName="Train Yumi" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/yumi_icon_64.jpg" Grid.Column="2" Grid.Row="9" HotkeyName="Train Multiple Yumi" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/ashigaru_icon_64.jpg" Grid.Column="0" Grid.Row="10" HotkeyName="Train Ashigaru" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/ashigaru_icon_64.jpg" Grid.Column="1" Grid.Row="10" HotkeyName="Train Multiple Ashigaru" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/samurai_icon_64.jpg" Grid.Column="2" Grid.Row="10" HotkeyName="Train Samurai" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/samurai_icon_64.jpg" Grid.Column="0" Grid.Row="11" HotkeyName="Train Multiple Samurai" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/rajput_icon_64.jpg" Grid.Column="1" Grid.Row="11" HotkeyName="Train Rajput" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/rajput_icon_64.jpg" Grid.Column="2" Grid.Row="11" HotkeyName="Train Multiple Rajput" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+
+
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/sepoy_icon_64.jpg" Grid.Column="0" Grid.Row="12" HotkeyName="Train Sepoy" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/sepoy_icon_64.jpg" Grid.Column="1" Grid.Row="12" HotkeyName="Train Multiple Sepoy" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/gurkha_icon_64.jpg" Grid.Column="2" Grid.Row="12" HotkeyName="Train Gurkha" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                    <local:HotheyControl UsedBy=""  HotkeyIcon="Hotkeys Editor/gurkha_icon_64.jpg" Grid.Column="0" Grid.Row="13" HotkeyName="Train Multiple Gurkha" needSound="{Binding ElementName=Audio, Path=IsChecked}"/>
+                                </Grid>
+
 
 
                             </StackPanel>
                                 
                         </ScrollViewer>
                     </Border>
+                    <Border
+            x:Name="gHackAccs"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="10"
+            Visibility="Collapsed">
+                        
+                        <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="0" Text="Количество рабочих потоков: " VerticalAlignment="Center"/>
 
+                            <Grid
+                        Grid.Row="0" Grid.Column="1"
+                        Width="352"
+                        Height="32"
+                        Margin="10,5">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBox.png" />
+                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox
+                             x:Name="tbHackedAccsWorkers"  Text="{Binding HackedAccsWorkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Padding="5"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0" FontSize="20" FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                            />
+                            </Grid>
+                            <TextBlock  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24"  Grid.Row="1" Text="Количество паролей: " VerticalAlignment="Center"/>
+
+                            <DockPanel           Grid.Row="1"
+                                Grid.Column="1">
+                            <Slider
+                                Width="128"
+                      IsSnapToTickEnabled="True"
+                                Margin="10,5"
+                                        x:Name="slPasswordsCount"
+                                        LargeChange="100"
+                                        Maximum="100000"
+                                        Minimum="1"
+                                        SmallChange="1"
+                                        Template="{StaticResource SliderTemplate2}"
+                                        Value="100">
+                                <Slider.Background>
+                                    <ImageBrush ImageSource="Slider/Slider.png" />
+                                </Slider.Background>
+                            </Slider>
+                                <TextBlock Grid.Column="2"   Padding="0,0,5,0" Text="{Binding ElementName=slPasswordsCount, Path=Value}"
+                    VerticalAlignment="Center"
+                    FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                    FontSize="20"
+                    Foreground="Black"/>
+                            </DockPanel>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="2" Text="Просканировано пар: " VerticalAlignment="Center"/>
+                            <TextBlock  Margin="10,5" FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="2" Grid.Column="1" Text="{Binding Scanned}"/>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="3" Text="Взломано аккаунтов: " VerticalAlignment="Center"/>
+                            <TextBlock   Margin="10,5" FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="3" Grid.Column="1" Text="{Binding HackedAccsCount}"/>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="4" Text="Осталось пар: " VerticalAlignment="Center"/>
+                            <TextBlock  Margin="10,5" FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="4" Grid.Column="1" Text="{Binding LeftPairsCount}"/>
+
+
+                            <TextBlock  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="5" Text="Затрачено времени: " VerticalAlignment="Center"/>
+
+                            <TextBlock Margin="10,5"  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="5" Grid.Column="1"  Text="{Binding HackedAccsTimeElapsed}"/>
+
+                            <TextBlock  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="6" Text="Осталось времени: " VerticalAlignment="Center"/>
+
+                            <TextBlock Margin="10,5"  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="6" Grid.Column="1"  Text="{Binding LeftHackedAccsTime}"/>
+
+
+
+
+
+
+                            <DockPanel  Margin="0,5" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" >
+
+
+                                <Button Click="Button_Click_12"  Margin="0,0,42,0" Template="{StaticResource ButtonTemplate}" Width="192" Content="Начать перебор" />
+                                <Button
+            Name="bHackedAccsRun"
+IsEnabled="False"
+          
+            Padding="0"
+                                Width="32"
+            BorderThickness="0" HorizontalAlignment="Right" Click="BHackedAccsRun_Click" 
+            >
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Image
+                        Name="iClose"
+                        Width="32"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="Buttons/runNormal.png" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Source" Value="Buttons/runActive.png" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+
+                                                </Image.Style>
+                                            </Image>
+
+                                            <ControlTemplate.Triggers>
+
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/runClicked.png" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/runDisabled.png" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button
+            Name="bHackedAccsPause"
+IsEnabled="False"
+                          
+            Margin="0,0"
+            Padding="0"
+                                Width="32"
+            BorderThickness="0" HorizontalAlignment="Right" Click="BHackedAccsPause_Click" 
+            >
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Image
+                        Name="iClose"
+                        Width="32"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="Buttons/pauseNormal.png" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Source" Value="Buttons/pauseActive.png" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+
+                                                </Image.Style>
+                                            </Image>
+
+                                            <ControlTemplate.Triggers>
+
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/pauseClicked.png" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/pauseDisabled.png" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                
+                                <Button
+            Name="bHackedAccsStop"
+IsEnabled="False"
+            Margin="0,0"
+            Padding="0"
+                                Width="32"
+            BorderThickness="0" HorizontalAlignment="Left" Click="BHackedAccsStop_Click" 
+            >
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Image
+                        Name="iClose"
+                        Width="32"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="Buttons/stopNormal.png" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Source" Value="Buttons/stopActive.png" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+
+                                                </Image.Style>
+                                            </Image>
+
+                                            <ControlTemplate.Triggers>
+
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/stopClicked.png" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/stopDisabled.png" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DockPanel>
+
+
+                            <Grid 
+                             Grid.Column="2" Grid.RowSpan="8" Height="262" 
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Width="8"
+                                HorizontalAlignment="Left">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/left.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Width="8"
+                                HorizontalAlignment="Right">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/right.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/top.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottom.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <TextBox  Grid.Row="0"
+                                          VirtualizingPanel.ScrollUnit="Pixel"
+                                Grid.RowSpan="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="5"
+                                Margin="8"
+                                Padding="8,10"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0"  x:Name="tbHackedLogins"  AcceptsReturn="True" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" FontFamily="/MultiTools;component/Font/#Formal436 BT" FontSize="14"    />
+
+                            </Grid>
+                            <Grid 
+                             Grid.Column="3" Grid.RowSpan="8" Height="262" 
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Width="8"
+                                HorizontalAlignment="Left">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/left.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Width="8"
+                                HorizontalAlignment="Right">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/right.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/top.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottom.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <TextBox  Grid.Row="0"
+                                          VirtualizingPanel.ScrollUnit="Pixel"
+                                Grid.RowSpan="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="5"
+                                Margin="8"
+                                Padding="8,10"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0"  x:Name="tbHackedPasswords"  AcceptsReturn="True" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" FontFamily="/MultiTools;component/Font/#Formal436 BT" FontSize="14"    />
+
+                            </Grid>
+
+
+                          
+                            <Grid 
+                               
+                              Grid.Row="9"
+                                Grid.ColumnSpan="4"
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Width="8"
+                                HorizontalAlignment="Left">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/left.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Width="8"
+                                HorizontalAlignment="Right">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/right.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/top.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottom.png" />
+                                    </Grid.Background>
+                                  
+                                </Grid>
+
+                                <ListView
+                x:Name="listView4"
+                VirtualizingPanel.ScrollUnit="Pixel"
+              
+                     Grid.RowSpan="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="5"
+              BorderThickness="0"
+                   Margin="8"
+                                Padding="0,0,0,0"
+                                HorizontalAlignment="Stretch"
+           
+                BorderBrush="{x:Null}"
+               
+                FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                IsSynchronizedWithCurrentItem="False"
+           
+                ItemsSource="{Binding HackedAccs}"
+                                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" FontSize="18">
+                                    <ListView.Background>
+                                        <ImageBrush
+                        ImageSource="Images/Paper.png"
+                        TileMode="Tile"
+                        Viewport="0 0 256 256"
+                        ViewportUnits="Absolute" />
+                                    </ListView.Background>
+
+                                    <ListView.ItemContainerStyle>
+
+
+                                        <Style TargetType="ListViewItem">
+
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                        <Border
+                                        x:Name="Bd"
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                            <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderThickness" Value="0" />
+
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+
+                                            <Style.Triggers>
+
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#4C000000" />
+                                                </Trigger>
+
+
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.View>
+                                        <GridView AllowsColumnReorder="False">
+                                            <GridView.ColumnHeaderContainerStyle>
+                                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                                    <!-- Set any properties you want to set -->
+                                                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                                                    <Setter Property="Foreground" Value="Black" />
+                                                    <Setter Property="FontFamily" Value="/MultiTools;component/Font/#Monotype Corsiva" />
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="FontSize" Value="20" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*" />
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="#51FFFFFF">
+                                                                        <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Center" />
+                                                                    </Border>
+                                                                    <Thumb x:Name="PART_HeaderGripper" Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Width="2" BorderThickness="1"
+                        BorderBrush="Black"
+                        Cursor="SizeWE"/>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </GridView.ColumnHeaderContainerStyle>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Login}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="Login" Content="Логин" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Password}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="Password" Content="Пароль" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Email}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="Email" Content="Email" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding SecretQuestion}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="SecretQuestion" Content="Secret Question" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding SecretAnswer}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="SecretAnswer" Content="Secret Answer" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn  DisplayMemberBinding="{Binding pr_nilla}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="pr_nilla" Content="Vanilla Sup" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding pr_tad}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="pr_tad" Content="TAD Sup" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn  DisplayMemberBinding="{Binding pr_tad_tr}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="pr_tad_tr" Content="TAD Treaty" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding lastLogin}">
+                                                <GridViewColumn.Header>
+                                                    <GridViewColumnHeader Tag="lastLogin" Content="Last Login" Click="GridViewColumnHeader_Click" />
+                                                </GridViewColumn.Header>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+
+                                </ListView>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <Border
+            x:Name="gLogins"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="10"
+            Visibility="Collapsed">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Алфавит: " FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" VerticalAlignment="Center"/>
+                            <Grid
+                        Grid.Row="0" Grid.Column="1"
+                        Width="352"
+                        Height="32"
+                        Margin="10,5">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBox.png" />
+                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox
+                             x:Name="tbAlpha"  Text="{Binding Alpha, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Padding="5"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0" FontSize="20" FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                            />
+                            </Grid>
+
+                          
+
+                            <TextBlock Grid.Row="1" Text="Первичный алфавит: " FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" VerticalAlignment="Center"/>
+
+                            <Grid
+                        Grid.Row="1" Grid.Column="1" 
+                        Width="352"
+                        Height="32"
+                        Margin="10,5">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBox.png" />
+                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox
+                            x:Name="tbFirstAlpha"  Text="{Binding FirstAlpha, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Padding="5"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0" FontSize="20" FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                            />
+                            </Grid>
+
+
+                            <TextBlock Grid.Row="2" Text="Уровень глубины поиска: " FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" VerticalAlignment="Center"/>
+
+                            <Grid
+                        Grid.Row="2" Grid.Column="1"
+                        Width="352"
+                        Height="32"
+                        Margin="10,5">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBox.png" />
+                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox
+                             x:Name="tbDepth"  Text="{Binding AlphaDepth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Padding="5"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0" FontSize="20" FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                            />
+                            </Grid>
+                             <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="3" Text="Количество рабочих потоков: " VerticalAlignment="Center"/>
+
+                            <Grid
+                        Grid.Row="3" Grid.Column="1"
+                        Width="352"
+                        Height="32"
+                        Margin="10,5">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="Buttons/TextBox.png" />
+                                </Grid.Background>
+                                <Grid.ColumnDefinitions>
+
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox
+                             x:Name="tbLoginsWorkers"  Text="{Binding LoginsWorkers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Padding="5"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0" FontSize="20" FontFamily="/MultiTools;component/Font/#Monotype Corsiva"
+                            />
+                            </Grid>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="4" Text="Макс. количество логинов: " VerticalAlignment="Center"/>
+                            <TextBlock  Margin="10,5" FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="4" Grid.Column="1" Text="{Binding MaxLoginsCount}"/>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="5" Text="Получено логинов: " VerticalAlignment="Center"/>
+                            <TextBlock   Margin="10,5" FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="5" Grid.Column="1" Text="{Binding CollectedLoginsCount}"/>
+                            <TextBlock FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="6" Text="Осталось возможных логинов: " VerticalAlignment="Center"/>
+                            <TextBlock  Margin="10,5" FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="6" Grid.Column="1" Text="{Binding LeftLoginsCount}"/>
+                            <TextBlock  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="7" Text="Затрачено времени: " VerticalAlignment="Center"/>
+
+                            <TextBlock Margin="10,5"  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="7" Grid.Column="1"  Text="{Binding LoginsTimeElapsed}"/>
+
+                            <TextBlock  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="8" Text="Осталось времени: " VerticalAlignment="Center"/>
+
+                               <TextBlock Margin="10,5"  FontFamily="/MultiTools;component/Font/#Monotype Corsiva" FontSize="24" Grid.Row="8" Grid.Column="1"  Text="{Binding LeftLoginsTime}"/>
+                            <DockPanel Grid.Column="2" Grid.Row="9" >
+                                <Button   Margin="0,0,42,0" Template="{StaticResource ButtonTemplate}" Width="192" Content="Собрать логины"   Click="Button_Click8"/>
+                            <Button
+            Name="bLoginsRun"
+IsEnabled="False"
+          
+            Padding="0"
+                                Width="32"
+            BorderThickness="0" HorizontalAlignment="Right" Click="BLoginsRun_Click" 
+            >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Image
+                        Name="iClose"
+                        Width="32"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Buttons/runNormal.png" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Source" Value="Buttons/runActive.png" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+
+                                            </Image.Style>
+                                        </Image>
+
+                                        <ControlTemplate.Triggers>
+
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="iClose" Property="Source" Value="Buttons/runClicked.png" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="iClose" Property="Source" Value="Buttons/runDisabled.png" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button
+            Name="bLoginsPause"
+IsEnabled="False"
+                                Click="Button_Click_16"
+            Margin="0,0"
+            Padding="0"
+                                Width="32"
+            BorderThickness="0" HorizontalAlignment="Right" 
+            >
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Image
+                        Name="iClose"
+                        Width="32"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Setter Property="Source" Value="Buttons/pauseNormal.png" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Source" Value="Buttons/pauseActive.png" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+
+                                            </Image.Style>
+                                        </Image>
+
+                                        <ControlTemplate.Triggers>
+
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="iClose" Property="Source" Value="Buttons/pauseClicked.png" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="iClose" Property="Source" Value="Buttons/pauseDisabled.png" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                                <Button
+            Name="bLoginsStop"
+IsEnabled="False"
+            Margin="0,0"
+            Padding="0"
+                                Width="32"
+            BorderThickness="0" HorizontalAlignment="Left" Click="BLoginsStop_Click" 
+            >
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Image
+                        Name="iClose"
+                        Width="32"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Source" Value="Buttons/stopNormal.png" />
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Source" Value="Buttons/stopActive.png" />
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+
+                                                </Image.Style>
+                                            </Image>
+
+                                            <ControlTemplate.Triggers>
+
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/stopClicked.png" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter TargetName="iClose" Property="Source" Value="Buttons/stopDisabled.png" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DockPanel>
+                            <Grid Height="362"
+                             Grid.Column="2" Grid.RowSpan="9" 
+                            >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/topright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomleft.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="3"
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="2"
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottomright.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Width="8"
+                                HorizontalAlignment="Left">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/left.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Width="8"
+                                HorizontalAlignment="Right">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/right.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Top">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/top.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Height="8"
+                                VerticalAlignment="Bottom">
+                                    <Grid.Background>
+                                        <ImageBrush ImageSource="Borders3/bottom.png" />
+                                    </Grid.Background>
+                                </Grid>
+                                <TextBox  Grid.Row="0"
+                                Grid.RowSpan="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="5"
+                                Margin="8"
+                                Padding="8,10"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0"  Text="{Binding CollectedLogins}"  x:Name="tbScannedLogins"  AcceptsReturn="True" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible" FontFamily="/MultiTools;component/Font/#Formal436 BT" FontSize="18"    />
+                             
+                            </Grid>
+
+                      
+
+                        </Grid>
+                    </Border>
                 </Grid>
             </Border>
         </Grid>
@@ -3749,7 +5077,7 @@
                                             <Image
                                                 Width="13"
                                                 Height="13"
-                                          
+                                          Margin="4,0"
                                                 Source="{Binding Icon}">
                                                 <Image.Triggers>
                                                     <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -3794,7 +5122,7 @@
 
 
                                             <Button
-                                                Height="24"
+                                                Height="20"
                                                 BorderThickness="0"
                                                 Padding="0"                  
                                                 Opacity="0"
@@ -3912,5 +5240,6 @@
         <TextBlock TextWrapping="Wrap" x:Name="tbHackJoke" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="3" Background="Black" Foreground="#00FF41" FontFamily="Lucida Console" FontSize="14">
 
         </TextBlock>
+    
     </Grid>
 </Window>

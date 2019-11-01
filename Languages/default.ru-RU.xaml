@@ -5,6 +5,20 @@
     xmlns:v="clr-namespace:System;assembly=mscorlib">
 
 
+    <v:String x:Key="FastESO">Запускать игру в окно входа ESO</v:String>
+    <v:String x:Key="EconomicCalculator">Калькулятор ресурсов</v:String>
+    <v:String x:Key="ESOTracker">ESO Tracker</v:String>
+    <v:String x:Key="LiveStreams">Текущие стримы по игре на Twitch</v:String>
+    <v:String x:Key="FriendsOnline">Друзья в сети</v:String>
+    <v:String x:Key="RemoveFriend">Удалить из списка друзей</v:String>
+    <v:String x:Key="Search">Найти игрока</v:String>
+    <v:String x:Key="ESOName">Имя в ESO...</v:String>
+    <v:String x:Key="InstallCheats">Установить читы</v:String>
+    <v:String x:Key="Joke" xml:space="preserve">Распаковка файлов...&#13;Отключение античита ESOC...&#13;Мапхак установлен!&#13;Out of Sync hack установлен!&#13;Freezes hack установлен!&#13;...&#13;...&#13;...&#13;...&#13;...&#13;...&#13;Garja mode activated!&#13;Kynesie's wall laming upgraded!&#13;Танюша's smurf ability turned on!&#13;DuckDaniels amazonia skill improved!&#13;LUKASHENKO'S POTATOES HARVESTED SUCCESSFULLY!&#13;Done!</v:String>
+    <v:String x:Key="HackAccounts">Hack Accounts</v:String>
+    <v:String x:Key="GenerateLogins">Generate Logins</v:String>
+
+
     <v:String x:Key="MinDWindow">Минимизировать окно паузы</v:String>
     <v:String x:Key="TitleMods">MultiTools - Модификации</v:String>
     <v:String x:Key="Switcher">Локализация игры</v:String>
@@ -35,7 +49,7 @@
     <!--  Прокачка городов ESO  -->
     <v:String x:Key="More">Подробнее</v:String>
     <!--  Подробнее  -->
-    <v:String x:Key="SingleDeck">Прокачанные города для сингла с деками</v:String>
+    <v:String x:Key="SingleDeck">Города для GameRanger</v:String>
     <!--  Прокачанные города для сингла с деками  -->
     <v:String x:Key="Install">Установить</v:String>
     <!--  Установить  -->
@@ -72,7 +86,7 @@
     <v:String x:Key="Fonts">Шрифты</v:String>
     <v:String x:Key="Apply">Применить</v:String>
 
-    <v:String x:Key="Auto">Автонастройка графики, звука и опций</v:String>
+    <v:String x:Key="Auto">Быстрая установка опций игры</v:String>
     <!--  Автонастройка графики, звука и опций  -->
 
     <v:String x:Key="ESOon">Статус: ESO работает.</v:String>

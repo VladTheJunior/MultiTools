@@ -52,10 +52,16 @@
     <ApplicationIcon>9090.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlAgilityPack.1.11.16\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Classic" />
+    <Reference Include="SciChart.Wpf.UI.Transitionz, Version=3.0.249.0, Culture=neutral, PublicKeyToken=8eea68d53aa73a83, processorArchitecture=MSIL">
+      <HintPath>packages\SciChart.Wpf.UI.Transitionz.3.0.249\lib\net452\SciChart.Wpf.UI.Transitionz.dll</HintPath>
+    </Reference>
     <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
@@ -163,7 +169,6 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="Original\DataPY.zip" />
     <EmbeddedResource Include="Mods\Art.zip" />
     <EmbeddedResource Include="Mods\Cows.zip" />
     <EmbeddedResource Include="Mods\Keys.zip" />
@@ -177,8 +182,6 @@
       <SubType>Designer</SubType>
     </Page>
     <EmbeddedResource Include="Localizations\Eng.zip" />
-    <EmbeddedResource Include="Localizations\French.zip" />
-    <EmbeddedResource Include="Localizations\Ger.zip" />
     <EmbeddedResource Include="Localizations\Rus.zip" />
     <Resource Include="Font\ACADEMY.TTF" />
     <Resource Include="Font\Basil-Regular.otf" />
@@ -564,6 +567,113 @@
     <Resource Include="Buttons\etc\ExtClicked.png" />
     <Resource Include="Buttons\etc\ExtDisabled.png" />
     <Resource Include="Buttons\etc\ExtNormal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hotkeys Editor\colonial_militia_icon.jpg" />
+    <Resource Include="Hotkeys Editor\command_repair.jpg" />
+    <Resource Include="Hotkeys Editor\command_stop.jpg" />
+    <Resource Include="Hotkeys Editor\cougar_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\dock_icon_1.jpg" />
+    <Resource Include="Hotkeys Editor\d_envoy_icon.jpg" />
+    <Resource Include="Hotkeys Editor\factory_produce_coin.jpg" />
+    <Resource Include="Hotkeys Editor\factory_produce_food.jpg" />
+    <Resource Include="Hotkeys Editor\factory_produce_heavy_art.jpg" />
+    <Resource Include="Hotkeys Editor\factory_produce_wood.jpg" />
+    <Resource Include="Hotkeys Editor\garrison_in.jpg" />
+    <Resource Include="Hotkeys Editor\garrison_out.jpg" />
+    <Resource Include="Hotkeys Editor\generate_coin_icon.jpg" />
+    <Resource Include="Hotkeys Editor\generate_fame_icon.jpg" />
+    <Resource Include="Hotkeys Editor\generate_food_icon.jpg" />
+    <Resource Include="Hotkeys Editor\generate_wood_icon.jpg" />
+    <Resource Include="Hotkeys Editor\kill_unit.jpg" />
+    <Resource Include="Hotkeys Editor\mode_bombard.jpg" />
+    <Resource Include="Hotkeys Editor\mode_broadside.jpg" />
+    <Resource Include="Hotkeys Editor\mode_trample.jpg" />
+    <Resource Include="Hotkeys Editor\panel_gather_point_economy01.jpg" />
+    <Resource Include="Hotkeys Editor\panel_gather_point_military01.jpg" />
+    <Resource Include="Hotkeys Editor\ransom_explorer.jpg" />
+    <Resource Include="Hotkeys Editor\repair_colony_wall.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_bombard_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_charge_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_cover_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_defend_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_limber_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_melee_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_stagger_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_trample_avl.jpg" />
+    <Resource Include="Hotkeys Editor\tactics_volley_avl.jpg" />
+    <Resource Include="Hotkeys Editor\town_bell.jpg" />
+    <Resource Include="Hotkeys Editor\town_bell_back_to_work.jpg" />
+    <Resource Include="Hotkeys Editor\villager_icon.jpg" />
+    <Resource Include="Hotkeys Editor\waypoint_on.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hotkeys Editor\ashigaru_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\az_arrow_knight_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_coyote_man_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_eagle_knight_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_jaguar_warrior_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_macehuatlin_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_priest_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_puma_man_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_skull_knight_icon.jpg" />
+    <Resource Include="Hotkeys Editor\az_war_canoe_icon.jpg" />
+    <Resource Include="Hotkeys Editor\cacadore_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\coureur_du_bois_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\cree_tracker_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\crossbow_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\dopplesoldner_icon.jpg" />
+    <Resource Include="Hotkeys Editor\elmeti_icon.jpg" />
+    <Resource Include="Hotkeys Editor\fusilier_icon.jpg" />
+    <Resource Include="Hotkeys Editor\gurkha_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\halberdier_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\horse_artillery_icon.jpg" />
+    <Resource Include="Hotkeys Editor\huron_mantlet_icon.jpg" />
+    <Resource Include="Hotkeys Editor\iro_aenna_icon.jpg" />
+    <Resource Include="Hotkeys Editor\iro_forrest_runner_icon.jpg" />
+    <Resource Include="Hotkeys Editor\iro_light_cannon_icon.jpg" />
+    <Resource Include="Hotkeys Editor\iro_musket_rider_icon.jpg" />
+    <Resource Include="Hotkeys Editor\iro_ram_icon.jpg" />
+    <Resource Include="Hotkeys Editor\IRO_tomahawk_icon.jpg" />
+    <Resource Include="Hotkeys Editor\janissary_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\longbow_icon.jpg" />
+    <Resource Include="Hotkeys Editor\minuteman_icon.jpg" />
+    <Resource Include="Hotkeys Editor\musketeer_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\petard_icon.jpg" />
+    <Resource Include="Hotkeys Editor\pikeman_icon.jpg" />
+    <Resource Include="Hotkeys Editor\rajput_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\redolero_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\samurai_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\sepoy_icon_64.jpg" />
+    <Resource Include="Hotkeys Editor\skirmisher_icon.jpg" />
+    <Resource Include="Hotkeys Editor\spy_icon.jpg" />
+    <Resource Include="Hotkeys Editor\strelet_icon_64x64.jpg" />
+    <Resource Include="Hotkeys Editor\sx_axe_rider_icon.jpg" />
+    <Resource Include="Hotkeys Editor\sx_bow_rider_icon.jpg" />
+    <Resource Include="Hotkeys Editor\sx_dog_soldier_icon.jpg" />
+    <Resource Include="Hotkeys Editor\sx_rifle_rider_icon.jpg" />
+    <Resource Include="Hotkeys Editor\sx_warbow_icon.jpg" />
+    <Resource Include="Hotkeys Editor\sx_warclub_icon.jpg" />
+    <Resource Include="Hotkeys Editor\sx_warrifle_icon.jpg" />
+    <Resource Include="Hotkeys Editor\tlaloc_canoe_icon.jpg" />
+    <Resource Include="Hotkeys Editor\yumi_icon_64.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hack\TopWorld.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Buttons\pauseActive.png" />
+    <Resource Include="Buttons\pauseClicked.png" />
+    <Resource Include="Buttons\pauseDisabled.png" />
+    <Resource Include="Buttons\pauseNormal.png" />
+    <Resource Include="Buttons\runActive.png" />
+    <Resource Include="Buttons\runClicked.png" />
+    <Resource Include="Buttons\runDisabled.png" />
+    <Resource Include="Buttons\runNormal.png" />
+    <Resource Include="Buttons\stopActive.png" />
+    <Resource Include="Buttons\stopClicked.png" />
+    <Resource Include="Buttons\stopDisabled.png" />
+    <Resource Include="Buttons\stopNormal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

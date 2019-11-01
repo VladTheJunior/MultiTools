@@ -26,8 +26,8 @@
             <ColumnDefinition Width="auto"/>
 
         </Grid.ColumnDefinitions>
-        <Image Width="64" Height="64" Source="{Binding ElementName=hotkey, Path=HotkeyIcon}" Margin="0,0,5,0" VerticalAlignment="Top" />
-        <Grid  Width="64" Height="64"  Margin="0,0,5,0" Background="#FFFFFFFF"  PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown">
+        <Image x:Name="i" Width="64"   Source="{Binding ElementName=hotkey, Path=HotkeyIcon}" Margin="0,0,5,0" MaxHeight="64" MaxWidth="64"  />
+        <Grid  Width="64" Height="{Binding ElementName=i, Path=ActualHeight}"  Margin="0,0,5,0" Background="#FFFFFFFF"  PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown" MaxHeight="64" MaxWidth="64">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Setter Property="Opacity" Value="0"/>

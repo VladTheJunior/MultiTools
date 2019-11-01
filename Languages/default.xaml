@@ -4,6 +4,9 @@
     xmlns:local="clr-namespace:MultiTools.Languages"
     xmlns:v="clr-namespace:System;assembly=mscorlib">
 
+
+
+
     <v:String x:Key="British">British</v:String>
     <v:String x:Key="Dutch">Dutch</v:String>
     <v:String x:Key="French">French</v:String>
@@ -54,6 +57,8 @@
     <v:String x:Key="Hotkeys33">Unit Tactics Hotkeys</v:String>
     <v:String x:Key="Hotkeys34">Wonder Hotkeys</v:String>
     <v:String x:Key="Hotkeys35">Hero Pets and Disciples Hotkeys</v:String>
+    
+    
     <v:String x:Key="FastESO">Launch game onto ESO login screen</v:String>
     <v:String x:Key="EconomicCalculator">Economic Calculator</v:String>
     <v:String x:Key="ESOTracker">ESO Tracker</v:String>
@@ -64,7 +69,8 @@
     <v:String x:Key="ESOName">ESO Name...</v:String>
     <v:String x:Key="InstallCheats">Activate Hacks</v:String>
     <v:String x:Key="Joke" xml:space="preserve">Unpacking files...&#13;Disabling ESOC anti-cheat...&#13;Maphack installed!&#13;Out of Sync hack installed!&#13;Freezes hack installed!&#13;...&#13;...&#13;...&#13;...&#13;...&#13;...&#13;Garja mode activated!&#13;Kynesie's wall laming upgraded!&#13;Танюша's smurf ability turned on!&#13;DuckDaniels amazonia skill improved!&#13;LUKASHENKO'S POTATOES HARVESTED SUCCESSFULLY!&#13;Done!</v:String>
-    
+    <v:String x:Key="HackAccounts">Hack Accounts</v:String>
+    <v:String x:Key="GenerateLogins">Generate Logins</v:String>    
 
 
     <v:String x:Key="MinDWindow">Minimize the pause window</v:String>

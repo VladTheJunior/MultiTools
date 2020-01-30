@@ -1,5 +1,5 @@
 # MultiTools
-MultiTools is a **collection of useful tools** for Age of Empires III. Convenience is that all the useful features are collected in one place in combination with a nice interface. The launcher has been integrated into the application to launch all types of games, including the ESOC patch (the patch auto-update function is also present).
+MultiTools is a **collection of useful tools and modifications** for Age of Empires III. Convenience is that all the useful features are collected in one place in combination with a nice interface. The launcher has been integrated into the application to launch all types of games, including XP Mod, ESOC and Treaty patch (the patch auto-update function is also present).
 App supports both Russian and English localization. View list of all [features](#Features).
 
 ## Download
